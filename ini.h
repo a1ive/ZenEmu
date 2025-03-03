@@ -75,6 +75,8 @@ typedef struct _ZEMU_INI_DATA
 	CHAR qemu_dir[MAX_PATH];
 	ZEMU_QEMU_ARCH qemu_arch;
 	int qemu_cpu_num;
+	char qemu_cpu_x86[32];
+	char qemu_cpu_arm[32];
 	//int qemu_cpu_core;
 	int qemu_mem_mb;
 	ZEMU_FW_X86 qemu_fw_x86;

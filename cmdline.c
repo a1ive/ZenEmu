@@ -105,14 +105,16 @@ append_qemu_hw(void)
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
-		cpu = L"max";
+		cpu = utf8_to_ucs2(nk.ini->qemu_cpu_x86);
 		extra = L"-M pc";
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
-		cpu = L"cortex-a72";
+		cpu = utf8_to_ucs2(nk.ini->qemu_cpu_arm);
 		extra = L"-M virt,virtualization=true -device ramfb -device usb-kbd -device usb-tablet";
 		break;
 	}
+	if (cpu[0] == '\0')
+		cpu = L"max";
 	append_cmdline(L"-m %d -smp %d -cpu %s %s %s %s %s ",
 		nk.ini->qemu_mem_mb, nk.ini->qemu_cpu_num, cpu, accel, device, nic, extra);
 }

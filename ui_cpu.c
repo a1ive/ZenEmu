@@ -5,35 +5,43 @@
 #include "ui.h"
 
 static char static_buf_cpu[32];
-static char static_buf_core[32];
 
 void
 ui_qemu_cpu_init(void)
 {
-	nk.ini->qemu_cpu_num = get_ini_num(L"CPU", L"Smp", 4);
+	nk.ini->qemu_cpu_num = get_ini_num(L"Cpu", L"Smp", 4);
 	snprintf(static_buf_cpu, 32, "%d", nk.ini->qemu_cpu_num);
-	//nk.ini->qemu_cpu_core = get_ini_num(L"CPU", L"Cores", 4);
-	//snprintf(static_buf_core, 32, "%d", nk.ini->qemu_cpu_core);
+	strcpy_s(nk.ini->qemu_cpu_x86, 32, get_ini_value(L"Cpu", L"X86", L"max"));
+	strcpy_s(nk.ini->qemu_cpu_arm, 32, get_ini_value(L"Cpu", L"Arm", L"cortex-a76"));
 }
 
 void
 ui_qemu_cpu_save(void)
 {
 	set_ini_num(L"CPU", L"Smp", nk.ini->qemu_cpu_num);
+	set_ini_value(L"Cpu", L"X86", L"%s", utf8_to_ucs2(nk.ini->qemu_cpu_x86));
+	set_ini_value(L"Cpu", L"Arm", L"%s", utf8_to_ucs2(nk.ini->qemu_cpu_arm));
 }
 
 void
 ui_qemu_cpu(struct nk_context* ctx)
 {
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.2f, 0.6f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f });
 	nk_label(ctx, "CPU", NK_TEXT_LEFT);
 	if (nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, static_buf_cpu, 32, nk_filter_decimal)
 		== NK_EDIT_COMMITED)
 		nk.ini->qemu_cpu_num = (int) strtol(static_buf_cpu, NULL, 10);
-	//nk_label(ctx, "cpus", NK_TEXT_LEFT);
-	//if (nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, static_buf_core, 32, nk_filter_decimal)
-	//	== NK_EDIT_COMMITED)
-	//	nk.ini->qemu_cpu_core = (int)strtol(static_buf_core, NULL, 10);
-	//nk_label(ctx, "cores", NK_TEXT_LEFT);
+	nk_label(ctx, "cores", NK_TEXT_LEFT);
+	switch (nk.ini->qemu_arch)
+	{
+	case ZEMU_QEMU_ARCH_X64:
+		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->qemu_cpu_x86, 32, NULL);
+		break;
+	case ZEMU_QEMU_ARCH_AA64:
+		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->qemu_cpu_arm, 32, NULL);
+		break;
+	default:
+		nk_spacer(ctx);
+	}
 	nk_spacer(ctx);
 }
