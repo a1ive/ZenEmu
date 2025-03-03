@@ -36,6 +36,9 @@
     <ClInclude Include="ui.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="cmdline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -69,6 +72,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ui_end.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cmdline.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -84,10 +84,6 @@ typedef struct _ZEMU_INI_DATA
 	CHAR boot_vhd[MAX_PATH];
 	CHAR boot_iso[MAX_PATH];
 
-	WCHAR qemu_path[MAX_PATH];
-	WCHAR qemu_target[2 * MAX_PATH];
-	WCHAR cmdline[CONV_BUFSZ];
-
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;
 } ZEMU_INI_DATA;
