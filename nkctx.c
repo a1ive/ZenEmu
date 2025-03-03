@@ -1,6 +1,8 @@
-﻿// SPDX-License-Identifier: Unlicense
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "nkctx.h"
+#include "ini.h"
+#include "ui.h"
 #include "resource.h"
 
 #include <windowsx.h>
@@ -82,6 +84,7 @@ nkctx_init(HINSTANCE inst,
 
 	ZeroMemory(&nk, sizeof(nk));
 
+	load_ini();
 	nk.inst = inst;
 	nk.width = width;
 	nk.height = height;
@@ -120,8 +123,16 @@ nkctx_main_window(struct nk_context* ctx, float width, float height)
 	}
 	nk_layout_row_dynamic(ctx, 0, 1);
 	nk_spacer(ctx);
-	nk_label(ctx, "Hello world!", NK_TEXT_CENTERED);
-	nk_label(ctx, "Nuklear GDI+ Demo", NK_TEXT_CENTERED);
+
+	ui_qemu_dir(ctx);
+	ui_qemu_cpu(ctx);
+	ui_qemu_mem(ctx);
+	ui_qemu_fw(ctx);
+	ui_qemu_boot(ctx);
+	ui_qemu_obj(ctx);
+
+	ui_qemu_end(ctx);
+
 	nk_end(ctx);
 }
 
@@ -174,5 +185,6 @@ nkctx_fini(int code)
 	nk_gdipfont_del(nk.font);
 	nk_gdip_shutdown();
 	UnregisterClassW(nk.wc.lpszClassName, nk.wc.hInstance);
+	OleUninitialize();
 	exit(code);
 }

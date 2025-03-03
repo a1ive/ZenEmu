@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Unlicense
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
 #define WIN32_LEAN_AND_MEAN
@@ -33,6 +33,8 @@ nk_gdip_load_font(LPCWSTR name, int size);
 #define NK_COLOR_LIGHT      {0xBF, 0xBF, 0xBF, 0xff}
 #define NK_COLOR_DARK       {0x2D, 0x2D, 0x2D, 0xFF}
 
+struct _ZEMU_INI_DATA;
+
 typedef struct _NK_GUI_CTX
 {
 	HINSTANCE inst;
@@ -44,6 +46,7 @@ typedef struct _NK_GUI_CTX
 	unsigned height;
 	unsigned font_size;
 	float title_height;
+	struct _ZEMU_INI_DATA* ini;
 } NK_GUI_CTX;
 extern NK_GUI_CTX nk;
 

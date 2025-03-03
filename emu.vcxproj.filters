@@ -30,6 +30,12 @@
     <ClInclude Include="version.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ini.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -39,6 +45,30 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="nkctx.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ini.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_dir.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_cpu.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_mem.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_fw.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_boot.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_obj.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_end.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

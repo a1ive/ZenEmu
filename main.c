@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Unlicense
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "nkctx.h"
 
@@ -8,7 +8,8 @@ wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR lpCmdLine,
 	_In_ int nCmdShow)
 {
-	nkctx_init(hInstance, 200, 200, 600, 800, L"NkWindowClass", L"ZenEMU", L"Courier New", 16);
+	OleInitialize(NULL);
+	nkctx_init(hInstance, 200, 200, 800, 800, L"NkWindowClass", L"ZenEMU", L"Courier New", 18);
 	nkctx_loop();
 	nkctx_fini(0);
 	return 0;

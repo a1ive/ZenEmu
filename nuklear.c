@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: Unlicense
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
