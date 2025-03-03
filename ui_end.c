@@ -62,6 +62,12 @@ read_pipe_thread(LPVOID lparam)
 	return 0;
 }
 
+static inline void
+reset_log(void)
+{
+	ZeroMemory(nk.ini->output, OUTBUF_SZ);
+	nk.ini->output_offset = 0;
+}
 
 static void
 run_qemu(void)
@@ -69,8 +75,7 @@ run_qemu(void)
 	reset_cmdline();
 	LPWSTR cmdline = get_cmdline();
 
-	ZeroMemory(nk.ini->output, OUTBUF_SZ);
-	nk.ini->output_offset = 0;
+	reset_log();
 
 	SECURITY_ATTRIBUTES sa;
 	HANDLE child_out_r = NULL;
@@ -123,7 +128,12 @@ run_qemu(void)
 void
 ui_qemu_end(struct nk_context* ctx)
 {
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.3f, 0.4f, 0.3f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.1f, 0.1f, 0.1f, 0.4f, 0.3f });
+	if (nk_button_label(ctx, "Clear"))
+		reset_log();
+	nk_spacer(ctx);
+	if (nk_button_label(ctx, "Save"))
+		save_ini();
 	nk_spacer(ctx);
 	if (check_valid())
 	{
@@ -132,7 +142,6 @@ ui_qemu_end(struct nk_context* ctx)
 	}
 	else
 		nk_label(ctx, "Start", NK_TEXT_CENTERED);
-	nk_spacer(ctx);
 
 	nk_layout_row_dynamic(ctx, 0, 1);
 	nk_label(ctx, "Logs", NK_TEXT_LEFT);

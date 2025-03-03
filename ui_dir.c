@@ -15,6 +15,13 @@ ui_qemu_dir_init(void)
 		nk.ini->qemu_arch = ZEMU_QEMU_ARCH_X64;
 }
 
+void
+ui_qemu_dir_save(void)
+{
+	set_ini_value(L"Qemu", L"Dir", L"%s", utf8_to_ucs2(nk.ini->qemu_dir));
+	set_ini_num(L"Qemu", L"Arch", nk.ini->qemu_arch);
+}
+
 static int CALLBACK
 browse_callback_fn(HWND wnd, UINT msg, LPARAM lparam, LPARAM data)
 {

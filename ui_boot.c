@@ -16,6 +16,13 @@ ui_qemu_boot_init(void)
 }
 
 void
+ui_qemu_boot_save(void)
+{
+	set_ini_num(L"Boot", L"X86", nk.ini->qemu_boot_x86);
+	set_ini_num(L"Boot", L"Arm", nk.ini->qemu_boot_arm);
+}
+
+void
 ui_qemu_boot(struct nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, 0, 1);

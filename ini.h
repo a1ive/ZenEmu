@@ -90,6 +90,8 @@ typedef struct _ZEMU_INI_DATA
 
 VOID load_ini(VOID);
 
+VOID save_ini(VOID);
+
 LPCSTR
 get_ini_value(LPCWSTR section, LPCWSTR key, LPCWSTR fallback);
 

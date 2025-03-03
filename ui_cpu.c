@@ -17,6 +17,12 @@ ui_qemu_cpu_init(void)
 }
 
 void
+ui_qemu_cpu_save(void)
+{
+	set_ini_num(L"CPU", L"Smp", nk.ini->qemu_cpu_num);
+}
+
+void
 ui_qemu_cpu(struct nk_context* ctx)
 {
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.2f, 0.6f });

@@ -13,6 +13,12 @@ ui_qemu_mem_init(void)
 	snprintf(static_buf_mem, 32, "%d", nk.ini->qemu_mem_mb);
 }
 
+void
+ui_qemu_mem_save(void)
+{
+	set_ini_num(L"Memory", L"Size", nk.ini->qemu_mem_mb);
+}
+
 static const char*
 get_human_size(UINT64 size, const char* human_sizes[6], UINT64 base)
 {

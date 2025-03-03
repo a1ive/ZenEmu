@@ -38,6 +38,12 @@ ui_qemu_obj_init(void)
 	
 }
 
+void
+ui_qemu_obj_save(void)
+{
+
+}
+
 static void
 ui_qemu_obj_x86(struct nk_context* ctx)
 {	

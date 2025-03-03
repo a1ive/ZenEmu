@@ -90,6 +90,16 @@ VOID load_ini(VOID)
 	ui_qemu_obj_init();
 }
 
+VOID save_ini(VOID)
+{
+	ui_qemu_dir_save();
+	ui_qemu_cpu_save();
+	ui_qemu_mem_save();
+	ui_qemu_fw_save();
+	ui_qemu_boot_save();
+	ui_qemu_obj_save();
+}
+
 static WCHAR static_ini_value[MAX_PATH];
 
 LPCSTR
