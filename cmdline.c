@@ -61,7 +61,7 @@ append_qemu_path(void)
 static void
 append_qemu_bios(void)
 {
-	bool pflash = true;
+	bool pflash = false;
 	LPCWSTR name = L"";
 	switch (nk.ini->qemu_arch)
 	{
@@ -83,7 +83,6 @@ append_qemu_bios(void)
 		switch (nk.ini->qemu_fw_arm)
 		{
 		case ZEMU_FW_AA64_EFI:
-			pflash = false;
 			name = L"AA64_EFI.fd";
 			break;
 		}
