@@ -3,6 +3,7 @@
 #include "nkctx.h"
 #include "ini.h"
 #include "ui.h"
+#include "dev.h"
 
 #include <commdlg.h>
 
@@ -62,18 +63,32 @@ obj_iso(struct nk_context* ctx)
 		open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
 }
 
+DWORD
+nk_disk_list(struct nk_context* ctx, PHY_DRIVE_INFO* items, DWORD count,
+	DWORD selected, int item_height, float width);
+
 static void
 obj_hd(struct nk_context* ctx)
 {
-	nk_label(ctx, "Physical Disk", NK_TEXT_LEFT);
-	if (nk.ini->boot_hd > nk.hd_count)
+	if (nk.ini->hd_info == NULL)
+		nk.ini->hd_count = get_disk_list(FALSE, &nk.ini->hd_info);
+
+	if (nk.ini->boot_hd >= nk.ini->hd_count)
 		nk.ini->boot_hd = 0;
-	if (nk.hd_count == 0)
+
+	nk_label(ctx, "Physical Disk", NK_TEXT_LEFT);
+
+	if (nk.ini->hd_count == 0)
 		nk_label(ctx, "NO DISK", NK_TEXT_CENTERED);
 	else
-		nk.ini->boot_hd = nk_combo(ctx, nk.hd, (int)nk.hd_count, nk.ini->boot_hd,
-			(int)nk.title_height, nk_vec2(0.68f * nk.width, 200));
-	nk_spacer(ctx);
+		nk.ini->boot_hd = nk_disk_list(ctx, nk.ini->hd_info, nk.ini->hd_count, nk.ini->boot_hd,
+			(int)nk.title_height, 0.7f * nk.width);
+	if (nk_button_label(ctx, "Refresh"))
+	{
+		free(nk.ini->hd_info);
+		nk.ini->hd_info = NULL;
+		nk.ini->hd_count = 0;
+	}
 }
 
 static void

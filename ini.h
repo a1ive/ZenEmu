@@ -73,6 +73,8 @@ typedef enum _ZEMU_BOOT_ARM
 
 #define OUTBUF_SZ 4096
 
+struct _PHY_DRIVE_INFO;
+
 typedef struct _ZEMU_INI_DATA
 {
 	WCHAR pwd[MAX_PATH];
@@ -90,8 +92,13 @@ typedef struct _ZEMU_INI_DATA
 	ZEMU_BOOT_ARM qemu_boot_arm;
 	CHAR boot_vhd[MAX_PATH];
 	CHAR boot_iso[MAX_PATH];
-	int boot_hd;
-	int boot_cd;
+
+	struct _PHY_DRIVE_INFO* hd_info;
+	DWORD hd_count;
+	DWORD boot_hd;
+	struct _PHY_DRIVE_INFO* cd_info;
+	DWORD cd_count;
+	DWORD boot_cd;
 
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;

@@ -31,6 +31,8 @@
 
 #include <VersionHelpers.h>
 
+#include "dev.h"
+
 GdipFont*
 nk_gdip_load_font(LPCWSTR name, int size)
 {
@@ -60,4 +62,41 @@ nk_gdip_load_font(LPCWSTR name, int size)
 fail:
 	MessageBoxW(NULL, L"Failed to load font", L"Error", MB_OK);
 	exit(1);
+}
+
+DWORD
+nk_disk_list(struct nk_context* ctx, PHY_DRIVE_INFO* items, DWORD count,
+	DWORD selected, int item_height, float width)
+{
+	DWORD i = 0;
+	int max_height;
+	struct nk_vec2 item_spacing;
+	struct nk_vec2 window_padding;
+	struct nk_vec2 size;
+
+	NK_ASSERT(ctx);
+	NK_ASSERT(items);
+	NK_ASSERT(ctx->current);
+	if (!ctx || !items || !count)
+		return selected;
+
+	item_spacing = ctx->style.window.spacing;
+	window_padding = nk_panel_get_padding(&ctx->style, ctx->current->layout->type);
+	max_height = NK_MIN(count, 8) * (item_height + (int)item_spacing.y);
+	max_height += (int)item_spacing.y * 2 + (int)window_padding.y * 2;
+	size.y = max_height;
+	
+	float x_padding = 2 * window_padding.y + 2 * item_spacing.y;
+	size.x = (width > x_padding) ? width - x_padding : width;
+
+	if (nk_combo_begin_text(ctx, items[selected].text, MAX_PATH, size))
+	{
+		nk_layout_row_dynamic(ctx, (float)item_height, 1);
+		for (i = 0; i < count; ++i) {
+			if (nk_combo_item_label(ctx, items[i].text, NK_TEXT_LEFT))
+				selected = i;
+		}
+		nk_combo_end(ctx);
+	}
+	return selected;
 }

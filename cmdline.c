@@ -3,6 +3,7 @@
 #include "nkctx.h"
 #include "ini.h"
 #include "cmdline.h"
+#include "dev.h"
 
 #include <stdbool.h>
 
@@ -135,10 +136,7 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
 			break;
 		case ZEMU_BOOT_X86_PD:
-		{
-			DWORD id = strtoul(&nk.hd[nk.ini->boot_hd][2], NULL, 10);
-			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", id);
-		}
+			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", nk.ini->hd_info[nk.ini->boot_hd].index);
 			break;
 		}
 	}
@@ -154,10 +152,7 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
 			break;
 		case ZEMU_BOOT_ARM_PD:
-		{
-			DWORD id = strtoul(&nk.hd[nk.ini->boot_hd][2], NULL, 10);
-			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", id);
-		}
+			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", nk.ini->hd_info[nk.ini->boot_hd].index);
 			break;
 		}
 	}

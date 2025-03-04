@@ -48,10 +48,6 @@ typedef struct _NK_GUI_CTX
 	float title_height;
 
 	MEMORYSTATUSEX statex;
-	CHAR** hd;
-	size_t hd_count;
-	CHAR** cd;
-	size_t cd_count;
 
 	struct _ZEMU_INI_DATA* ini;
 } NK_GUI_CTX;

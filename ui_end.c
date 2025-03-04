@@ -21,7 +21,7 @@ check_valid(void)
 		case ZEMU_BOOT_X86_ISO:
 			return nk.ini->boot_iso[0] ? true : false;
 		case ZEMU_BOOT_X86_PD:
-			return nk.hd_count ? true : false;
+			return nk.ini->hd_count ? true : false;
 		}
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
@@ -32,7 +32,7 @@ check_valid(void)
 		case ZEMU_BOOT_ARM_ISO:
 			return nk.ini->boot_iso[0] ? true : false;
 		case ZEMU_BOOT_ARM_PD:
-			return nk.hd_count ? true : false;
+			return nk.ini->hd_count ? true : false;
 		}
 		break;
 	}

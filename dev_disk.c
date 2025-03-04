@@ -8,16 +8,34 @@
 #include <setupapi.h>
 #include <winioctl.h>
 
-typedef struct _PHY_DRIVE_INFO
+static inline LPCSTR
+get_bus_name(STORAGE_BUS_TYPE bus)
 {
-	DWORD index;
-	PARTITION_STYLE partmap; // 0:MBR 1:GPT 2:RAW
-	UINT64 size;
-	CHAR prefix[3];
-	CHAR name[MAX_PATH];
-	STORAGE_BUS_TYPE bus;
-	UINT32 mnt;
-}PHY_DRIVE_INFO;
+	switch (bus)
+	{
+	case BusTypeUnknown: return "Unknown";
+	case BusTypeScsi: return "SCSI";
+	case BusTypeAtapi: return "Atapi";
+	case BusTypeAta: return "ATA";
+	case BusType1394: return "1394";
+	case BusTypeSsa: return "SSA";
+	case BusTypeFibre: return "Fibre";
+	case BusTypeUsb: return "USB";
+	case BusTypeRAID: return "RAID";
+	case BusTypeiScsi: return "iSCSI";
+	case BusTypeSas: return "SAS";
+	case BusTypeSata: return "SATA";
+	case BusTypeSd: return "SD";
+	case BusTypeMmc: return "MMC";
+	case BusTypeVirtual: return "Virtual";
+	case BusTypeFileBackedVirtual: return "File";
+	case BusTypeSpaces: return "Spaces";
+	case BusTypeNvme: return "NVMe";
+	case BusTypeSCM: return "SCM";
+	case BusTypeUfs: return "UFS";
+	}
+	return "Unknown";
+}
 
 static UINT64
 get_disk_size(HANDLE hd)
@@ -29,23 +47,6 @@ get_disk_size(HANDLE hd)
 		&LengthInfo, sizeof(LengthInfo), &dw, NULL))
 		size = LengthInfo.Length.QuadPart;
 	return size;
-}
-
-#define LAYOUT_BUFSZ 0x10000
-static CHAR static_layout[LAYOUT_BUFSZ];
-static PARTITION_STYLE
-get_disk_partmap(HANDLE hd)
-{
-	DRIVE_LAYOUT_INFORMATION_EX* pLayout = (DRIVE_LAYOUT_INFORMATION_EX*)static_layout;
-	DWORD dw = LAYOUT_BUFSZ;
-	if (!DeviceIoControl(hd, IOCTL_DISK_GET_DRIVE_LAYOUT_EX, NULL, 0,
-		pLayout, dw, &dw, NULL))
-		goto fail;
-	if (dw < sizeof(DRIVE_LAYOUT_INFORMATION_EX) - sizeof(PARTITION_INFORMATION_EX))
-		goto fail;
-	return pLayout->PartitionStyle;
-fail:
-	return PARTITION_STYLE_RAW;
 }
 
 static HANDLE
@@ -96,15 +97,15 @@ typedef struct
 	WCHAR  DevicePath[512];
 } MY_DEVIF_DETAIL_DATA;
 
-static size_t
-get_info_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
+DWORD
+get_disk_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 {
-	size_t i;
+	DWORD i;
 	BOOL rc;
 	DWORD ret_bytes;
 	PHY_DRIVE_INFO* info;
 
-	size_t count = 0;
+	DWORD count = 0;
 	SP_DEVICE_INTERFACE_DATA if_data = { .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
 	MY_DEVIF_DETAIL_DATA my_data = { .cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W) };
 	SP_DEVINFO_DATA devinfo_data = { .cbSize = sizeof(SP_DEVINFO_DATA) };
@@ -113,7 +114,7 @@ get_info_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 	if (dev_info_handle == INVALID_HANDLE_VALUE)
 		return 0;
 
-	while (SetupDiEnumDeviceInterfaces(dev_info_handle, NULL, &dev_guid, (DWORD)count, &if_data))
+	while (SetupDiEnumDeviceInterfaces(dev_info_handle, NULL, &dev_guid, count, &if_data))
 		count++;
 	if (count == 0)
 	{
@@ -181,29 +182,31 @@ get_info_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 
 		info[i].size = get_disk_size(hd);
 		if (is_cd)
-			strcpy_s(info[i].prefix, 3, "CD");
+			info[i].prefix = "CD";
 		else
-			strcpy_s(info[i].prefix, 3, sdd->RemovableMedia ? "RM" : "HD");
-		info[i].bus = sdd->BusType;
+			info[i].prefix = sdd->RemovableMedia ? "RM" : "HD";
+		info[i].bus = get_bus_name(sdd->BusType);
 
 		if (sdd->VendorIdOffset)
 		{
-			strcpy_s(info[i].name, MAX_PATH,
+			strcpy_s(info[i].hw, MAX_PATH,
 				(char*)sdd + sdd->VendorIdOffset);
-			trim_str(info[i].name);
+			trim_str(info[i].hw);
 		}
 
 		if (sdd->ProductIdOffset)
 		{
-			size_t len = strlen(info[i].name);
+			size_t len = strlen(info[i].hw);
 			if (len && len < MAX_PATH - 1)
-				info[i].name[len++] = ' ';
-			strcpy_s(info[i].name + len, MAX_PATH - len,
+				info[i].hw[len++] = ' ';
+			strcpy_s(info[i].hw + len, MAX_PATH - len,
 				(char*)sdd + sdd->ProductIdOffset);
-			trim_str(info[i].name);
+			trim_str(info[i].hw);
 		}
 
-		info[i].partmap = get_disk_partmap(hd);
+		snprintf(info[i].text, MAX_PATH, "%s%lu:%s %s (%s)",
+			info[i].prefix, info[i].index, info[i].bus, info[i].hw,
+			get_human_size(info[i].size, human_units, 1024));
 
 	next_drive:
 		if (sdd)
@@ -215,75 +218,4 @@ get_info_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 
 	qsort(info, count, sizeof(PHY_DRIVE_INFO), compare_disk_id);
 	return count;
-}
-
-static inline LPCSTR
-get_bus_name(STORAGE_BUS_TYPE bus)
-{
-	switch (bus)
-	{
-	case BusTypeUnknown: return "Unknown";
-	case BusTypeScsi: return "SCSI";
-	case BusTypeAtapi: return "Atapi";
-	case BusTypeAta: return "ATA";
-	case BusType1394: return "1394";
-	case BusTypeSsa: return "SSA";
-	case BusTypeFibre: return "Fibre";
-	case BusTypeUsb: return "USB";
-	case BusTypeRAID: return "RAID";
-	case BusTypeiScsi: return "iSCSI";
-	case BusTypeSas: return "SAS";
-	case BusTypeSata: return "SATA";
-	case BusTypeSd: return "SD";
-	case BusTypeMmc: return "MMC";
-	case BusTypeVirtual: return "Virtual";
-	case BusTypeFileBackedVirtual: return "File";
-	case BusTypeSpaces: return "Spaces";
-	case BusTypeNvme: return "NVMe";
-	case BusTypeSCM: return "SCM";
-	case BusTypeUfs: return "UFS";
-	}
-	return "Unknown";
-}
-
-CHAR**
-get_disk_list(BOOL is_cd, size_t* count)
-{
-	size_t i;
-	CHAR** ret = NULL;
-	PHY_DRIVE_INFO* pd_info;
-	*count = get_info_list(is_cd, &pd_info);
-	if (*count == 0)
-		return NULL;
-	ret = calloc(*count, sizeof(CHAR*));
-	if (ret == NULL)
-	{
-		*count = 0;
-		free(pd_info);
-		return NULL;
-	}
-
-	for (i = 0; i < *count; i++)
-	{
-		ret[i] = malloc(MAX_PATH);
-		if (ret[i] == NULL)
-			continue;
-		snprintf(ret[i], MAX_PATH, "%s%lu:%s %s (%s)",
-			pd_info[i].prefix, pd_info[i].index, get_bus_name(pd_info[i].bus),
-			pd_info[i].name,
-			get_human_size(pd_info[i].size, human_units, 1024));
-	}
-	free(pd_info);
-	return ret;
-}
-
-VOID
-free_disk_list(CHAR** disk_list, size_t count)
-{
-	size_t i;
-	for (i = 0; i < count; i++)
-	{
-		free(disk_list[i]);
-	}
-	free(disk_list);
 }

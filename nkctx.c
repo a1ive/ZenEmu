@@ -27,20 +27,6 @@ nkctx_window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_TIMER:
 		nkctx_update(wparam);
 		break;
-	case WM_DEVICECHANGE:
-	{
-		switch (wparam)
-		{
-		case DBT_DEVNODES_CHANGED:
-			// TODO: check if this is needed
-			break;
-		case DBT_DEVICEARRIVAL:
-		case DBT_DEVICEREMOVECOMPLETE:
-			nkctx_update(IDT_TIMER_DISK);
-			break;
-		}
-	}
-		break;
 	case WM_DPICHANGED:
 		break;
 	case WM_NCHITTEST:
@@ -132,7 +118,6 @@ nkctx_init(HINSTANCE inst,
 
 	SetTimer(nk.wnd, IDT_TIMER_1S, 1000, (TIMERPROC)NULL);
 	nkctx_update(IDT_TIMER_1S);
-	nkctx_update(IDT_TIMER_DISK);
 }
 
 static void
@@ -211,14 +196,6 @@ nkctx_update(WPARAM wparam)
 			nk.statex.dwLength = sizeof(MEMORYSTATUSEX);
 			GlobalMemoryStatusEx(&nk.statex);
 			break;
-		case IDT_TIMER_DISK:
-		{
-			free_disk_list(nk.cd, nk.cd_count);
-			nk.cd = get_disk_list(TRUE, &nk.cd_count);
-			free_disk_list(nk.hd, nk.hd_count);
-			nk.hd = get_disk_list(FALSE, &nk.hd_count);
-		}
-		break;
 	}
 }
 
