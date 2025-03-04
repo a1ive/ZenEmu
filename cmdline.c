@@ -135,10 +135,12 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
 			break;
 		case ZEMU_BOOT_X86_PD:
-			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", nk.ini->hd_info[nk.ini->boot_hd].index);
+			append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
+				nk.ini->hd_info[nk.ini->boot_hd].index);
 			break;
 		case ZEMU_BOOT_X86_CD:
-			append_cmdline(L"-cdrom \\\\.\\CdRom%lu -boot d ", nk.ini->cd_info[nk.ini->boot_cd].index);
+			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
+				nk.ini->cd_info[nk.ini->boot_cd].index);
 			break;
 		}
 	}
@@ -154,10 +156,12 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
 			break;
 		case ZEMU_BOOT_ARM_PD:
-			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", nk.ini->hd_info[nk.ini->boot_hd].index);
+			append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
+				nk.ini->hd_info[nk.ini->boot_hd].index);
 			break;
 		case ZEMU_BOOT_ARM_CD:
-			append_cmdline(L"-cdrom \\\\.\\CdRom%lu -boot d ", nk.ini->cd_info[nk.ini->boot_cd].index);
+			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
+				nk.ini->cd_info[nk.ini->boot_cd].index);
 			break;
 		}
 	}
