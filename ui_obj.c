@@ -8,7 +8,11 @@
 #include <commdlg.h>
 
 #define FILTER_VHD \
-	L"Virtual Disk Image (vhd,vhdx,img)\0*.VHD;*.VHDX;*.IMG\0All Files\0*.*\0"
+	L"Disk Image (vhd,vhdx,vdi,vmdk,img,raw)\0" \
+	 "*.VHD;*.VHDX;*.VDI;*.VMDK;*.IMG;*.RAW\0" \
+	 "QEMU Image (qcow2,qcow)\0" \
+	 "*.QCOW2;*.QCOW\0" \
+	 "All Files\0*.*\0"
 
 #define FILTER_ISO \
 	L"ISO\0*.ISO\0All Files\0*.*\0"
