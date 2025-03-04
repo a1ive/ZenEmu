@@ -36,6 +36,9 @@ ui_qemu_boot(struct nk_context* ctx)
 		nk_spacer(ctx);
 		UI_OPTION("Disk Image", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_VHD);
 		UI_OPTION("ISO Image", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_ISO);
+		nk_spacer(ctx);
+		UI_OPTION("Physical Disk", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_PD);
+		nk_spacer(ctx);
 		break;
 	}
 	case ZEMU_QEMU_ARCH_AA64:
@@ -43,6 +46,9 @@ ui_qemu_boot(struct nk_context* ctx)
 		nk_spacer(ctx);
 		UI_OPTION("Disk Image", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_VHD);
 		UI_OPTION("ISO Image", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_ISO);
+		nk_spacer(ctx);
+		UI_OPTION("Physical Disk", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_PD);
+		nk_spacer(ctx);
 		break;
 	}
 	default:

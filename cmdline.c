@@ -134,6 +134,12 @@ append_qemu_bootdev(void)
 		case ZEMU_BOOT_X86_ISO:
 			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
 			break;
+		case ZEMU_BOOT_X86_PD:
+		{
+			DWORD id = strtoul(&nk.hd[nk.ini->boot_hd][2], NULL, 10);
+			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", id);
+		}
+			break;
 		}
 	}
 	break;
@@ -146,6 +152,12 @@ append_qemu_bootdev(void)
 			break;
 		case ZEMU_BOOT_ARM_ISO:
 			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
+			break;
+		case ZEMU_BOOT_ARM_PD:
+		{
+			DWORD id = strtoul(&nk.hd[nk.ini->boot_hd][2], NULL, 10);
+			append_cmdline(L"-hda \\\\.\\PhysicalDrive%lu -boot c ", id);
+		}
 			break;
 		}
 	}

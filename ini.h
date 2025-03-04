@@ -13,6 +13,11 @@ LPCSTR ucs2_to_utf8(LPCWSTR src);
 
 LPCWSTR utf8_to_ucs2(LPCSTR src);
 
+extern const char* human_units[];
+
+const char*
+get_human_size(UINT64 size, const char* human_sizes[6], UINT64 base);
+
 typedef enum _ZEMU_QEMU_ARCH
 {
 	ZEMU_QEMU_ARCH_X64 = 0,
@@ -41,8 +46,8 @@ typedef enum _ZEMU_BOOT_X86
 {
 	ZEMU_BOOT_X86_VHD = 0,
 	ZEMU_BOOT_X86_ISO,
-#if 0
 	ZEMU_BOOT_X86_PD,
+#if 0
 	ZEMU_BOOT_X86_CD,
 	ZEMU_BOOT_X86_PXE,
 	ZEMU_BOOT_X86_LINUX,
@@ -56,8 +61,8 @@ typedef enum _ZEMU_BOOT_ARM
 {
 	ZEMU_BOOT_ARM_VHD = 0,
 	ZEMU_BOOT_ARM_ISO,
-#if 0
 	ZEMU_BOOT_ARM_PD,
+#if 0
 	ZEMU_BOOT_ARM_CD,
 	ZEMU_BOOT_ARM_PXE,
 	ZEMU_BOOT_ARM_LINUX,
@@ -85,6 +90,8 @@ typedef struct _ZEMU_INI_DATA
 	ZEMU_BOOT_ARM qemu_boot_arm;
 	CHAR boot_vhd[MAX_PATH];
 	CHAR boot_iso[MAX_PATH];
+	int boot_hd;
+	int boot_cd;
 
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;

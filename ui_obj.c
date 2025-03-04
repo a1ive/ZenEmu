@@ -35,13 +35,45 @@ open_file(CHAR* path, size_t len, LPCWSTR filter)
 void
 ui_qemu_obj_init(void)
 {
-	
+
 }
 
 void
 ui_qemu_obj_save(void)
 {
 
+}
+
+static void
+obj_vhd(struct nk_context* ctx)
+{
+	nk_label(ctx, "Disk Image", NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
+	if (nk_button_label(ctx, ".."))
+		open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
+}
+
+static void
+obj_iso(struct nk_context* ctx)
+{
+	nk_label(ctx, "ISO Image", NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
+	if (nk_button_label(ctx, ".."))
+		open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
+}
+
+static void
+obj_hd(struct nk_context* ctx)
+{
+	nk_label(ctx, "Physical Disk", NK_TEXT_LEFT);
+	if (nk.ini->boot_hd > nk.hd_count)
+		nk.ini->boot_hd = 0;
+	if (nk.hd_count == 0)
+		nk_label(ctx, "NO DISK", NK_TEXT_CENTERED);
+	else
+		nk.ini->boot_hd = nk_combo(ctx, nk.hd, (int)nk.hd_count, nk.ini->boot_hd,
+			(int)nk.title_height, nk_vec2(0.68f * nk.width, 200));
+	nk_spacer(ctx);
 }
 
 static void
@@ -53,21 +85,14 @@ ui_qemu_obj_x86(struct nk_context* ctx)
 	switch (nk.ini->qemu_boot_x86)
 	{
 	case ZEMU_BOOT_X86_VHD:
-	{
-		nk_label(ctx, "Disk Image", NK_TEXT_LEFT);
-		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
-		if (nk_button_label(ctx, ".."))
-			open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
+		obj_vhd(ctx);
 		break;
-	}
 	case ZEMU_BOOT_X86_ISO:
-	{
-		nk_label(ctx, "ISO Image", NK_TEXT_LEFT);
-		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
-		if (nk_button_label(ctx, ".."))
-			open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
+		obj_iso(ctx);
 		break;
-	}
+	case ZEMU_BOOT_X86_PD:
+		obj_hd(ctx);
+		break;
 	default:
 		nk_spacer(ctx);
 		nk_spacer(ctx);
@@ -84,21 +109,14 @@ ui_qemu_obj_arm(struct nk_context* ctx)
 	switch (nk.ini->qemu_boot_arm)
 	{
 	case ZEMU_BOOT_ARM_VHD:
-	{
-		nk_label(ctx, "Disk Image", NK_TEXT_LEFT);
-		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
-		if (nk_button_label(ctx, ".."))
-			open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
+		obj_vhd(ctx);
 		break;
-	}
 	case ZEMU_BOOT_ARM_ISO:
-	{
-		nk_label(ctx, "ISO Image", NK_TEXT_LEFT);
-		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
-		if (nk_button_label(ctx, ".."))
-			open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
+		obj_iso(ctx);
 		break;
-	}
+	case ZEMU_BOOT_ARM_PD:
+		obj_hd(ctx);
+		break;
 	default:
 		nk_spacer(ctx);
 		nk_spacer(ctx);

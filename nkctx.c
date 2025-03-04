@@ -3,9 +3,11 @@
 #include "nkctx.h"
 #include "ini.h"
 #include "ui.h"
+#include "dev.h"
 #include "resource.h"
 
 #include <windowsx.h>
+#include <dbt.h>
 
 NK_GUI_CTX nk;
 
@@ -21,6 +23,23 @@ nkctx_window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		break;
+	case WM_TIMER:
+		nkctx_update(wparam);
+		break;
+	case WM_DEVICECHANGE:
+	{
+		switch (wparam)
+		{
+		case DBT_DEVNODES_CHANGED:
+			// TODO: check if this is needed
+			break;
+		case DBT_DEVICEARRIVAL:
+		case DBT_DEVICEREMOVECOMPLETE:
+			nkctx_update(IDT_TIMER_DISK);
+			break;
+		}
+	}
 		break;
 	case WM_DPICHANGED:
 		break;
@@ -110,6 +129,10 @@ nkctx_init(HINSTANCE inst,
 	nk_gdip_set_font(nk.font);
 
 	set_style(nk.ctx);
+
+	SetTimer(nk.wnd, IDT_TIMER_1S, 1000, (TIMERPROC)NULL);
+	nkctx_update(IDT_TIMER_1S);
+	nkctx_update(IDT_TIMER_DISK);
 }
 
 static void
@@ -179,9 +202,30 @@ nkctx_loop(void)
 	}
 }
 
+void
+nkctx_update(WPARAM wparam)
+{
+	switch (wparam)
+	{
+		case IDT_TIMER_1S:
+			nk.statex.dwLength = sizeof(MEMORYSTATUSEX);
+			GlobalMemoryStatusEx(&nk.statex);
+			break;
+		case IDT_TIMER_DISK:
+		{
+			free_disk_list(nk.cd, nk.cd_count);
+			nk.cd = get_disk_list(TRUE, &nk.cd_count);
+			free_disk_list(nk.hd, nk.hd_count);
+			nk.hd = get_disk_list(FALSE, &nk.hd_count);
+		}
+		break;
+	}
+}
+
 _Noreturn void
 nkctx_fini(int code)
 {
+	KillTimer(nk.wnd, IDT_TIMER_1S);
 	nk_gdipfont_del(nk.font);
 	nk_gdip_shutdown();
 	UnregisterClassW(nk.wc.lpszClassName, nk.wc.hInstance);

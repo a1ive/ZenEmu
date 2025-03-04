@@ -46,6 +46,13 @@ typedef struct _NK_GUI_CTX
 	unsigned height;
 	unsigned font_size;
 	float title_height;
+
+	MEMORYSTATUSEX statex;
+	CHAR** hd;
+	size_t hd_count;
+	CHAR** cd;
+	size_t cd_count;
+
 	struct _ZEMU_INI_DATA* ini;
 } NK_GUI_CTX;
 extern NK_GUI_CTX nk;
@@ -58,6 +65,9 @@ nkctx_init(HINSTANCE inst,
 
 void
 nkctx_loop(void);
+
+void
+nkctx_update(WPARAM wparam);
 
 _Noreturn void
 nkctx_fini(int code);
