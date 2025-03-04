@@ -38,6 +38,7 @@ ui_qemu_boot(struct nk_context* ctx)
 		UI_OPTION("ISO Image", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_ISO);
 		nk_spacer(ctx);
 		UI_OPTION("Physical Disk", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_PD);
+		UI_OPTION("CD-ROM", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_CD);
 		nk_spacer(ctx);
 		break;
 	}
@@ -48,6 +49,7 @@ ui_qemu_boot(struct nk_context* ctx)
 		UI_OPTION("ISO Image", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_ISO);
 		nk_spacer(ctx);
 		UI_OPTION("Physical Disk", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_PD);
+		UI_OPTION("CD-ROM", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_CD);
 		nk_spacer(ctx);
 		break;
 	}

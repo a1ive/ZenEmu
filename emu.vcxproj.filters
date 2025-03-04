@@ -80,7 +80,7 @@
     <ClCompile Include="cmdline.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dev_disk.c">
+    <ClCompile Include="dev.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -197,7 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cmdline.c" />
-    <ClCompile Include="dev_disk.c" />
+    <ClCompile Include="dev.c" />
     <ClCompile Include="ini.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="nkctx.c" />

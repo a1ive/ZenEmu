@@ -22,6 +22,8 @@ check_valid(void)
 			return nk.ini->boot_iso[0] ? true : false;
 		case ZEMU_BOOT_X86_PD:
 			return nk.ini->hd_count ? true : false;
+		case ZEMU_BOOT_X86_CD:
+			return nk.ini->cd_count ? true : false;
 		}
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
@@ -33,6 +35,8 @@ check_valid(void)
 			return nk.ini->boot_iso[0] ? true : false;
 		case ZEMU_BOOT_ARM_PD:
 			return nk.ini->hd_count ? true : false;
+		case ZEMU_BOOT_ARM_CD:
+			return nk.ini->cd_count ? true : false;
 		}
 		break;
 	}
@@ -71,6 +75,35 @@ reset_log(void)
 {
 	ZeroMemory(nk.ini->output, OUTBUF_SZ);
 	nk.ini->output_offset = 0;
+}
+
+static void
+copy_cmdline(void)
+{
+	reset_cmdline();
+	LPCWSTR str = get_cmdline();
+
+	if (!OpenClipboard(NULL))
+	{
+		MessageBoxW(NULL, L"Could not open clipboard", L"ERROR", MB_OK | MB_ICONERROR);
+		return;
+	}
+	EmptyClipboard();
+	HGLOBAL hmem = GlobalAlloc(GMEM_MOVEABLE, CMDLINE_LEN * sizeof(WCHAR));
+	if (!hmem)
+	{
+		CloseClipboard();
+		MessageBoxW(NULL, L"Could not allocate memory", L"ERROR", MB_OK | MB_ICONERROR);
+		return;
+	}
+	LPWSTR pmem = (LPWSTR)GlobalLock(hmem);
+	if (pmem)
+	{
+		wcscpy_s(pmem, CMDLINE_LEN, str);
+		GlobalUnlock(hmem);
+	}
+	SetClipboardData(CF_UNICODETEXT, hmem);
+	CloseClipboard();
 }
 
 static void
@@ -135,7 +168,8 @@ ui_qemu_end(struct nk_context* ctx)
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.1f, 0.1f, 0.1f, 0.4f, 0.3f });
 	if (nk_button_label(ctx, "Clear"))
 		reset_log();
-	nk_spacer(ctx);
+	if (nk_button_label(ctx, "Copy"))
+		copy_cmdline();
 	if (nk_button_label(ctx, "Save"))
 		save_ini();
 	nk_spacer(ctx);

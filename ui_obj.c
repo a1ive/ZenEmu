@@ -96,6 +96,30 @@ obj_hd(struct nk_context* ctx)
 }
 
 static void
+obj_cd(struct nk_context* ctx)
+{
+	if (nk.ini->cd_info == NULL)
+		nk.ini->cd_count = get_disk_list(TRUE, &nk.ini->cd_info);
+
+	if (nk.ini->boot_cd >= nk.ini->cd_count)
+		nk.ini->boot_cd = 0;
+
+	nk_label(ctx, "CD-ROM", NK_TEXT_LEFT);
+
+	if (nk.ini->cd_count == 0)
+		nk_label(ctx, "NO DISK", NK_TEXT_CENTERED);
+	else
+		nk.ini->boot_cd = nk_disk_list(ctx, nk.ini->cd_info, nk.ini->cd_count, nk.ini->boot_cd,
+			(int)nk.title_height, 0.7f * nk.width);
+	if (nk_button_label(ctx, "Refresh"))
+	{
+		free(nk.ini->cd_info);
+		nk.ini->cd_info = NULL;
+		nk.ini->cd_count = 0;
+	}
+}
+
+static void
 ui_qemu_obj_x86(struct nk_context* ctx)
 {	
 	nk_layout_row_dynamic(ctx, 0, 1);
@@ -111,6 +135,9 @@ ui_qemu_obj_x86(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_X86_PD:
 		obj_hd(ctx);
+		break;
+	case ZEMU_BOOT_X86_CD:
+		obj_cd(ctx);
 		break;
 	default:
 		nk_spacer(ctx);
@@ -135,6 +162,9 @@ ui_qemu_obj_arm(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_ARM_PD:
 		obj_hd(ctx);
+		break;
+	case ZEMU_BOOT_ARM_CD:
+		obj_cd(ctx);
 		break;
 	default:
 		nk_spacer(ctx);
