@@ -24,6 +24,8 @@ check_valid(void)
 			return nk.ini->hd_count ? true : false;
 		case ZEMU_BOOT_X86_CD:
 			return nk.ini->cd_count ? true : false;
+		case ZEMU_BOOT_X86_PXE:
+			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
 		}
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
@@ -37,6 +39,8 @@ check_valid(void)
 			return nk.ini->hd_count ? true : false;
 		case ZEMU_BOOT_ARM_CD:
 			return nk.ini->cd_count ? true : false;
+		case ZEMU_BOOT_ARM_PXE:
+			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
 		}
 		break;
 	}

@@ -100,7 +100,7 @@ append_qemu_hw(void)
 	LPCWSTR cpu = L"";
 	LPCWSTR accel = L"-msg timestamp=off -accel tcg,thread=multi";
 	LPCWSTR device = L"-device nec-usb-xhci";
-	LPCWSTR nic = L"-nic user,model=virtio";
+	LPCWSTR nic = L"";
 	LPCWSTR extra = L"";
 	switch (nk.ini->qemu_arch)
 	{
@@ -142,6 +142,10 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
 				nk.ini->cd_info[nk.ini->boot_cd].index);
 			break;
+		case ZEMU_BOOT_X86_PXE:
+			append_cmdline(L"-net nic,model=e1000 -net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
+			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
+			break;
 		}
 	}
 	break;
@@ -162,6 +166,10 @@ append_qemu_bootdev(void)
 		case ZEMU_BOOT_ARM_CD:
 			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
 				nk.ini->cd_info[nk.ini->boot_cd].index);
+			break;
+		case ZEMU_BOOT_ARM_PXE:
+			append_cmdline(L"-net nic,model=e1000 -net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
+			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
 			break;
 		}
 	}

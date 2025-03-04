@@ -40,6 +40,7 @@ ui_qemu_boot(struct nk_context* ctx)
 		UI_OPTION("Physical Disk", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_PD);
 		UI_OPTION("CD-ROM", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_CD);
 		nk_spacer(ctx);
+		UI_OPTION("PXE", nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_PXE);
 		break;
 	}
 	case ZEMU_QEMU_ARCH_AA64:
@@ -51,6 +52,7 @@ ui_qemu_boot(struct nk_context* ctx)
 		UI_OPTION("Physical Disk", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_PD);
 		UI_OPTION("CD-ROM", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_CD);
 		nk_spacer(ctx);
+		UI_OPTION("PXE", nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_PXE);
 		break;
 	}
 	default:

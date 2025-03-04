@@ -83,6 +83,9 @@
     <ClCompile Include="dev.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="open_dialog.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc">

@@ -48,8 +48,8 @@ typedef enum _ZEMU_BOOT_X86
 	ZEMU_BOOT_X86_ISO,
 	ZEMU_BOOT_X86_PD,
 	ZEMU_BOOT_X86_CD,
-#if 0
 	ZEMU_BOOT_X86_PXE,
+#if 0
 	ZEMU_BOOT_X86_LINUX,
 	ZEMU_BOOT_X86_WIM,
 	ZEMU_BOOT_X86_VFD,
@@ -63,8 +63,8 @@ typedef enum _ZEMU_BOOT_ARM
 	ZEMU_BOOT_ARM_ISO,
 	ZEMU_BOOT_ARM_PD,
 	ZEMU_BOOT_ARM_CD,
-#if 0
 	ZEMU_BOOT_ARM_PXE,
+#if 0
 	ZEMU_BOOT_ARM_LINUX,
 	ZEMU_BOOT_ARM_WIM,
 #endif
@@ -99,6 +99,9 @@ typedef struct _ZEMU_INI_DATA
 	struct _PHY_DRIVE_INFO* cd_info;
 	DWORD cd_count;
 	DWORD boot_cd;
+
+	CHAR net_tftp[MAX_PATH];
+	CHAR net_file[MAX_PATH];
 
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;

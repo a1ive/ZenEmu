@@ -5,6 +5,25 @@
 #define VC_EXTRALEAN
 #include <windows.h>
 
+#define FILTER_VHD \
+	L"Disk Image (vhd,vhdx,vdi,vmdk,img,raw)\0" \
+	 "*.VHD;*.VHDX;*.VDI;*.VMDK;*.IMG;*.RAW\0" \
+	 "QEMU Image (qcow2,qcow)\0" \
+	 "*.QCOW2;*.QCOW\0" \
+	 "All Files\0*.*\0"
+
+#define FILTER_ISO \
+	L"ISO\0*.ISO\0All Files\0*.*\0"
+
+#define FILTER_ALL \
+	L"All Files\0*.*\0"
+
+void
+ui_open_file(CHAR* path, size_t len, LPCWSTR filter);
+
+void
+ui_open_dir(CHAR* path, size_t len);
+
 #define UI_OPTION(label, var, val) \
 	var = nk_option_label(ctx, (label), var == val) ? val : var
 
