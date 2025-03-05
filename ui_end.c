@@ -42,6 +42,8 @@ check_valid(void)
 			return nk.ini->hd_count ? true : false;
 		case ZEMU_BOOT_ARM_CD:
 			return nk.ini->cd_count ? true : false;
+		case ZEMU_BOOT_ARM_VFD:
+			return nk.ini->boot_vfd[0] ? true : false;
 		case ZEMU_BOOT_ARM_PXE:
 			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
 		}

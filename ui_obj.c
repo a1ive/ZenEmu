@@ -155,6 +155,9 @@ ui_qemu_obj_arm(struct nk_context* ctx)
 	case ZEMU_BOOT_ARM_CD:
 		obj_cd(ctx);
 		break;
+	case ZEMU_BOOT_ARM_VFD:
+		obj_vfd(ctx);
+		break;
 	case ZEMU_BOOT_ARM_PXE:
 		obj_pxe(ctx);
 		break;

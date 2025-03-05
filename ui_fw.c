@@ -44,11 +44,9 @@ ui_qemu_fw(struct nk_context* ctx)
 		nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.2f, 0.2f });
 		nk_spacer(ctx);
 		UI_OPTION("ARM64 EFI", nk.ini->qemu_fw_arm, ZEMU_FW_AA64_EFI);
-#if 0
+		nk_widget_disable_begin(ctx);
 		UI_OPTION("ARM32 EFI", nk.ini->qemu_fw_arm, ZEMU_FW_ARM32_EFI);
-#else
-		nk_spacer(ctx);
-#endif
+		nk_widget_disable_end(ctx);
 		break;
 	}
 	default:

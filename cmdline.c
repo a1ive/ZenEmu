@@ -39,7 +39,7 @@ append_cmdline(LPCWSTR _Printf_format_string_ format, ...)
 	va_end(ap);
 	return;
 fail:
-	MessageBoxW(NULL, L"Set cmddline failed", L"Error", MB_ICONERROR);
+	MessageBoxW(NULL, L"Set cmdline failed", L"Error", MB_ICONERROR);
 }
 
 static void
@@ -85,6 +85,9 @@ append_qemu_bios(void)
 		case ZEMU_FW_AA64_EFI:
 			name = L"AA64_EFI.fd";
 			break;
+		case ZEMU_FW_ARM32_EFI:
+			name = L"ARM_EFI.fd";
+			break;
 		}
 		break;
 	}
@@ -100,7 +103,7 @@ append_qemu_hw(void)
 	LPCWSTR cpu = L"";
 	LPCWSTR accel = L"-msg timestamp=off -accel tcg,thread=multi";
 	LPCWSTR device = L"-device nec-usb-xhci";
-	LPCWSTR nic = L"-net nic,model=virtio";
+	LPCWSTR nic = L"-nic user,model=virtio-net-pci";
 	LPCWSTR extra = L"";
 	switch (nk.ini->qemu_arch)
 	{
