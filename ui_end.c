@@ -29,6 +29,8 @@ check_valid(void)
 			return nk.ini->boot_vfd[0] ? true : false;
 		case ZEMU_BOOT_X86_PXE:
 			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
+		case ZEMU_BOOT_X86_LINUX:
+			return nk.ini->boot_linux[0] ? true : false;
 		}
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
@@ -46,6 +48,8 @@ check_valid(void)
 			return nk.ini->boot_vfd[0] ? true : false;
 		case ZEMU_BOOT_ARM_PXE:
 			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
+		case ZEMU_BOOT_ARM_LINUX:
+			return nk.ini->boot_linux[0] ? true : false;
 		}
 		break;
 	}

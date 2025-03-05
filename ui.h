@@ -19,6 +19,10 @@
 	L"Floppy Image (img)\0*.IMG\0" \
 	 "All Files\0*.*\0"
 
+#define FILTER_DTB \
+	L"Device Tree Binary (dtb)\0*.DTB\0" \
+	 "All Files\0*.*\0"
+
 #define FILTER_ALL \
 	L"All Files\0*.*\0"
 

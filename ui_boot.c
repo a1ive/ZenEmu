@@ -45,6 +45,13 @@ ui_qemu_boot(struct nk_context* ctx)
 		nk_widget_disable_begin(ctx);
 		UI_OPTION(ZTXT(ZTXT_PXE), nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_PXE);
 		nk_widget_disable_end(ctx);
+		nk_spacer(ctx);
+		if (nk.ini->qemu_fw_x86 != ZEMU_FW_X86_BIOS)
+			nk_widget_disable_begin(ctx);
+		UI_OPTION(ZTXT(ZTXT_LINUX_KERNEL), nk.ini->qemu_boot_x86, ZEMU_BOOT_X86_LINUX);
+		if (nk.ini->qemu_fw_x86 != ZEMU_FW_X86_BIOS)
+			nk_widget_disable_end(ctx);
+		nk_spacer(ctx);
 		break;
 	}
 	case ZEMU_QEMU_ARCH_AA64:
@@ -60,6 +67,9 @@ ui_qemu_boot(struct nk_context* ctx)
 		UI_OPTION(ZTXT(ZTXT_FLOPPY_IMAGE), nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_VFD);
 		UI_OPTION(ZTXT(ZTXT_PXE), nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_PXE);
 		nk_widget_disable_end(ctx);
+		nk_spacer(ctx);
+		UI_OPTION(ZTXT(ZTXT_LINUX_KERNEL), nk.ini->qemu_boot_arm, ZEMU_BOOT_ARM_LINUX);
+		nk_spacer(ctx);
 		break;
 	}
 	default:

@@ -152,6 +152,15 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
 			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
 			break;
+		case ZEMU_BOOT_X86_LINUX:
+			append_cmdline(L"-kernel \"%s\" ", utf8_to_ucs2(nk.ini->boot_linux));
+			if (nk.ini->boot_initrd[0])
+				append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_initrd));
+			if (nk.ini->boot_kcmd[0])
+				append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
+			if (nk.ini->boot_dtb[0])
+				append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
+			break;
 		}
 	}
 	break;
@@ -177,6 +186,14 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
 			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
 			break;
+		case ZEMU_BOOT_ARM_LINUX:
+			append_cmdline(L"-kernel \"%s\" ", utf8_to_ucs2(nk.ini->boot_linux));
+			if (nk.ini->boot_initrd[0])
+				append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_initrd));
+			if (nk.ini->boot_kcmd[0])
+				append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
+			if (nk.ini->boot_dtb[0])
+				append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
 		}
 	}
 	break;

@@ -48,8 +48,8 @@ typedef enum _ZEMU_BOOT_X86
 	ZEMU_BOOT_X86_CD,
 	ZEMU_BOOT_X86_VFD,
 	ZEMU_BOOT_X86_PXE,
-#if 0
 	ZEMU_BOOT_X86_LINUX,
+#if 0
 	ZEMU_BOOT_X86_WIM,
 #endif
 	ZEMU_BOOT_X86_MAX,
@@ -63,14 +63,16 @@ typedef enum _ZEMU_BOOT_ARM
 	ZEMU_BOOT_ARM_CD,
 	ZEMU_BOOT_ARM_VFD,
 	ZEMU_BOOT_ARM_PXE,
-#if 0
 	ZEMU_BOOT_ARM_LINUX,
+#if 0
 	ZEMU_BOOT_ARM_WIM,
 #endif
 	ZEMU_BOOT_ARM_MAX,
 } ZEMU_BOOT_ARM;
 
 #define OUTBUF_SZ 4096
+
+#define KCMD_SZ 4096
 
 struct _PHY_DRIVE_INFO;
 
@@ -99,6 +101,11 @@ typedef struct _ZEMU_INI_DATA
 	struct _PHY_DRIVE_INFO* cd_info;
 	DWORD cd_count;
 	DWORD boot_cd;
+
+	CHAR boot_linux[MAX_PATH];
+	CHAR boot_initrd[MAX_PATH];
+	CHAR boot_kcmd[KCMD_SZ];
+	CHAR boot_dtb[MAX_PATH];
 
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];

@@ -107,6 +107,26 @@ obj_pxe(struct nk_context* ctx)
 }
 
 static void
+obj_linux(struct nk_context* ctx)
+{
+	nk_label(ctx, ZTXT(ZTXT_LINUX_KERNEL), NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_linux, MAX_PATH, NULL);
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+		ui_open_file(nk.ini->boot_linux, MAX_PATH, FILTER_ALL);
+	nk_label(ctx, ZTXT(ZTXT_INITRD), NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_initrd, MAX_PATH, NULL);
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+		ui_open_file(nk.ini->boot_initrd, MAX_PATH, FILTER_ALL);
+	nk_label(ctx, ZTXT(ZTXT_CMDLINE), NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_kcmd, KCMD_SZ, NULL);
+	nk_spacer(ctx);
+	nk_label(ctx, ZTXT(ZTXT_DTB), NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dtb, MAX_PATH, NULL);
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+		ui_open_file(nk.ini->boot_dtb, MAX_PATH, FILTER_DTB);
+}
+
+static void
 ui_qemu_obj_x86(struct nk_context* ctx)
 {	
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
@@ -129,6 +149,9 @@ ui_qemu_obj_x86(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_X86_PXE:
 		obj_pxe(ctx);
+		break;
+	case ZEMU_BOOT_X86_LINUX:
+		obj_linux(ctx);
 		break;
 	default:
 		nk_spacer(ctx);
@@ -160,6 +183,9 @@ ui_qemu_obj_arm(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_ARM_PXE:
 		obj_pxe(ctx);
+		break;
+	case ZEMU_BOOT_ARM_LINUX:
+		obj_linux(ctx);
 		break;
 	default:
 		nk_spacer(ctx);
