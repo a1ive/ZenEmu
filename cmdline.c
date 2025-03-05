@@ -142,6 +142,9 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
 				nk.ini->cd_info[nk.ini->boot_cd].index);
 			break;
+		case ZEMU_BOOT_X86_VFD:
+			append_cmdline(L"-fda \"%s\" -boot a ", utf8_to_ucs2(nk.ini->boot_vfd));
+			break;
 		case ZEMU_BOOT_X86_PXE:
 			append_cmdline(L"-net nic,model=e1000 -net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
 			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));

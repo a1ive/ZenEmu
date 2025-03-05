@@ -15,6 +15,10 @@
 #define FILTER_ISO \
 	L"ISO\0*.ISO\0All Files\0*.*\0"
 
+#define FILTER_VFD \
+	L"Floppy Image (img)\0*.IMG\0" \
+	 "All Files\0*.*\0"
+
 #define FILTER_ALL \
 	L"All Files\0*.*\0"
 

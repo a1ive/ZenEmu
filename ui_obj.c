@@ -88,6 +88,15 @@ obj_cd(struct nk_context* ctx)
 }
 
 static void
+obj_vfd(struct nk_context* ctx)
+{
+	nk_label(ctx, "Floppy Image", NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vfd, MAX_PATH, NULL);
+	if (nk_button_label(ctx, ".."))
+		ui_open_file(nk.ini->boot_vfd, MAX_PATH, FILTER_VFD);
+}
+
+static void
 obj_pxe(struct nk_context* ctx)
 {
 	nk_label(ctx, "TFTP Folder", NK_TEXT_LEFT);
@@ -119,6 +128,9 @@ ui_qemu_obj_x86(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_X86_CD:
 		obj_cd(ctx);
+		break;
+	case ZEMU_BOOT_X86_VFD:
+		obj_vfd(ctx);
 		break;
 	case ZEMU_BOOT_X86_PXE:
 		obj_pxe(ctx);
