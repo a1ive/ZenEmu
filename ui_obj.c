@@ -35,10 +35,6 @@ obj_iso(struct nk_context* ctx)
 		ui_open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
 }
 
-DWORD
-nk_disk_list(struct nk_context* ctx, PHY_DRIVE_INFO* items, DWORD count,
-	DWORD selected, int item_height, float width);
-
 static void
 obj_hd(struct nk_context* ctx)
 {
