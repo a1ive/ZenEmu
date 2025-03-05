@@ -32,6 +32,9 @@ nk_disk_list(struct nk_context* ctx, struct _PHY_DRIVE_INFO* items, DWORD count,
 void
 nk_image_label(struct nk_context* ctx, struct nk_image img, const char* str);
 
+void
+nk_space_label(struct nk_context* ctx, const char* str);
+
 #define NK_COLOR_YELLOW     {0xFF, 0xEA, 0x00, 0xff}
 #define NK_COLOR_RED        {0xFF, 0x17, 0x44, 0xff}
 #define NK_COLOR_GREEN      {0x00, 0xE6, 0x76, 0xff}

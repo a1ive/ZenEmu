@@ -21,7 +21,7 @@ ui_qemu_obj_save(void)
 static void
 obj_vhd(struct nk_context* ctx)
 {
-	nk_label(ctx, ZTXT(ZTXT_DISK_IMAGE), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_DISK_IMAGE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
@@ -30,7 +30,7 @@ obj_vhd(struct nk_context* ctx)
 static void
 obj_iso(struct nk_context* ctx)
 {
-	nk_label(ctx, ZTXT(ZTXT_ISO_IMAGE), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_ISO_IMAGE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
@@ -45,7 +45,7 @@ obj_hd(struct nk_context* ctx)
 	if (nk.ini->boot_hd >= nk.ini->hd_count)
 		nk.ini->boot_hd = 0;
 
-	nk_label(ctx, ZTXT(ZTXT_PHYSICAL_DISK), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_PHYSICAL_DISK));
 
 	if (nk.ini->hd_count == 0)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
@@ -69,7 +69,7 @@ obj_cd(struct nk_context* ctx)
 	if (nk.ini->boot_cd >= nk.ini->cd_count)
 		nk.ini->boot_cd = 0;
 
-	nk_label(ctx, ZTXT(ZTXT_CD_ROM), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_CD_ROM));
 
 	if (nk.ini->cd_count == 0)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
@@ -87,7 +87,7 @@ obj_cd(struct nk_context* ctx)
 static void
 obj_vfd(struct nk_context* ctx)
 {
-	nk_label(ctx, ZTXT(ZTXT_FLOPPY_IMAGE), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_FLOPPY_IMAGE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vfd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vfd, MAX_PATH, FILTER_VFD);
@@ -96,11 +96,11 @@ obj_vfd(struct nk_context* ctx)
 static void
 obj_pxe(struct nk_context* ctx)
 {
-	nk_label(ctx, ZTXT(ZTXT_TFTP_FOLDER), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_TFTP_FOLDER));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_tftp, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->net_tftp, MAX_PATH);
-	nk_label(ctx, ZTXT(ZTXT_BOOT_FILE), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_BOOT_FILE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_file, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->net_file, MAX_PATH, FILTER_ALL);
@@ -109,18 +109,18 @@ obj_pxe(struct nk_context* ctx)
 static void
 obj_linux(struct nk_context* ctx)
 {
-	nk_label(ctx, ZTXT(ZTXT_LINUX_KERNEL), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_LINUX_KERNEL));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_linux, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_linux, MAX_PATH, FILTER_ALL);
-	nk_label(ctx, ZTXT(ZTXT_INITRD), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_INITRD));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_initrd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_initrd, MAX_PATH, FILTER_ALL);
-	nk_label(ctx, ZTXT(ZTXT_CMDLINE), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_CMDLINE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_kcmd, KCMD_SZ, NULL);
 	nk_spacer(ctx);
-	nk_label(ctx, ZTXT(ZTXT_DTB), NK_TEXT_LEFT);
+	nk_space_label(ctx, ZTXT(ZTXT_DTB));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dtb, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_dtb, MAX_PATH, FILTER_DTB);
