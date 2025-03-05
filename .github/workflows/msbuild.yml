@@ -1,0 +1,66 @@
+name: MSBuild
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: .
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Run git checkout
+      uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: |
+        msbuild /m /p:Configuration=Release /p:platform=x64 ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Copy files
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: |
+        md zemu
+        move x64\Release\zemu.exe zemu\
+        move firmware\bios.bin zemu\
+        move firmware\X64_EFI.fd zemu\
+        move firmware\IA32_EFI.fd zemu\
+        move firmware\AA64_EFI.fd zemu\
+
+    - name: Create ZIP
+      uses: thedoctor0/zip-release@master
+      with:
+        type: 'zip'
+        filename: 'zemu.zip'
+        directory: '.'
+        path: 'zemu'
+
+    - name: Delete old release
+      continue-on-error: true
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: |
+        gh release delete latest --cleanup-tag --yes
+      env:
+        GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+    - name: Release
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: |
+        gh release create latest zemu.zip -t "Development Build" -p
+      env:
+        GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
