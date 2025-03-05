@@ -3,6 +3,7 @@
 #include "nkctx.h"
 #include "ini.h"
 #include "ui.h"
+#include "gettext.h"
 
 static char static_buf_mem[32];
 
@@ -24,9 +25,9 @@ ui_qemu_mem(struct nk_context* ctx)
 {
 	char buf[48];
 	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_image_label(ctx, GET_PNG(IDR_PNG_MEMORY), "Memory");
+	nk_image_label(ctx, GET_PNG(IDR_PNG_MEMORY), ZTXT(ZTXT_MEMORY));
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.3f, 0.1f, 0.4f });
-	nk_label(ctx, "Size", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_SIZE), NK_TEXT_LEFT);
 	if (nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, static_buf_mem, 32, nk_filter_decimal)
 		== NK_EDIT_COMMITED)
 		nk.ini->qemu_mem_mb = (int)strtol(static_buf_mem, NULL, 10);

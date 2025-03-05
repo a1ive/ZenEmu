@@ -45,6 +45,9 @@
     <ClInclude Include="dev.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="gettext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -87,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="open_dialog.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="gettext.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

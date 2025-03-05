@@ -3,6 +3,7 @@
 #include "nkctx.h"
 #include "ini.h"
 #include "ui.h"
+#include "gettext.h"
 
 static char static_buf_cpu[32];
 
@@ -27,15 +28,15 @@ void
 ui_qemu_cpu(struct nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_image_label(ctx, GET_PNG(IDR_PNG_CPU), "CPU");
+	nk_image_label(ctx, GET_PNG(IDR_PNG_CPU), ZTXT(ZTXT_CPU));
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.2f, 0.6f });
-	nk_label(ctx, "SMP", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_SMP), NK_TEXT_LEFT);
 	if (nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, static_buf_cpu, 32, nk_filter_decimal)
 		== NK_EDIT_COMMITED)
 		nk.ini->qemu_cpu_num = (int) strtol(static_buf_cpu, NULL, 10);
 	nk_spacer(ctx);
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.3f, 0.5f });
-	nk_label(ctx, "Name", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_NAME), NK_TEXT_LEFT);
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:

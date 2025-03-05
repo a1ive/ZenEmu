@@ -4,6 +4,7 @@
 #include "ini.h"
 #include "ui.h"
 #include "dev.h"
+#include "gettext.h"
 
 void
 ui_qemu_obj_init(void)
@@ -20,7 +21,7 @@ ui_qemu_obj_save(void)
 static void
 obj_vhd(struct nk_context* ctx)
 {
-	nk_label(ctx, "Disk Image", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_DISK_IMAGE), NK_TEXT_LEFT);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
@@ -29,7 +30,7 @@ obj_vhd(struct nk_context* ctx)
 static void
 obj_iso(struct nk_context* ctx)
 {
-	nk_label(ctx, "ISO Image", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_ISO_IMAGE), NK_TEXT_LEFT);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
@@ -44,10 +45,10 @@ obj_hd(struct nk_context* ctx)
 	if (nk.ini->boot_hd >= nk.ini->hd_count)
 		nk.ini->boot_hd = 0;
 
-	nk_label(ctx, "Physical Disk", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_PHYSICAL_DISK), NK_TEXT_LEFT);
 
 	if (nk.ini->hd_count == 0)
-		nk_label(ctx, "NO DISK", NK_TEXT_CENTERED);
+		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
 	else
 		nk.ini->boot_hd = nk_disk_list(ctx, nk.ini->hd_info, nk.ini->hd_count, nk.ini->boot_hd,
 			(int)nk.title_height, 0.7f * nk.width);
@@ -68,10 +69,10 @@ obj_cd(struct nk_context* ctx)
 	if (nk.ini->boot_cd >= nk.ini->cd_count)
 		nk.ini->boot_cd = 0;
 
-	nk_label(ctx, "CD-ROM", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_CD_ROM), NK_TEXT_LEFT);
 
 	if (nk.ini->cd_count == 0)
-		nk_label(ctx, "NO DISK", NK_TEXT_CENTERED);
+		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
 	else
 		nk.ini->boot_cd = nk_disk_list(ctx, nk.ini->cd_info, nk.ini->cd_count, nk.ini->boot_cd,
 			(int)nk.title_height, 0.7f * nk.width);
@@ -86,7 +87,7 @@ obj_cd(struct nk_context* ctx)
 static void
 obj_vfd(struct nk_context* ctx)
 {
-	nk_label(ctx, "Floppy Image", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_FLOPPY_IMAGE), NK_TEXT_LEFT);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vfd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vfd, MAX_PATH, FILTER_VFD);
@@ -95,11 +96,11 @@ obj_vfd(struct nk_context* ctx)
 static void
 obj_pxe(struct nk_context* ctx)
 {
-	nk_label(ctx, "TFTP Folder", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_TFTP_FOLDER), NK_TEXT_LEFT);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_tftp, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->net_tftp, MAX_PATH);
-	nk_label(ctx, "Boot File", NK_TEXT_LEFT);
+	nk_label(ctx, ZTXT(ZTXT_BOOT_FILE), NK_TEXT_LEFT);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_file, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->net_file, MAX_PATH, FILTER_ALL);
@@ -139,8 +140,6 @@ ui_qemu_obj_x86(struct nk_context* ctx)
 static void
 ui_qemu_obj_arm(struct nk_context* ctx)
 {
-	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_label(ctx, "Boot Device", NK_TEXT_LEFT);
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
 	switch (nk.ini->qemu_boot_arm)
 	{

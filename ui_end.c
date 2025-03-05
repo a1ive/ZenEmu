@@ -4,6 +4,7 @@
 #include "ini.h"
 #include "ui.h"
 #include "cmdline.h"
+#include "gettext.h"
 
 #include <stdbool.h>
 #include <shellapi.h>
@@ -168,12 +169,12 @@ ui_qemu_end(struct nk_context* ctx)
 {
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.2f, 0.3f, 0.3f });
 	
-	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_COPY), "Copy", NK_TEXT_RIGHT))
+	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_COPY), ZTXT(ZTXT_COPY), NK_TEXT_RIGHT))
 		copy_cmdline();
-	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_FLOPPY), "Save", NK_TEXT_RIGHT))
+	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_FLOPPY), ZTXT(ZTXT_SAVE), NK_TEXT_RIGHT))
 		save_ini();
 	nk_spacer(ctx);
-	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_START), "Start", NK_TEXT_RIGHT))
+	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_START), ZTXT(ZTXT_START), NK_TEXT_RIGHT))
 	{
 		reset_log();
 		if (check_valid())
@@ -183,7 +184,7 @@ ui_qemu_end(struct nk_context* ctx)
 	}
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 2, (float[2]) { 1.0f - nk.sq, nk.sq });
-	nk_image_label(ctx, GET_PNG(IDR_PNG_INFO), "Logs");
+	nk_image_label(ctx, GET_PNG(IDR_PNG_INFO), ZTXT(ZTXT_LOGS));
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 		reset_log();
 	nk_layout_row_dynamic(ctx, 300, 1);

@@ -187,6 +187,7 @@
   <ItemGroup>
     <ClInclude Include="cmdline.h" />
     <ClInclude Include="dev.h" />
+    <ClInclude Include="gettext.h" />
     <ClInclude Include="ini.h" />
     <ClInclude Include="nkctx.h" />
     <ClInclude Include="nuklear.h" />
@@ -198,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="cmdline.c" />
     <ClCompile Include="dev.c" />
+    <ClCompile Include="gettext.c" />
     <ClCompile Include="ini.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="nkctx.c" />
