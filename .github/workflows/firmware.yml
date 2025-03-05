@@ -1,18 +1,19 @@
-name: Build FIRMWARE
+name: Build Firmware
 
 on:
   workflow_dispatch:
 
 jobs:
   ovmf:
-    # https://github.com/osdev0/edk2-ovmf-nightly
-    name: FIRMWARE Build
+    name: Firmware Build
     runs-on: ubuntu-latest
-    container: archlinux:latest
 
     steps:
       - name: Install dependencies
-        run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel git wget python acpica nasm
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential git wget python3 acpica-tools nasm iasl uuid-dev
+          sudo apt install -y gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,28 +21,24 @@ jobs:
       - name: Git config
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Rebuild
+      - name: Build SeaBIOS
+        run: |
+          git clone --depth 1 https://github.com/qemu/seabios.git
+          mkdir -p output
+          make -C seabios
+          cp seabios/out/bios.bin output/bios.bin
+
+      - name: Build OVMF
         run: |
           set -ex
 
-          GCC_VERSION=14.2.0
-
-          for i in aarch64-linux arm-linux-gnueabi loongarch64-linux; do
-              wget https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/$GCC_VERSION/x86_64-gcc-$GCC_VERSION-nolibc-$i-linux.tar.gz
-              tar -xf x86_64-gcc-$GCC_VERSION-nolibc-$i.tar.gz
-              export PATH="$(pwd -P)"/gcc-$GCC_VERSION-nolibc/$i/bin:"$PATH"
-          done
-
-          git clone --recursive --depth=1 https://github.com/tianocore/edk2.git
+          git clone --recursive https://github.com/tianocore/edk2.git
           ( cd edk2 && git checkout edk2-stable202502 )
-
-          # ( cd edk2 && patch -p1 <../ovmf.patch )
 
           export PACKAGES_PATH="$(pwd -P)"/edk2
 
           export GCC5_ARM_PREFIX=arm-linux-gnueabi-
-          export GCC5_AARCH64_PREFIX=aarch64-linux-
-          export GCC5_LOONGARCH64_PREFIX=loongarch64-linux-
+          export GCC5_AARCH64_PREFIX=aarch64-linux-gnu-
 
           set +e
           . edk2/edksetup.sh
@@ -51,7 +48,6 @@ jobs:
           build -b RELEASE -t GCC5 -a ARM -p ArmVirtPkg/ArmVirtQemu.dsc
           build -b RELEASE -t GCC5 -a AARCH64 -p ArmVirtPkg/ArmVirtQemu.dsc
           build -b RELEASE -t GCC5 -a IA32 -p OvmfPkg/OvmfPkgIa32.dsc -D FD_SIZE_2MB
-          build -b RELEASE -t GCC5 -a LOONGARCH64 -p OvmfPkg/LoongArchVirt/LoongArchVirtQemu.dsc
           build -b RELEASE -t GCC5 -a X64 -p OvmfPkg/OvmfPkgX64.dsc -D FD_SIZE_2MB
 
           mkdir -p output
@@ -65,14 +61,11 @@ jobs:
           cp Build/OvmfIa32/RELEASE_GCC5/FV/OVMF_CODE.fd output/IA32_EFI.fd
           cp Build/OvmfIa32/RELEASE_GCC5/FV/OVMF_VARS.fd output/IA32_VARS.fd
 
-          cp Build/LoongArchVirtQemu/RELEASE_GCC5/FV/QEMU_EFI.fd  output/LA64_EFI.fd
-          cp Build/LoongArchVirtQemu/RELEASE_GCC5/FV/QEMU_VARS.fd output/LA64_VARS.fd
-
           cp Build/OvmfX64/RELEASE_GCC5/FV/OVMF_CODE.fd output/X64_EFI.fd
           cp Build/OvmfX64/RELEASE_GCC5/FV/OVMF_VARS.fd output/X64_VARS.fd
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: FIRMWARE
+          name: firmware
           path: output/
