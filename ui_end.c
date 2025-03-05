@@ -49,6 +49,13 @@ check_valid(void)
 	return false;
 }
 
+static inline void
+reset_log(void)
+{
+	ZeroMemory(nk.ini->output, OUTBUF_SZ);
+	nk.ini->output_offset = 0;
+}
+
 DWORD WINAPI
 read_pipe_thread(LPVOID lparam)
 {
@@ -61,10 +68,7 @@ read_pipe_thread(LPVOID lparam)
 		buffer[read_size] = '\0';
 
 		if (nk.ini->output_offset + read_size >= OUTBUF_SZ)
-		{
-			ZeroMemory(nk.ini->output, OUTBUF_SZ);
-			nk.ini->output_offset = 0;
-		}
+			reset_log();
 
 		memcpy(nk.ini->output + nk.ini->output_offset, buffer, read_size);
 		nk.ini->output_offset += read_size;
@@ -74,13 +78,6 @@ read_pipe_thread(LPVOID lparam)
 			nk.ini->output[OUTBUF_SZ - 1] = '\0';
 	}
 	return 0;
-}
-
-static inline void
-reset_log(void)
-{
-	ZeroMemory(nk.ini->output, OUTBUF_SZ);
-	nk.ini->output_offset = 0;
 }
 
 static void
@@ -117,8 +114,6 @@ run_qemu(void)
 {
 	reset_cmdline();
 	LPWSTR cmdline = get_cmdline();
-
-	reset_log();
 
 	SECURITY_ATTRIBUTES sa;
 	HANDLE child_out_r = NULL;
@@ -171,24 +166,26 @@ run_qemu(void)
 void
 ui_qemu_end(struct nk_context* ctx)
 {
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.1f, 0.1f, 0.1f, 0.4f, 0.3f });
-	if (nk_button_label(ctx, "Clear"))
-		reset_log();
-	if (nk_button_label(ctx, "Copy"))
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.2f, 0.3f, 0.3f });
+	
+	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_COPY), "Copy", NK_TEXT_RIGHT))
 		copy_cmdline();
-	if (nk_button_label(ctx, "Save"))
+	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_FLOPPY), "Save", NK_TEXT_RIGHT))
 		save_ini();
 	nk_spacer(ctx);
-	if (check_valid())
+	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_START), "Start", NK_TEXT_RIGHT))
 	{
-		if (nk_button_label(ctx, "Start"))
+		reset_log();
+		if (check_valid())
 			run_qemu();
+		else
+			strcpy_s(nk.ini->output, OUTBUF_SZ, "Missing arguments.");
 	}
-	else
-		nk_label(ctx, "Start", NK_TEXT_CENTERED);
 
-	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_label(ctx, "Logs", NK_TEXT_LEFT);
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 2, (float[2]) { 1.0f - nk.sq, nk.sq });
+	nk_image_label(ctx, GET_PNG(IDR_PNG_INFO), "Logs");
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
+		reset_log();
 	nk_layout_row_dynamic(ctx, 300, 1);
 	nk_label_wrap(ctx, nk.ini->output);
 }

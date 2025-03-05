@@ -215,6 +215,23 @@
     <ResourceCompile Include="nuklear.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="icons\cd.png" />
+    <Image Include="icons\copy.png" />
+    <Image Include="icons\cpu.png" />
+    <Image Include="icons\dir.png" />
+    <Image Include="icons\disk.png" />
+    <Image Include="icons\edit.png" />
+    <Image Include="icons\eth.png" />
+    <Image Include="icons\firmware.png" />
+    <Image Include="icons\floppy.png" />
+    <Image Include="icons\info.png" />
+    <Image Include="icons\memory.png" />
+    <Image Include="icons\network.png" />
+    <Image Include="icons\pc.png" />
+    <Image Include="icons\pci.png" />
+    <Image Include="icons\qemu.png" />
+    <Image Include="icons\refresh.png" />
+    <Image Include="icons\start.png" />
     <Image Include="nuklear.ico" />
   </ItemGroup>
   <ItemGroup>

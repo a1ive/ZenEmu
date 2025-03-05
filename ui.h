@@ -28,6 +28,8 @@ ui_open_file(CHAR* path, size_t len, LPCWSTR filter);
 void
 ui_open_dir(CHAR* path, size_t len);
 
+#define GET_PNG(x) nk.image[x - IDR_PNG_MIN]
+
 #define UI_OPTION(label, var, val) \
 	var = nk_option_label(ctx, (label), var == val) ? val : var
 

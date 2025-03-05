@@ -26,7 +26,7 @@ void
 ui_qemu_boot(struct nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_label(ctx, "Boot Target", NK_TEXT_LEFT);
+	nk_image_label(ctx, GET_PNG(IDR_PNG_PC), "Boot Device");
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.4f, 0.4f });
 	
 	switch (nk.ini->qemu_arch)

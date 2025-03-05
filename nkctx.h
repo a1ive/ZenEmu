@@ -8,6 +8,8 @@
 #include <limits.h>
 #include <time.h>
 
+#include "resource.h"
+
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -54,6 +56,9 @@ typedef struct _NK_GUI_CTX
 	unsigned height;
 	unsigned font_size;
 	float title_height;
+	float sq;
+
+	struct nk_image image[IDR_PNG_MAX - IDR_PNG_MIN];
 
 	MEMORYSTATUSEX statex;
 

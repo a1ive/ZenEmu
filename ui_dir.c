@@ -23,10 +23,12 @@ ui_qemu_dir_save(void)
 void
 ui_qemu_dir(struct nk_context* ctx)
 {
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.7f, 0.1f });
-	nk_label(ctx, "QEMU Path", NK_TEXT_LEFT);
+	nk_layout_row_dynamic(ctx, 0, 1);
+	nk_image_label(ctx, GET_PNG(IDR_PNG_QEMU), "QEMU");
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
+	nk_label(ctx, "Path", NK_TEXT_LEFT);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->qemu_dir, MAX_PATH, NULL);
-	if (nk_button_label(ctx, ".."))
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->qemu_dir, MAX_PATH);
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.4f, 0.4f });

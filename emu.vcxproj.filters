@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="资源文件\icons">
+      <UniqueIdentifier>{b4a51450-6ef8-481d-a95b-51012e2e024e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nuklear.h">
@@ -95,6 +98,57 @@
   <ItemGroup>
     <Image Include="nuklear.ico">
       <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="icons\cd.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\copy.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\cpu.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\dir.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\disk.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\edit.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\eth.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\firmware.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\floppy.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\info.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\memory.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\network.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\pc.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\pci.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\qemu.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\refresh.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\start.png">
+      <Filter>资源文件\icons</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include "ui.h"
 #include "dev.h"
 #include "resource.h"
+#include "version.h"
 
 #include <windowsx.h>
 #include <dbt.h>
@@ -115,6 +116,26 @@ set_style(struct nk_context* ctx)
 		+ ctx->style.window.header.label_padding.y;
 }
 
+static struct nk_image
+load_png(WORD id)
+{
+	HRSRC res = FindResourceW(NULL, MAKEINTRESOURCEW(id), RT_RCDATA);
+	if (!res)
+		goto fail;
+	HGLOBAL mem = LoadResource(NULL, res);
+	if (!mem)
+		goto fail;
+	DWORD size = SizeofResource(NULL, res);
+	if (!size)
+		goto fail;
+	void* data = LockResource(mem);
+	if (!data)
+		goto fail;
+	return nk_gdip_load_image_from_memory(data, size);
+fail:
+	return nk_image_id(0);
+}
+
 void
 nkctx_init(HINSTANCE inst,
 	int x, int y, unsigned width, unsigned height,
@@ -151,6 +172,9 @@ nkctx_init(HINSTANCE inst,
 	nk.font = nk_gdip_load_font(font_name, nk.font_size);
 	nk_gdip_set_font(nk.font);
 
+	for (WORD i = 0; i < sizeof(nk.image) / sizeof(nk.image[0]); i++)
+		nk.image[i] = load_png(i + IDR_PNG_MIN);
+
 	set_style(nk.ctx);
 
 	SetTimer(nk.wnd, IDT_TIMER_1S, 1000, (TIMERPROC)NULL);
@@ -167,7 +191,9 @@ nkctx_main_window(struct nk_context* ctx, float width, float height)
 		nkctx_fini(0);
 	}
 	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_spacer(ctx);
+	struct nk_rect rect = nk_layout_widget_bounds(ctx);
+	nk.sq = rect.h / rect.w;
+	nk_label(ctx, "v" NKGUI_VERSION_STR " " NKGUI_COPYRIGHT, NK_TEXT_CENTERED);
 
 	ui_qemu_dir(ctx);
 	ui_qemu_cpu(ctx);
@@ -241,6 +267,8 @@ nkctx_fini(int code)
 {
 	KillTimer(nk.wnd, IDT_TIMER_1S);
 	nk_gdipfont_del(nk.font);
+	for (WORD i = 0; i < sizeof(nk.image) / sizeof(nk.image[0]); i++)
+		nk_gdip_image_free(nk.image[i]);
 	nk_gdip_shutdown();
 	UnregisterClassW(nk.wc.lpszClassName, nk.wc.hInstance);
 	OleUninitialize();
