@@ -23,6 +23,10 @@
 	L"Device Tree Binary (dtb)\0*.DTB\0" \
 	 "All Files\0*.*\0"
 
+#define FILTER_EFI \
+	L"EFI Application (efi)\0*.EFI\0" \
+	 "All Files\0*.*\0"
+
 #define FILTER_ALL \
 	L"All Files\0*.*\0"
 
@@ -36,6 +40,9 @@ ui_open_dir(CHAR* path, size_t len);
 
 #define UI_OPTION(label, var, val) \
 	var = nk_option_label(ctx, (label), var == val) ? val : var
+
+#define IS_BIOS \
+	(nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64 && nk.ini->qemu_fw_x86 == ZEMU_FW_X86_BIOS)
 
 void
 ui_qemu_dir_init(void);

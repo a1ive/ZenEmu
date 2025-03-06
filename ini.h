@@ -106,6 +106,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR boot_initrd[MAX_PATH];
 	CHAR boot_kcmd[KCMD_SZ];
 	CHAR boot_dtb[MAX_PATH];
+	CHAR boot_shim[MAX_PATH];
 
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];

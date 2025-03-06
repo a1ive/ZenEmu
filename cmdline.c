@@ -160,6 +160,8 @@ append_qemu_bootdev(void)
 				append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
 			if (nk.ini->boot_dtb[0])
 				append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
+			if (nk.ini->boot_shim[0])
+				append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
 			break;
 		}
 	}
@@ -194,6 +196,8 @@ append_qemu_bootdev(void)
 				append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
 			if (nk.ini->boot_dtb[0])
 				append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
+			if (nk.ini->boot_shim[0])
+				append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
 		}
 	}
 	break;

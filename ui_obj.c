@@ -124,6 +124,13 @@ obj_linux(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dtb, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_dtb, MAX_PATH, FILTER_DTB);
+	if (!IS_BIOS)
+	{
+		nk_space_label(ctx, ZTXT(ZTXT_SHIM_EFI));
+		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_shim, MAX_PATH, NULL);
+		if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+			ui_open_file(nk.ini->boot_shim, MAX_PATH, FILTER_EFI);
+	}
 }
 
 static void
