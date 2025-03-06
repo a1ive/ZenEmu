@@ -13,7 +13,7 @@ ui_qemu_cpu_init(void)
 	nk.ini->qemu_cpu_num = get_ini_num(L"Cpu", L"Smp", 4);
 	snprintf(static_buf_cpu, 32, "%d", nk.ini->qemu_cpu_num);
 	strcpy_s(nk.ini->qemu_cpu_x86, 32, get_ini_value(L"Cpu", L"X86", L"max"));
-	strcpy_s(nk.ini->qemu_cpu_arm, 32, get_ini_value(L"Cpu", L"Arm", L"cortex-a76"));
+	strcpy_s(nk.ini->qemu_cpu_arm, 32, get_ini_value(L"Cpu", L"Arm", L"cortex-a72"));
 }
 
 void

@@ -101,19 +101,19 @@ static void
 append_qemu_hw(void)
 {
 	LPCWSTR cpu = L"";
-	LPCWSTR accel = L"-msg timestamp=off -accel tcg,thread=multi";
-	LPCWSTR device = L"-device nec-usb-xhci";
+	LPCWSTR accel = L"-accel tcg,thread=multi";
+	LPCWSTR device = L"-device usb-ehci -device usb-kbd -device usb-tablet";
 	LPCWSTR nic = L"-nic user,model=virtio-net-pci";
 	LPCWSTR extra = L"";
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
 		cpu = utf8_to_ucs2(nk.ini->qemu_cpu_x86);
-		extra = L"-M pc";
+		extra = L"-M pc,kernel-irqchip=off -device vmware-svga";
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
 		cpu = utf8_to_ucs2(nk.ini->qemu_cpu_arm);
-		extra = L"-M virt,virtualization=true -device ramfb -device usb-kbd -device usb-tablet";
+		extra = L"-M virt,virtualization=true,kernel-irqchip=off -device ramfb";
 		break;
 	}
 	if (cpu[0] == '\0')
