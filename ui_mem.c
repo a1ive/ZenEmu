@@ -29,7 +29,7 @@ ui_qemu_mem(struct nk_context* ctx)
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.3f, 0.1f, 0.4f });
 	nk_space_label(ctx, ZTXT(ZTXT_SIZE));
 	if (nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, static_buf_mem, 32, nk_filter_decimal)
-		== NK_EDIT_COMMITED)
+		== NK_EDIT_ACTIVE)
 		nk.ini->qemu_mem_mb = (int)strtol(static_buf_mem, NULL, 10);
 	nk_label(ctx, "MB", NK_TEXT_LEFT);
 	strcpy_s(buf, 48, get_human_size(nk.statex.ullAvailPhys, human_units, 1024));
