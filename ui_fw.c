@@ -9,10 +9,12 @@ void
 ui_qemu_fw_init(void)
 {
 	nk.ini->qemu_fw_x86 = get_ini_num(L"Firmware", L"X86", ZEMU_FW_X64_EFI);
-	if (nk.ini->qemu_fw_x86 >= ZEMU_FW_X86_MAX)
+	if (nk.ini->qemu_fw_x86 <= ZEMU_FW_X86_MIN ||
+		nk.ini->qemu_fw_x86 >= ZEMU_FW_X86_MAX)
 		nk.ini->qemu_fw_x86 = ZEMU_FW_X64_EFI;
 	nk.ini->qemu_fw_arm = get_ini_num(L"Firmware", L"Arm", ZEMU_FW_AA64_EFI);
-	if (nk.ini->qemu_fw_arm >= ZEMU_FW_ARM_MAX)
+	if (nk.ini->qemu_fw_arm <= ZEMU_FW_ARM_MIN ||
+		nk.ini->qemu_fw_arm >= ZEMU_FW_ARM_MAX)
 		nk.ini->qemu_fw_arm = ZEMU_FW_AA64_EFI;
 }
 

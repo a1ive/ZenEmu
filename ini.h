@@ -4,6 +4,7 @@
 
 #define VC_EXTRALEAN
 #include <windows.h>
+#include <stdbool.h>
 
 #define CONV_BUFSZ 65535
 #define CONV_BUFSZW (CONV_BUFSZ / sizeof(WCHAR))
@@ -25,53 +26,35 @@ typedef enum _ZEMU_QEMU_ARCH
 	ZEMU_QEMU_ARCH_MAX,
 } ZEMU_QEMU_ARCH;
 
-typedef enum _ZEMU_FW_X86
+typedef enum _ZEMU_FW
 {
-	ZEMU_FW_X86_BIOS = 0,
-	ZEMU_FW_X86_EFI,
+	ZEMU_FW_X86_MIN = 0,
 	ZEMU_FW_X64_EFI,
+	ZEMU_FW_X86_BIOS,
+	ZEMU_FW_X86_EFI,
 	ZEMU_FW_X86_MAX,
-} ZEMU_FW_X86;
 
-typedef enum _ZEMU_FW_ARM
-{
-	ZEMU_FW_AA64_EFI = 0,
+	ZEMU_FW_ARM_MIN = 10,
+	ZEMU_FW_AA64_EFI,
 	ZEMU_FW_ARM32_EFI,
 	ZEMU_FW_ARM_MAX,
-} ZEMU_FW_ARM;
+} ZEMU_FW;
 
-typedef enum _ZEMU_BOOT_X86
+typedef enum _ZEMU_BOOT_TARGET
 {
-	ZEMU_BOOT_X86_VHD = 0,
-	ZEMU_BOOT_X86_ISO,
-	ZEMU_BOOT_X86_PD,
-	ZEMU_BOOT_X86_CD,
-	ZEMU_BOOT_X86_VFD,
-	ZEMU_BOOT_X86_PXE,
-	ZEMU_BOOT_X86_LINUX,
-#if 0
-	ZEMU_BOOT_X86_WIM,
-#endif
-	ZEMU_BOOT_X86_MAX,
-} ZEMU_BOOT_X86;
-
-typedef enum _ZEMU_BOOT_ARM
-{
-	ZEMU_BOOT_ARM_VHD = 0,
-	ZEMU_BOOT_ARM_ISO,
-	ZEMU_BOOT_ARM_PD,
-	ZEMU_BOOT_ARM_CD,
-	ZEMU_BOOT_ARM_VFD,
-	ZEMU_BOOT_ARM_PXE,
-	ZEMU_BOOT_ARM_LINUX,
-#if 0
-	ZEMU_BOOT_ARM_WIM,
-#endif
-	ZEMU_BOOT_ARM_MAX,
-} ZEMU_BOOT_ARM;
+	ZEMU_BOOT_VHD = 0,
+	ZEMU_BOOT_ISO,
+	ZEMU_BOOT_PD,
+	ZEMU_BOOT_CD,
+	ZEMU_BOOT_VFD,
+	ZEMU_BOOT_PXE,
+	ZEMU_BOOT_LINUX,
+	ZEMU_BOOT_MAX,
+} ZEMU_BOOT_TARGET;
 
 #define OUTBUF_SZ 4096
 
+#define MODEL_SZ 32
 #define KCMD_SZ 4096
 
 struct _PHY_DRIVE_INFO;
@@ -87,10 +70,10 @@ typedef struct _ZEMU_INI_DATA
 	char qemu_cpu_arm[32];
 	//int qemu_cpu_core;
 	int qemu_mem_mb;
-	ZEMU_FW_X86 qemu_fw_x86;
-	ZEMU_FW_ARM qemu_fw_arm;
-	ZEMU_BOOT_X86 qemu_boot_x86;
-	ZEMU_BOOT_ARM qemu_boot_arm;
+	ZEMU_FW qemu_fw_x86;
+	ZEMU_FW qemu_fw_arm;
+	ZEMU_BOOT_TARGET qemu_boot_x86;
+	ZEMU_BOOT_TARGET qemu_boot_arm;
 	CHAR boot_vhd[MAX_PATH];
 	CHAR boot_iso[MAX_PATH];
 	CHAR boot_vfd[MAX_PATH];

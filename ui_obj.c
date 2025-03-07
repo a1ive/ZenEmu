@@ -133,84 +133,48 @@ obj_linux(struct nk_context* ctx)
 	}
 }
 
-static void
-ui_qemu_obj_x86(struct nk_context* ctx)
-{	
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
-	switch (nk.ini->qemu_boot_x86)
-	{
-	case ZEMU_BOOT_X86_VHD:
-		obj_vhd(ctx);
-		break;
-	case ZEMU_BOOT_X86_ISO:
-		obj_iso(ctx);
-		break;
-	case ZEMU_BOOT_X86_PD:
-		obj_hd(ctx);
-		break;
-	case ZEMU_BOOT_X86_CD:
-		obj_cd(ctx);
-		break;
-	case ZEMU_BOOT_X86_VFD:
-		obj_vfd(ctx);
-		break;
-	case ZEMU_BOOT_X86_PXE:
-		obj_pxe(ctx);
-		break;
-	case ZEMU_BOOT_X86_LINUX:
-		obj_linux(ctx);
-		break;
-	default:
-		nk_spacer(ctx);
-		nk_spacer(ctx);
-		nk_spacer(ctx);
-	}
-}
-
-static void
-ui_qemu_obj_arm(struct nk_context* ctx)
-{
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
-	switch (nk.ini->qemu_boot_arm)
-	{
-	case ZEMU_BOOT_ARM_VHD:
-		obj_vhd(ctx);
-		break;
-	case ZEMU_BOOT_ARM_ISO:
-		obj_iso(ctx);
-		break;
-	case ZEMU_BOOT_ARM_PD:
-		obj_hd(ctx);
-		break;
-	case ZEMU_BOOT_ARM_CD:
-		obj_cd(ctx);
-		break;
-	case ZEMU_BOOT_ARM_VFD:
-		obj_vfd(ctx);
-		break;
-	case ZEMU_BOOT_ARM_PXE:
-		obj_pxe(ctx);
-		break;
-	case ZEMU_BOOT_ARM_LINUX:
-		obj_linux(ctx);
-		break;
-	default:
-		nk_spacer(ctx);
-		nk_spacer(ctx);
-		nk_spacer(ctx);
-	}
-}
-
 void
 ui_qemu_obj(struct nk_context* ctx)
 {
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
+	ZEMU_BOOT_TARGET target;
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
-		ui_qemu_obj_x86(ctx);
-		return;
+		target = nk.ini->qemu_boot_x86;
+		break;
 	case ZEMU_QEMU_ARCH_AA64:
-		ui_qemu_obj_arm(ctx);
-		return;
+		target = nk.ini->qemu_boot_arm;
+		break;
+	default:
+		target = ZEMU_BOOT_MAX;
+	}
+	switch (target)
+	{
+	case ZEMU_BOOT_VHD:
+		obj_vhd(ctx);
+		break;
+	case ZEMU_BOOT_ISO:
+		obj_iso(ctx);
+		break;
+	case ZEMU_BOOT_PD:
+		obj_hd(ctx);
+		break;
+	case ZEMU_BOOT_CD:
+		obj_cd(ctx);
+		break;
+	case ZEMU_BOOT_VFD:
+		obj_vfd(ctx);
+		break;
+	case ZEMU_BOOT_PXE:
+		obj_pxe(ctx);
+		break;
+	case ZEMU_BOOT_LINUX:
+		obj_linux(ctx);
+		break;
+	default:
+		nk_spacer(ctx);
+		nk_spacer(ctx);
+		nk_spacer(ctx);
 	}
 }

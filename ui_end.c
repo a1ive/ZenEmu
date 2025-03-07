@@ -12,46 +12,34 @@
 static bool
 check_valid(void)
 {
+	ZEMU_BOOT_TARGET target;
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
-		switch (nk.ini->qemu_boot_x86)
-		{
-		case ZEMU_BOOT_X86_VHD:
-			return nk.ini->boot_vhd[0] ? true : false;
-		case ZEMU_BOOT_X86_ISO:
-			return nk.ini->boot_iso[0] ? true : false;
-		case ZEMU_BOOT_X86_PD:
-			return nk.ini->hd_count ? true : false;
-		case ZEMU_BOOT_X86_CD:
-			return nk.ini->cd_count ? true : false;
-		case ZEMU_BOOT_X86_VFD:
-			return nk.ini->boot_vfd[0] ? true : false;
-		case ZEMU_BOOT_X86_PXE:
-			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
-		case ZEMU_BOOT_X86_LINUX:
-			return nk.ini->boot_linux[0] ? true : false;
-		}
+		target = nk.ini->qemu_boot_x86;
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
-		switch (nk.ini->qemu_boot_arm)
-		{
-		case ZEMU_BOOT_ARM_VHD:
-			return nk.ini->boot_vhd[0] ? true : false;
-		case ZEMU_BOOT_ARM_ISO:
-			return nk.ini->boot_iso[0] ? true : false;
-		case ZEMU_BOOT_ARM_PD:
-			return nk.ini->hd_count ? true : false;
-		case ZEMU_BOOT_ARM_CD:
-			return nk.ini->cd_count ? true : false;
-		case ZEMU_BOOT_ARM_VFD:
-			return nk.ini->boot_vfd[0] ? true : false;
-		case ZEMU_BOOT_ARM_PXE:
-			return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
-		case ZEMU_BOOT_ARM_LINUX:
-			return nk.ini->boot_linux[0] ? true : false;
-		}
+		target = nk.ini->qemu_boot_arm;
 		break;
+	default:
+		target = ZEMU_BOOT_MAX;
+	}
+	switch (target)
+	{
+	case ZEMU_BOOT_VHD:
+		return nk.ini->boot_vhd[0] ? true : false;
+	case ZEMU_BOOT_ISO:
+		return nk.ini->boot_iso[0] ? true : false;
+	case ZEMU_BOOT_PD:
+		return nk.ini->hd_count ? true : false;
+	case ZEMU_BOOT_CD:
+		return nk.ini->cd_count ? true : false;
+	case ZEMU_BOOT_VFD:
+		return nk.ini->boot_vfd[0] ? true : false;
+	case ZEMU_BOOT_PXE:
+		return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
+	case ZEMU_BOOT_LINUX:
+		return nk.ini->boot_linux[0] ? true : false;
 	}
 	return false;
 }

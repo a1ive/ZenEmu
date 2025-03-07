@@ -63,32 +63,34 @@ append_qemu_bios(void)
 {
 	bool pflash = false;
 	LPCWSTR name = L"";
+	ZEMU_FW fw;
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
-		switch (nk.ini->qemu_fw_x86)
-		{
-		case ZEMU_FW_X86_BIOS:
-			name = L"bios.bin";
-			break;
-		case ZEMU_FW_X86_EFI:
-			name = L"IA32_EFI.fd";
-			break;
-		case ZEMU_FW_X64_EFI:
-			name = L"X64_EFI.fd";
-			break;
-		}
+		fw = nk.ini->qemu_fw_x86;
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
-		switch (nk.ini->qemu_fw_arm)
-		{
-		case ZEMU_FW_AA64_EFI:
-			name = L"AA64_EFI.fd";
-			break;
-		case ZEMU_FW_ARM32_EFI:
-			name = L"ARM_EFI.fd";
-			break;
-		}
+		fw = nk.ini->qemu_fw_arm;
+		break;
+	default:
+		fw = ZEMU_BOOT_MAX;
+	}
+	switch (fw)
+	{
+	case ZEMU_FW_X86_BIOS:
+		name = L"bios.bin";
+		break;
+	case ZEMU_FW_X86_EFI:
+		name = L"IA32_EFI.fd";
+		break;
+	case ZEMU_FW_X64_EFI:
+		name = L"X64_EFI.fd";
+		break;
+	case ZEMU_FW_AA64_EFI:
+		name = L"AA64_EFI.fd";
+		break;
+	case ZEMU_FW_ARM32_EFI:
+		name = L"ARM_EFI.fd";
 		break;
 	}
 	if (pflash)
@@ -125,82 +127,52 @@ append_qemu_hw(void)
 static void
 append_qemu_bootdev(void)
 {
+	ZEMU_BOOT_TARGET target;
 	switch (nk.ini->qemu_arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
-	{
-		switch (nk.ini->qemu_boot_x86)
-		{
-		case ZEMU_BOOT_X86_VHD:
-			append_cmdline(L"-hda \"%s\" -boot c ", utf8_to_ucs2(nk.ini->boot_vhd));
-			break;
-		case ZEMU_BOOT_X86_ISO:
-			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
-			break;
-		case ZEMU_BOOT_X86_PD:
-			append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
-				nk.ini->hd_info[nk.ini->boot_hd].index);
-			break;
-		case ZEMU_BOOT_X86_CD:
-			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
-				nk.ini->cd_info[nk.ini->boot_cd].index);
-			break;
-		case ZEMU_BOOT_X86_VFD:
-			append_cmdline(L"-fda \"%s\" -boot a ", utf8_to_ucs2(nk.ini->boot_vfd));
-			break;
-		case ZEMU_BOOT_X86_PXE:
-			append_cmdline(L"-net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
-			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
-			break;
-		case ZEMU_BOOT_X86_LINUX:
-			append_cmdline(L"-kernel \"%s\" ", utf8_to_ucs2(nk.ini->boot_linux));
-			if (nk.ini->boot_initrd[0])
-				append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_initrd));
-			if (nk.ini->boot_kcmd[0])
-				append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
-			if (nk.ini->boot_dtb[0])
-				append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
-			if (nk.ini->boot_shim[0])
-				append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
-			break;
-		}
-	}
-	break;
+		target = nk.ini->qemu_boot_x86;
+		break;
 	case ZEMU_QEMU_ARCH_AA64:
-	{
-		switch (nk.ini->qemu_boot_arm)
-		{
-		case ZEMU_BOOT_ARM_VHD:
-			append_cmdline(L"-hda \"%s\" -boot c ", utf8_to_ucs2(nk.ini->boot_vhd));
-			break;
-		case ZEMU_BOOT_ARM_ISO:
-			append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
-			break;
-		case ZEMU_BOOT_ARM_PD:
-			append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
-				nk.ini->hd_info[nk.ini->boot_hd].index);
-			break;
-		case ZEMU_BOOT_ARM_CD:
-			append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
-				nk.ini->cd_info[nk.ini->boot_cd].index);
-			break;
-		case ZEMU_BOOT_ARM_PXE:
-			append_cmdline(L"-net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
-			append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
-			break;
-		case ZEMU_BOOT_ARM_LINUX:
-			append_cmdline(L"-kernel \"%s\" ", utf8_to_ucs2(nk.ini->boot_linux));
-			if (nk.ini->boot_initrd[0])
-				append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_initrd));
-			if (nk.ini->boot_kcmd[0])
-				append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
-			if (nk.ini->boot_dtb[0])
-				append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
-			if (nk.ini->boot_shim[0])
-				append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
-		}
+		target = nk.ini->qemu_boot_arm;
+		break;
+	default:
+		target = ZEMU_BOOT_MAX;
 	}
-	break;
+	switch (target)
+	{
+	case ZEMU_BOOT_VHD:
+		append_cmdline(L"-hda \"%s\" -boot c ", utf8_to_ucs2(nk.ini->boot_vhd));
+		break;
+	case ZEMU_BOOT_ISO:
+		append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
+		break;
+	case ZEMU_BOOT_PD:
+		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
+			nk.ini->hd_info[nk.ini->boot_hd].index);
+		break;
+	case ZEMU_BOOT_CD:
+		append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
+			nk.ini->cd_info[nk.ini->boot_cd].index);
+		break;
+	case ZEMU_BOOT_VFD:
+		append_cmdline(L"-fda \"%s\" -boot a ", utf8_to_ucs2(nk.ini->boot_vfd));
+		break;
+	case ZEMU_BOOT_PXE:
+		append_cmdline(L"-net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
+		append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
+		break;
+	case ZEMU_BOOT_LINUX:
+		append_cmdline(L"-kernel \"%s\" ", utf8_to_ucs2(nk.ini->boot_linux));
+		if (nk.ini->boot_initrd[0])
+			append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_initrd));
+		if (nk.ini->boot_kcmd[0])
+			append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
+		if (nk.ini->boot_dtb[0])
+			append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
+		if (nk.ini->boot_shim[0])
+			append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
+		break;
 	}
 }
 
@@ -211,6 +183,6 @@ get_cmdline(void)
 	append_qemu_bios();
 	append_qemu_hw();
 	append_qemu_bootdev();
-	//MessageBoxW(nk.wnd, static_cmdline, L"Command", MB_OK);
+
 	return static_cmdline;
 }
