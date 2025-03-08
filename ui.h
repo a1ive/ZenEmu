@@ -63,10 +63,10 @@ void
 ui_qemu_fw(struct nk_context* ctx);
 
 void
-ui_qemu_boot(struct nk_context* ctx);
+ui_qemu_dev(struct nk_context* ctx);
 
 void
-ui_qemu_obj(struct nk_context* ctx);
+ui_qemu_boot(struct nk_context* ctx);
 
 void
 ui_qemu_end(struct nk_context* ctx);

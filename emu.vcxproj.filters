@@ -77,7 +77,7 @@
     <ClCompile Include="ui_boot.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ui_obj.c">
+    <ClCompile Include="ui_dev.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ui_end.c">
@@ -157,6 +157,9 @@
       <Filter>资源文件\icons</Filter>
     </Image>
     <Image Include="icons\start.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
+    <Image Include="icons\usb.png">
       <Filter>资源文件\icons</Filter>
     </Image>
   </ItemGroup>

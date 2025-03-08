@@ -73,13 +73,18 @@ append_qemu_hw(void)
 		append_cmdline(L" ");
 	append_cmdline(L"-m %s ", utf8_to_ucs2(nk.ini->cur->mem));
 	append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vga));
-	append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->usb));
-	if (nk.ini->cur->usb_kbd)
-		append_cmdline(L"-device usb-kbd ");
-	if (nk.ini->cur->usb_tablet)
-		append_cmdline(L"-device usb-tablet ");
-	if (nk.ini->cur->usb_mouse)
-		append_cmdline(L"-device usb-mouse ");
+
+	if (nk.ini->cur->usb[0])
+	{
+		append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->usb));
+		if (nk.ini->cur->usb_kbd)
+			append_cmdline(L"-device usb-kbd ");
+		if (nk.ini->cur->usb_tablet)
+			append_cmdline(L"-device usb-tablet ");
+		if (nk.ini->cur->usb_mouse)
+			append_cmdline(L"-device usb-mouse ");
+	}
+	
 	append_cmdline(L"-nic user,model=virtio-net-pci ");
 }
 

@@ -199,8 +199,8 @@ nkctx_main_window(struct nk_context* ctx, float width, float height)
 	ui_qemu_cpu(ctx);
 	ui_qemu_mem(ctx);
 	ui_qemu_fw(ctx);
+	ui_qemu_dev(ctx);
 	ui_qemu_boot(ctx);
-	ui_qemu_obj(ctx);
 
 	ui_qemu_end(ctx);
 

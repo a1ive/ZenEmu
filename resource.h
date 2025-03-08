@@ -21,7 +21,8 @@
 #define IDR_PNG_QEMU                    124
 #define IDR_PNG_REFRESH                 125
 #define IDR_PNG_START                   126
+#define IDR_PNG_USB                     127
 
-#define IDR_PNG_MAX                     127
+#define IDR_PNG_MAX                     128
 
 #define IDT_TIMER_1S                    2001

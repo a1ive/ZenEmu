@@ -212,7 +212,7 @@
     <ClCompile Include="ui_end.c" />
     <ClCompile Include="ui_fw.c" />
     <ClCompile Include="ui_mem.c" />
-    <ClCompile Include="ui_obj.c" />
+    <ClCompile Include="ui_dev.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc" />
@@ -235,6 +235,7 @@
     <Image Include="icons\qemu.png" />
     <Image Include="icons\refresh.png" />
     <Image Include="icons\start.png" />
+    <Image Include="icons\usb.png" />
     <Image Include="nuklear.ico" />
   </ItemGroup>
   <ItemGroup>
