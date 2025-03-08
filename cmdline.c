@@ -45,56 +45,17 @@ fail:
 static void
 append_qemu_path(void)
 {
-	LPCWSTR name = L"";
-	switch (nk.ini->qemu_arch)
-	{
-	case ZEMU_QEMU_ARCH_X64:
-		name = L"qemu-system-x86_64w.exe";
-		break;
-	case ZEMU_QEMU_ARCH_AA64:
-		name = L"qemu-system-aarch64w.exe";
-		break;
-	}
-	append_cmdline(L"\"%s\\%s\" ", utf8_to_ucs2(nk.ini->qemu_dir), name);
+	append_cmdline(L"\"%s\\", utf8_to_ucs2(nk.ini->qemu_dir));
+	append_cmdline(L"%s\" ", utf8_to_ucs2(nk.ini->qemu_name[nk.ini->qemu_arch]));
 }
 
 static void
 append_qemu_bios(void)
 {
 	bool pflash = false;
-	LPCWSTR name = L"";
-	ZEMU_FW fw;
-	switch (nk.ini->qemu_arch)
-	{
-	case ZEMU_QEMU_ARCH_X64:
-		fw = nk.ini->qemu_fw_x86;
-		break;
-	case ZEMU_QEMU_ARCH_AA64:
-		fw = nk.ini->qemu_fw_arm;
-		break;
-	default:
-		fw = ZEMU_BOOT_MAX;
-	}
-	switch (fw)
-	{
-	case ZEMU_FW_X86_BIOS:
-		name = L"bios.bin";
-		break;
-	case ZEMU_FW_X86_EFI:
-		name = L"IA32_EFI.fd";
-		break;
-	case ZEMU_FW_X64_EFI:
-		name = L"X64_EFI.fd";
-		break;
-	case ZEMU_FW_AA64_EFI:
-		name = L"AA64_EFI.fd";
-		break;
-	case ZEMU_FW_ARM32_EFI:
-		name = L"ARM_EFI.fd";
-		break;
-	}
+	LPCWSTR name = utf8_to_ucs2(nk.ini->qemu_fw[nk.ini->cur->fw]);
 	if (pflash)
-		append_cmdline(L"-drive if=pflash,file=\"%s\\%s\",format=raw ", nk.ini->pwd, name);
+		append_cmdline(L"-drive if=pflash,file=\"%s\\%s\",format=raw ", name);
 	else
 		append_cmdline(L"-bios \"%s\\%s\" ", nk.ini->pwd, name);
 }
@@ -102,44 +63,30 @@ append_qemu_bios(void)
 static void
 append_qemu_hw(void)
 {
-	LPCWSTR cpu = L"";
-	LPCWSTR accel = L"-accel tcg,thread=multi";
-	LPCWSTR device = L"-device usb-ehci -device usb-kbd -device usb-tablet";
-	LPCWSTR nic = L"-nic user,model=virtio-net-pci";
-	LPCWSTR extra = L"";
-	switch (nk.ini->qemu_arch)
-	{
-	case ZEMU_QEMU_ARCH_X64:
-		cpu = utf8_to_ucs2(nk.ini->qemu_cpu_x86);
-		extra = L"-M pc,kernel-irqchip=off -device vmware-svga";
-		break;
-	case ZEMU_QEMU_ARCH_AA64:
-		cpu = utf8_to_ucs2(nk.ini->qemu_cpu_arm);
-		extra = L"-M virt,virtualization=true,kernel-irqchip=off -device ramfb";
-		break;
-	}
-	if (cpu[0] == '\0')
-		cpu = L"max";
-	append_cmdline(L"-m %d -smp %d -cpu %s %s %s %s %s ",
-		nk.ini->qemu_mem_mb, nk.ini->qemu_cpu_num, cpu, accel, device, nic, extra);
+	append_cmdline(L"-cpu %s -accel tcg,thread=multi ", utf8_to_ucs2(nk.ini->cur->model));
+	append_cmdline(L"-smp %s ", utf8_to_ucs2(nk.ini->cur->smp));
+	append_cmdline(L"-M %s,kernel-irqchip=%s", utf8_to_ucs2(nk.ini->cur->machine),
+		nk.ini->cur->irqchip ? L"on" : L"off");
+	if (nk.ini->qemu_arch)
+		append_cmdline(L",virtualization=%s ", nk.ini->cur->virt ? L"true" : L"false");
+	else
+		append_cmdline(L" ");
+	append_cmdline(L"-m %s ", utf8_to_ucs2(nk.ini->cur->mem));
+	append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vga));
+	append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->usb));
+	if (nk.ini->cur->usb_kbd)
+		append_cmdline(L"-device usb-kbd ");
+	if (nk.ini->cur->usb_tablet)
+		append_cmdline(L"-device usb-tablet ");
+	if (nk.ini->cur->usb_mouse)
+		append_cmdline(L"-device usb-mouse ");
+	append_cmdline(L"-nic user,model=virtio-net-pci ");
 }
 
 static void
 append_qemu_bootdev(void)
 {
-	ZEMU_BOOT_TARGET target;
-	switch (nk.ini->qemu_arch)
-	{
-	case ZEMU_QEMU_ARCH_X64:
-		target = nk.ini->qemu_boot_x86;
-		break;
-	case ZEMU_QEMU_ARCH_AA64:
-		target = nk.ini->qemu_boot_arm;
-		break;
-	default:
-		target = ZEMU_BOOT_MAX;
-	}
-	switch (target)
+	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:
 		append_cmdline(L"-hda \"%s\" -boot c ", utf8_to_ucs2(nk.ini->boot_vhd));

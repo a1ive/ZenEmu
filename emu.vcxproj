@@ -205,6 +205,7 @@
     <ClCompile Include="nkctx.c" />
     <ClCompile Include="nuklear.c" />
     <ClCompile Include="open_dialog.c" />
+    <ClCompile Include="ui.c" />
     <ClCompile Include="ui_boot.c" />
     <ClCompile Include="ui_cpu.c" />
     <ClCompile Include="ui_dir.c" />

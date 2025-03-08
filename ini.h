@@ -28,16 +28,14 @@ typedef enum _ZEMU_QEMU_ARCH
 
 typedef enum _ZEMU_FW
 {
-	ZEMU_FW_X86_MIN = 0,
-	ZEMU_FW_X64_EFI,
+	ZEMU_FW_X64_EFI = 0,
 	ZEMU_FW_X86_BIOS,
 	ZEMU_FW_X86_EFI,
-	ZEMU_FW_X86_MAX,
 
-	ZEMU_FW_ARM_MIN = 10,
 	ZEMU_FW_AA64_EFI,
 	ZEMU_FW_ARM32_EFI,
-	ZEMU_FW_ARM_MAX,
+
+	ZEMU_FW_MAX,
 } ZEMU_FW;
 
 typedef enum _ZEMU_BOOT_TARGET
@@ -54,26 +52,41 @@ typedef enum _ZEMU_BOOT_TARGET
 
 #define OUTBUF_SZ 4096
 
-#define MODEL_SZ 32
+#define OPT_SZ 32
 #define KCMD_SZ 4096
 
 struct _PHY_DRIVE_INFO;
+
+typedef struct _ZEMU_INI_PROFILE
+{
+	char smp[OPT_SZ];
+	char model[OPT_SZ];
+	char mem[OPT_SZ];
+	char machine[OPT_SZ];
+	bool irqchip;
+	bool virt; // ARM only
+	char vga[OPT_SZ];
+	char usb[OPT_SZ];
+	bool usb_kbd;
+	bool usb_tablet;
+	bool usb_mouse;
+	ZEMU_FW fw;
+	ZEMU_BOOT_TARGET boot;
+} ZEMU_INI_PROFILE;
 
 typedef struct _ZEMU_INI_DATA
 {
 	WCHAR pwd[MAX_PATH];
 	WCHAR ini[MAX_PATH];
 	CHAR qemu_dir[MAX_PATH];
+	CHAR qemu_name[ZEMU_QEMU_ARCH_MAX][OPT_SZ];
 	ZEMU_QEMU_ARCH qemu_arch;
-	int qemu_cpu_num;
-	char qemu_cpu_x86[32];
-	char qemu_cpu_arm[32];
-	//int qemu_cpu_core;
-	int qemu_mem_mb;
-	ZEMU_FW qemu_fw_x86;
-	ZEMU_FW qemu_fw_arm;
-	ZEMU_BOOT_TARGET qemu_boot_x86;
-	ZEMU_BOOT_TARGET qemu_boot_arm;
+
+	CHAR qemu_fw[ZEMU_FW_MAX][MAX_PATH];
+
+	ZEMU_INI_PROFILE profile[ZEMU_QEMU_ARCH_MAX];
+	ZEMU_INI_PROFILE* cur;
+
 	CHAR boot_vhd[MAX_PATH];
 	CHAR boot_iso[MAX_PATH];
 	CHAR boot_vfd[MAX_PATH];
@@ -106,7 +119,7 @@ LPCSTR
 get_ini_value(LPCWSTR section, LPCWSTR key, LPCWSTR fallback);
 
 VOID
-set_ini_value(LPCWSTR section, LPCWSTR key, LPCWSTR _Printf_format_string_ format, ...);
+set_ini_value(LPCWSTR section, LPCWSTR key, LPCSTR value);
 
 int
 get_ini_num(LPCWSTR section, LPCWSTR key, int fallback);

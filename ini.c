@@ -113,22 +113,12 @@ VOID load_ini(VOID)
 	wcscpy_s(nk.ini->ini, MAX_PATH, nk.ini->pwd);
 	PathCchAppend(nk.ini->ini, MAX_PATH, L"zemu.ini");
 
-	ui_qemu_dir_init();
-	ui_qemu_cpu_init();
-	ui_qemu_mem_init();
-	ui_qemu_fw_init();
-	ui_qemu_boot_init();
-	ui_qemu_obj_init();
+	ui_ini_init();
 }
 
 VOID save_ini(VOID)
 {
-	ui_qemu_dir_save();
-	ui_qemu_cpu_save();
-	ui_qemu_mem_save();
-	ui_qemu_fw_save();
-	ui_qemu_boot_save();
-	ui_qemu_obj_save();
+	ui_ini_save();
 }
 
 static WCHAR static_ini_value[MAX_PATH];
@@ -141,31 +131,9 @@ get_ini_value(LPCWSTR section, LPCWSTR key, LPCWSTR fallback)
 }
 
 VOID
-set_ini_value(LPCWSTR section, LPCWSTR key, LPCWSTR _Printf_format_string_ format, ...)
+set_ini_value(LPCWSTR section, LPCWSTR key, LPCSTR value)
 {
-	int sz;
-	WCHAR* buf = NULL;
-	va_list ap;
-	va_start(ap, format);
-	sz = _vscwprintf(format, ap) + 1;
-	if (sz <= 0)
-	{
-		va_end(ap);
-		goto fail;
-	}
-	buf = calloc(sizeof(WCHAR), sz);
-	if (!buf)
-	{
-		va_end(ap);
-		goto fail;
-	}
-	_vsnwprintf_s(buf, sz, _TRUNCATE, format, ap);
-	va_end(ap);
-	WritePrivateProfileStringW(section, key, buf, nk.ini->ini);
-	free(buf);
-	return;
-fail:
-	MessageBoxW(NULL, L"Set ini value failed", L"Error", MB_ICONERROR);
+	WritePrivateProfileStringW(section, key, utf8_to_ucs2(value), nk.ini->ini);
 }
 
 int

@@ -42,49 +42,31 @@ ui_open_dir(CHAR* path, size_t len);
 	var = nk_option_label(ctx, (label), var == val) ? val : var
 
 #define IS_BIOS \
-	(nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64 && nk.ini->qemu_fw_x86 == ZEMU_FW_X86_BIOS)
+	(nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64 && nk.ini->cur->fw == ZEMU_FW_X86_BIOS)
 
 void
-ui_qemu_dir_init(void);
+ui_ini_init(void);
+
+void
+ui_ini_save(void);
+
 void
 ui_qemu_dir(struct nk_context* ctx);
-void
-ui_qemu_dir_save(void);
 
-void
-ui_qemu_cpu_init(void);
 void
 ui_qemu_cpu(struct nk_context* ctx);
-void
-ui_qemu_cpu_save(void);
 
-void
-ui_qemu_mem_init(void);
 void
 ui_qemu_mem(struct nk_context* ctx);
-void
-ui_qemu_mem_save(void);
 
-void
-ui_qemu_fw_init(void);
 void
 ui_qemu_fw(struct nk_context* ctx);
-void
-ui_qemu_fw_save(void);
 
-void
-ui_qemu_boot_init(void);
 void
 ui_qemu_boot(struct nk_context* ctx);
-void
-ui_qemu_boot_save(void);
 
 void
-ui_qemu_obj_init(void);
-void
 ui_qemu_obj(struct nk_context* ctx);
-void
-ui_qemu_obj_save(void);
 
 void
 ui_qemu_end(struct nk_context* ctx);

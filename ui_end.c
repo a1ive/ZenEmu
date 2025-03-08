@@ -12,19 +12,7 @@
 static bool
 check_valid(void)
 {
-	ZEMU_BOOT_TARGET target;
-	switch (nk.ini->qemu_arch)
-	{
-	case ZEMU_QEMU_ARCH_X64:
-		target = nk.ini->qemu_boot_x86;
-		break;
-	case ZEMU_QEMU_ARCH_AA64:
-		target = nk.ini->qemu_boot_arm;
-		break;
-	default:
-		target = ZEMU_BOOT_MAX;
-	}
-	switch (target)
+	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:
 		return nk.ini->boot_vhd[0] ? true : false;

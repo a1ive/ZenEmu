@@ -6,18 +6,6 @@
 #include "dev.h"
 #include "gettext.h"
 
-void
-ui_qemu_obj_init(void)
-{
-
-}
-
-void
-ui_qemu_obj_save(void)
-{
-
-}
-
 static void
 obj_vhd(struct nk_context* ctx)
 {
@@ -137,19 +125,7 @@ void
 ui_qemu_obj(struct nk_context* ctx)
 {
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
-	ZEMU_BOOT_TARGET target;
-	switch (nk.ini->qemu_arch)
-	{
-	case ZEMU_QEMU_ARCH_X64:
-		target = nk.ini->qemu_boot_x86;
-		break;
-	case ZEMU_QEMU_ARCH_AA64:
-		target = nk.ini->qemu_boot_arm;
-		break;
-	default:
-		target = ZEMU_BOOT_MAX;
-	}
-	switch (target)
+	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:
 		obj_vhd(ctx);
