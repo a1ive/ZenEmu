@@ -2,9 +2,7 @@
 
 #pragma once
 
-#define VC_EXTRALEAN
-#include <windows.h>
-#include <stdbool.h>
+#include "nkctx.h"
 
 #define CONV_BUFSZ 65535
 #define CONV_BUFSZW (CONV_BUFSZ / sizeof(WCHAR))
@@ -63,13 +61,13 @@ typedef struct _ZEMU_INI_PROFILE
 	char model[OPT_SZ];
 	char mem[OPT_SZ];
 	char machine[OPT_SZ];
-	bool irqchip;
-	bool virt; // ARM only
+	nk_bool irqchip;
+	nk_bool virt; // ARM only
 	char vga[OPT_SZ];
 	char usb[OPT_SZ];
-	bool usb_kbd;
-	bool usb_tablet;
-	bool usb_mouse;
+	nk_bool usb_kbd;
+	nk_bool usb_tablet;
+	nk_bool usb_mouse;
 	ZEMU_FW fw;
 	ZEMU_BOOT_TARGET boot;
 } ZEMU_INI_PROFILE;

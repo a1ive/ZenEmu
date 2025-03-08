@@ -55,7 +55,7 @@ append_qemu_bios(void)
 	bool pflash = false;
 	LPCWSTR name = utf8_to_ucs2(nk.ini->qemu_fw[nk.ini->cur->fw]);
 	if (pflash)
-		append_cmdline(L"-drive if=pflash,file=\"%s\\%s\",format=raw ", name);
+		append_cmdline(L"-drive if=pflash,file=\"%s\\%s\",format=raw ", nk.ini->pwd, name);
 	else
 		append_cmdline(L"-bios \"%s\\%s\" ", nk.ini->pwd, name);
 }

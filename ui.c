@@ -4,11 +4,11 @@
 #include "ini.h"
 #include "ui.h"
 
-static inline bool
-get_ini_bool(LPCWSTR section, LPCWSTR key, bool fallback)
+static inline nk_bool
+get_ini_bool(LPCWSTR section, LPCWSTR key, nk_bool fallback)
 {
 	int value = get_ini_num(section, key, (int)fallback);
-	return (int)value;
+	return value ? nk_true : nk_false;
 }
 
 static void
@@ -47,13 +47,13 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	strcpy_s(p->mem, OPT_SZ, get_ini_value(section, L"Memory", L"4096"));
 	// TODO: check number range
 	strcpy_s(p->machine, OPT_SZ, get_ini_value(section, L"Machine", machine));
-	p->irqchip = get_ini_bool(section, L"KernelIrqchip", true);
-	p->virt = get_ini_bool(section, L"Virtualization", true);
+	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_true);
+	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
 	strcpy_s(p->vga, OPT_SZ, get_ini_value(section, L"Display", display));
 	strcpy_s(p->usb, OPT_SZ, get_ini_value(section, L"Usb", L"usb-ehci"));
-	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", true);
-	p->usb_tablet = get_ini_bool(section, L"UsbTablet", true);
-	p->usb_mouse = get_ini_bool(section, L"UsbMouse", false);
+	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", nk_true);
+	p->usb_tablet = get_ini_bool(section, L"UsbTablet", nk_true);
+	p->usb_mouse = get_ini_bool(section, L"UsbMouse", nk_false);
 	p->fw = get_ini_num(section, L"Firmware", fw);
 	// TODO: check number range
 	p->boot = get_ini_num(section, L"BootTarget", ZEMU_BOOT_VHD);
