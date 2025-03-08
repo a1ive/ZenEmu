@@ -137,7 +137,11 @@ ui_qemu_boot(struct nk_context* ctx)
 	UI_OPTION(ZTXT(ZTXT_CD_ROM), nk.ini->cur->boot, ZEMU_BOOT_CD);
 
 	nk_spacer(ctx);
+	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
+		nk_widget_disable_begin(ctx);
 	UI_OPTION(ZTXT(ZTXT_FLOPPY_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_VFD);
+	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
+		nk_widget_disable_end(ctx);
 	nk_widget_disable_begin(ctx);
 	UI_OPTION(ZTXT(ZTXT_PXE), nk.ini->cur->boot, ZEMU_BOOT_PXE);
 	nk_widget_disable_end(ctx);

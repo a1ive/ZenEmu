@@ -9,7 +9,7 @@ wWinMain(_In_ HINSTANCE hInstance,
 	_In_ int nCmdShow)
 {
 	OleInitialize(NULL);
-	nkctx_init(hInstance, 200, 200, 800, 800, L"NkWindowClass", L"ZenEMU", L"Courier New", 18);
+	nkctx_init(hInstance, 200, 200, 800, 1000, L"NkWindowClass", L"ZenEMU", L"Courier New", 18);
 	nkctx_loop();
 	nkctx_fini(0);
 	return 0;
