@@ -125,6 +125,11 @@ append_qemu_bootdev(void)
 		if (nk.ini->boot_shim[0])
 			append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
 		break;
+	case ZEMU_BOOT_WIM:
+		append_cmdline(L"-kernel \"%s\\%s\" ", nk.ini->pwd, utf8_to_ucs2(nk.ini->qemu_wimldr[nk.ini->cur->fw]));
+		append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_wim));
+		append_cmdline(L"-drive file=\"%s\\%s\",snapshot=on ", nk.ini->pwd, utf8_to_ucs2(nk.ini->qemu_wimhda));
+		break;
 	}
 }
 

@@ -121,6 +121,15 @@ obj_linux(struct nk_context* ctx)
 	}
 }
 
+static void
+obj_wim(struct nk_context* ctx)
+{
+	nk_space_label(ctx, ZTXT(ZTXT_WIM_IMAGE));
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_wim, MAX_PATH, NULL);
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+		ui_open_file(nk.ini->boot_wim, MAX_PATH, FILTER_WIM);
+}
+
 void
 ui_qemu_boot(struct nk_context* ctx)
 {
@@ -148,7 +157,11 @@ ui_qemu_boot(struct nk_context* ctx)
 
 	nk_spacer(ctx);
 	UI_OPTION(ZTXT(ZTXT_LINUX_KERNEL), nk.ini->cur->boot, ZEMU_BOOT_LINUX);
-	nk_spacer(ctx);
+	if (!IS_BIOS)
+		nk_widget_disable_begin(ctx);
+	UI_OPTION(ZTXT(ZTXT_WIM_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_WIM);
+	if (!IS_BIOS)
+		nk_widget_disable_end(ctx);
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
 	switch (nk.ini->cur->boot)
@@ -173,6 +186,9 @@ ui_qemu_boot(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_LINUX:
 		obj_linux(ctx);
+		break;
+	case ZEMU_BOOT_WIM:
+		obj_wim(ctx);
 		break;
 	default:
 		nk_spacer(ctx);

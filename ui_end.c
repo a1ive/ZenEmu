@@ -28,6 +28,8 @@ check_valid(void)
 		return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
 	case ZEMU_BOOT_LINUX:
 		return nk.ini->boot_linux[0] ? true : false;
+	case ZEMU_BOOT_WIM:
+		return nk.ini->boot_wim[0] ? true : false;
 	}
 	return false;
 }

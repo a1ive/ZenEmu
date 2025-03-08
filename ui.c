@@ -79,6 +79,13 @@ ui_ini_init(void)
 	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_AA64_EFI], MAX_PATH, get_ini_value(L"Qemu", L"AA64_EFI", L"AA64_EFI.fd"));
 	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_ARM32_EFI], MAX_PATH, get_ini_value(L"Qemu", L"ARM32_EFI", L"ARM_EFI.fd"));
 
+	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X64_EFI], OPT_SZ, get_ini_value(L"Wim", L"X64_EFI", L"wimldr.x64"));
+	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X86_BIOS], OPT_SZ, get_ini_value(L"Wim", L"X86_BIOS", L"grub.exe"));
+	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X86_EFI], OPT_SZ, get_ini_value(L"Wim", L"X86_EFI", L"wimldr.ia32"));
+	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_AA64_EFI], OPT_SZ, get_ini_value(L"Wim", L"AA64_EFI", L"wimldr.aa64"));
+	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_ARM32_EFI], OPT_SZ, get_ini_value(L"Wim", L"ARM32_EFI", L"wimldr.arm"));
+	strcpy_s(nk.ini->qemu_wimhda, OPT_SZ, get_ini_value(L"Wim", L"Hda", L"wim.qcow2"));
+
 	nk.ini->cur = &nk.ini->profile[nk.ini->qemu_arch];
 	get_profile(ZEMU_QEMU_ARCH_X64);
 	get_profile(ZEMU_QEMU_ARCH_AA64);
@@ -130,6 +137,13 @@ ui_ini_save(void)
 
 	set_ini_value(L"Qemu", L"AA64_EFI", nk.ini->qemu_fw[ZEMU_FW_AA64_EFI]);
 	set_ini_value(L"Qemu", L"ARM32_EFI", nk.ini->qemu_fw[ZEMU_FW_ARM32_EFI]);
+
+	set_ini_value(L"Wim", L"X64_EFI", nk.ini->qemu_wimldr[ZEMU_FW_X64_EFI]);
+	set_ini_value(L"Wim", L"X86_BIOS", nk.ini->qemu_wimldr[ZEMU_FW_X86_BIOS]);
+	set_ini_value(L"Wim", L"X86_EFI", nk.ini->qemu_wimldr[ZEMU_FW_X86_EFI]);
+	set_ini_value(L"Wim", L"AA64_EFI", nk.ini->qemu_wimldr[ZEMU_FW_AA64_EFI]);
+	set_ini_value(L"Wim", L"ARM32_EFI", nk.ini->qemu_wimldr[ZEMU_FW_ARM32_EFI]);
+	set_ini_value(L"Wim", L"Hda", nk.ini->qemu_wimhda);
 
 	set_profile(ZEMU_QEMU_ARCH_X64);
 	set_profile(ZEMU_QEMU_ARCH_AA64);

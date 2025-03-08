@@ -45,6 +45,7 @@ typedef enum _ZEMU_BOOT_TARGET
 	ZEMU_BOOT_VFD,
 	ZEMU_BOOT_PXE,
 	ZEMU_BOOT_LINUX,
+	ZEMU_BOOT_WIM,
 	ZEMU_BOOT_MAX,
 } ZEMU_BOOT_TARGET;
 
@@ -82,6 +83,9 @@ typedef struct _ZEMU_INI_DATA
 
 	CHAR qemu_fw[ZEMU_FW_MAX][MAX_PATH];
 
+	CHAR qemu_wimldr[ZEMU_FW_MAX][OPT_SZ];
+	CHAR qemu_wimhda[OPT_SZ];
+
 	ZEMU_INI_PROFILE profile[ZEMU_QEMU_ARCH_MAX];
 	ZEMU_INI_PROFILE* cur;
 
@@ -101,6 +105,8 @@ typedef struct _ZEMU_INI_DATA
 	CHAR boot_kcmd[KCMD_SZ];
 	CHAR boot_dtb[MAX_PATH];
 	CHAR boot_shim[MAX_PATH];
+
+	CHAR boot_wim[MAX_PATH];
 
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];

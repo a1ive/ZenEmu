@@ -41,6 +41,8 @@ jobs:
         move firmware\X64_EFI.fd zemu\
         move firmware\IA32_EFI.fd zemu\
         move firmware\AA64_EFI.fd zemu\
+        move firmware\grub.exe zemu\
+        move firmware\wim.qcow2 zemu\
 
     - name: Create ZIP
       uses: thedoctor0/zip-release@master

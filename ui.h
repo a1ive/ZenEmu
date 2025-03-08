@@ -27,6 +27,10 @@
 	L"EFI Application (efi)\0*.EFI\0" \
 	 "All Files\0*.*\0"
 
+#define FILTER_WIM \
+	L"WIM Image (wim)\0*.WIM\0" \
+	 "All Files\0*.*\0"
+
 #define FILTER_ALL \
 	L"All Files\0*.*\0"
 
