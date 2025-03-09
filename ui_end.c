@@ -30,6 +30,8 @@ check_valid(void)
 		return nk.ini->boot_linux[0] ? true : false;
 	case ZEMU_BOOT_WIM:
 		return nk.ini->boot_wim[0] ? true : false;
+	case ZEMU_BOOT_DIR:
+		return nk.ini->boot_dir[0] ? true : false;
 	}
 	return false;
 }

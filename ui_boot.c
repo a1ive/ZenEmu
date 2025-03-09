@@ -130,27 +130,34 @@ obj_wim(struct nk_context* ctx)
 		ui_open_file(nk.ini->boot_wim, MAX_PATH, FILTER_WIM);
 }
 
+static void
+obj_dir(struct nk_context* ctx)
+{
+	nk_space_label(ctx, ZTXT(ZTXT_DIR));
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dir, MAX_PATH, NULL);
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+		ui_open_dir(nk.ini->boot_dir, MAX_PATH);
+}
+
 void
 ui_qemu_boot(struct nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, 0, 1);
 	nk_image_label(ctx, GET_PNG(IDR_PNG_PC), ZTXT(ZTXT_BOOT_DEVICE));
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.4f, 0.4f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.1f, 0.3f, 0.3f, 0.3f });
 	
 	nk_spacer(ctx);
 	UI_OPTION(ZTXT(ZTXT_DISK_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_VHD);
 	UI_OPTION(ZTXT(ZTXT_ISO_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_ISO);
-
-	nk_spacer(ctx);
-	UI_OPTION(ZTXT(ZTXT_PHYSICAL_DISK), nk.ini->cur->boot, ZEMU_BOOT_PD);
-	UI_OPTION(ZTXT(ZTXT_CD_ROM), nk.ini->cur->boot, ZEMU_BOOT_CD);
-
-	nk_spacer(ctx);
 	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
 		nk_widget_disable_begin(ctx);
 	UI_OPTION(ZTXT(ZTXT_FLOPPY_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_VFD);
 	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
 		nk_widget_disable_end(ctx);
+
+	nk_spacer(ctx);
+	UI_OPTION(ZTXT(ZTXT_PHYSICAL_DISK), nk.ini->cur->boot, ZEMU_BOOT_PD);
+	UI_OPTION(ZTXT(ZTXT_CD_ROM), nk.ini->cur->boot, ZEMU_BOOT_CD);
 	nk_widget_disable_begin(ctx);
 	UI_OPTION(ZTXT(ZTXT_PXE), nk.ini->cur->boot, ZEMU_BOOT_PXE);
 	nk_widget_disable_end(ctx);
@@ -161,6 +168,11 @@ ui_qemu_boot(struct nk_context* ctx)
 		nk_widget_disable_begin(ctx);
 	UI_OPTION(ZTXT(ZTXT_WIM_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_WIM);
 	if (!IS_BIOS)
+		nk_widget_disable_end(ctx);
+	if (IS_BIOS)
+		nk_widget_disable_begin(ctx);
+	UI_OPTION(ZTXT(ZTXT_DIR_VVFAT), nk.ini->cur->boot, ZEMU_BOOT_DIR);
+	if (IS_BIOS)
 		nk_widget_disable_end(ctx);
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
@@ -189,6 +201,9 @@ ui_qemu_boot(struct nk_context* ctx)
 		break;
 	case ZEMU_BOOT_WIM:
 		obj_wim(ctx);
+		break;
+	case ZEMU_BOOT_DIR:
+		obj_dir(ctx);
 		break;
 	default:
 		nk_spacer(ctx);

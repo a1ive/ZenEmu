@@ -50,6 +50,7 @@ typedef enum _ZEMU_BOOT_TARGET
 	ZEMU_BOOT_PXE,
 	ZEMU_BOOT_LINUX,
 	ZEMU_BOOT_WIM,
+	ZEMU_BOOT_DIR,
 	ZEMU_BOOT_MAX,
 } ZEMU_BOOT_TARGET;
 
@@ -115,6 +116,8 @@ typedef struct _ZEMU_INI_DATA
 
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];
+
+	CHAR boot_dir[MAX_PATH];
 
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;
