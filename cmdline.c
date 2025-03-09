@@ -53,11 +53,11 @@ static void
 append_qemu_bios(void)
 {
 	bool pflash = false;
-	LPCWSTR name = utf8_to_ucs2(nk.ini->qemu_fw[nk.ini->cur->fw]);
+	LPCWSTR name = rel_to_abs(nk.ini->qemu_fw[nk.ini->cur->fw]);
 	if (pflash)
-		append_cmdline(L"-drive if=pflash,file=\"%s\\%s\",format=raw ", nk.ini->pwd, name);
+		append_cmdline(L"-drive if=pflash,file=\"%s\",format=raw ", name);
 	else
-		append_cmdline(L"-bios \"%s\\%s\" ", nk.ini->pwd, name);
+		append_cmdline(L"-bios \"%s\" ", name);
 }
 
 static void
@@ -94,10 +94,10 @@ append_qemu_bootdev(void)
 	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:
-		append_cmdline(L"-hda \"%s\" -boot c ", utf8_to_ucs2(nk.ini->boot_vhd));
+		append_cmdline(L"-hda \"%s\" -boot c ", rel_to_abs(nk.ini->boot_vhd));
 		break;
 	case ZEMU_BOOT_ISO:
-		append_cmdline(L"-cdrom \"%s\" -boot d ", utf8_to_ucs2(nk.ini->boot_iso));
+		append_cmdline(L"-cdrom \"%s\" -boot d ", rel_to_abs(nk.ini->boot_iso));
 		break;
 	case ZEMU_BOOT_PD:
 		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
@@ -108,27 +108,27 @@ append_qemu_bootdev(void)
 			nk.ini->cd_info[nk.ini->boot_cd].index);
 		break;
 	case ZEMU_BOOT_VFD:
-		append_cmdline(L"-fda \"%s\" -boot a ", utf8_to_ucs2(nk.ini->boot_vfd));
+		append_cmdline(L"-fda \"%s\" -boot a ", rel_to_abs(nk.ini->boot_vfd));
 		break;
 	case ZEMU_BOOT_PXE:
-		append_cmdline(L"-net user,tftp=\"%s\",", utf8_to_ucs2(nk.ini->net_tftp));
-		append_cmdline(L",bootfile=\"%s\" -boot n ", utf8_to_ucs2(nk.ini->net_file));
+		append_cmdline(L"-net user,tftp=\"%s\",", rel_to_abs(nk.ini->net_tftp));
+		append_cmdline(L",bootfile=\"%s\" -boot n ", rel_to_abs(nk.ini->net_file));
 		break;
 	case ZEMU_BOOT_LINUX:
-		append_cmdline(L"-kernel \"%s\" ", utf8_to_ucs2(nk.ini->boot_linux));
+		append_cmdline(L"-kernel \"%s\" ", rel_to_abs(nk.ini->boot_linux));
 		if (nk.ini->boot_initrd[0])
-			append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_initrd));
+			append_cmdline(L"-initrd \"%s\" ", rel_to_abs(nk.ini->boot_initrd));
 		if (nk.ini->boot_kcmd[0])
-			append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
+			append_cmdline(L"-append \"%s\" ", rel_to_abs(nk.ini->boot_kcmd));
 		if (nk.ini->boot_dtb[0])
-			append_cmdline(L"-dtb \"%s\" ", utf8_to_ucs2(nk.ini->boot_dtb));
+			append_cmdline(L"-dtb \"%s\" ", rel_to_abs(nk.ini->boot_dtb));
 		if (nk.ini->boot_shim[0])
-			append_cmdline(L"-shim \"%s\" ", utf8_to_ucs2(nk.ini->boot_shim));
+			append_cmdline(L"-shim \"%s\" ", rel_to_abs(nk.ini->boot_shim));
 		break;
 	case ZEMU_BOOT_WIM:
-		append_cmdline(L"-kernel \"%s\\%s\" ", nk.ini->pwd, utf8_to_ucs2(nk.ini->qemu_wimldr[nk.ini->cur->fw]));
-		append_cmdline(L"-initrd \"%s\" ", utf8_to_ucs2(nk.ini->boot_wim));
-		append_cmdline(L"-drive file=\"%s\\%s\",snapshot=on ", nk.ini->pwd, utf8_to_ucs2(nk.ini->qemu_wimhda));
+		append_cmdline(L"-kernel \"%s\" ", rel_to_abs(nk.ini->qemu_wimldr[nk.ini->cur->fw]));
+		append_cmdline(L"-initrd \"%s\" ", rel_to_abs(nk.ini->boot_wim));
+		append_cmdline(L"-drive file=\"%s\",snapshot=on ", rel_to_abs(nk.ini->qemu_wimhda));
 		break;
 	}
 }

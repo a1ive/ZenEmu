@@ -134,3 +134,6 @@ get_ini_num(LPCWSTR section, LPCWSTR key, int fallback);
 
 VOID
 set_ini_num(LPCWSTR section, LPCWSTR key, int value);
+
+LPCWSTR
+rel_to_abs(LPCSTR path);

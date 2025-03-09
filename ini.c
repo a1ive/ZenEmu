@@ -152,3 +152,28 @@ set_ini_num(LPCWSTR section, LPCWSTR key, int value)
 	swprintf_s(buf, 32, L"%d", value);
 	WritePrivateProfileStringW(section, key, buf, nk.ini->ini);
 }
+
+static BOOL
+is_absolute_path(const WCHAR* path)
+{
+	if (wcslen(path) >= 3)
+	{
+		if (iswalpha(path[0]) && path[1] == L':' && path[2] == L'\\')
+			return TRUE;
+	}
+	return FALSE;
+}
+
+LPCWSTR
+rel_to_abs(LPCSTR path)
+{
+	static WCHAR abs_path[MAX_PATH];
+	LPCWSTR wpath = utf8_to_ucs2(path);
+
+	// If the path is absolute, copy it directly.
+	// Otherwise, the path is relative. Combine pwd and path.
+	if (is_absolute_path(wpath))
+		return wpath;
+	swprintf(abs_path, MAX_PATH, L"%s\\%s", nk.ini->pwd, wpath);
+	return abs_path;
+}
