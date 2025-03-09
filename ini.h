@@ -123,6 +123,9 @@ typedef struct _ZEMU_INI_DATA
 	size_t output_offset;
 } ZEMU_INI_DATA;
 
+#define IS_BIOS \
+	(nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64 && nk.ini->cur->fw == ZEMU_FW_X86_BIOS)
+
 VOID load_ini(VOID);
 
 VOID save_ini(VOID);

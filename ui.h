@@ -45,9 +45,6 @@ ui_open_dir(CHAR* path, size_t len);
 #define UI_OPTION(label, var, val) \
 	var = nk_option_label(ctx, (label), var == val) ? val : var
 
-#define IS_BIOS \
-	(nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64 && nk.ini->cur->fw == ZEMU_FW_X86_BIOS)
-
 void
 ui_ini_init(void);
 

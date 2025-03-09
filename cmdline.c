@@ -121,7 +121,7 @@ append_qemu_bootdev(void)
 			append_cmdline(L"-append \"%s\" ", rel_to_abs(nk.ini->boot_kcmd));
 		if (nk.ini->boot_dtb[0])
 			append_cmdline(L"-dtb \"%s\" ", rel_to_abs(nk.ini->boot_dtb));
-		if (nk.ini->boot_shim[0])
+		if (!IS_BIOS && nk.ini->boot_shim[0])
 			append_cmdline(L"-shim \"%s\" ", rel_to_abs(nk.ini->boot_shim));
 		break;
 	case ZEMU_BOOT_WIM:
