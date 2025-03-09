@@ -52,9 +52,8 @@ append_qemu_path(void)
 static void
 append_qemu_bios(void)
 {
-	bool pflash = false;
 	LPCWSTR name = rel_to_abs(nk.ini->qemu_fw[nk.ini->cur->fw]);
-	if (pflash)
+	if (nk.ini->cur->pflash)
 		append_cmdline(L"-drive if=pflash,file=\"%s\",format=raw ", name);
 	else
 		append_cmdline(L"-bios \"%s\" ", name);

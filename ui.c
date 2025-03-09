@@ -64,6 +64,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_true);
 	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
 	strcpy_s(p->vga, OPT_SZ, get_ini_value(section, L"Display", display));
+	p->pflash = get_ini_bool(section, L"Pflash", nk_false);
 	strcpy_s(p->usb, OPT_SZ, get_ini_value(section, L"Usb", L"usb-ehci"));
 	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", nk_true);
 	p->usb_tablet = get_ini_bool(section, L"UsbTablet", nk_true);
@@ -133,6 +134,7 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"KernelIrqchip", p->irqchip);
 	set_ini_num(section, L"Virtualization", p->virt);
 	set_ini_value(section, L"Display", p->vga);
+	set_ini_num(section, L"Pflash", p->pflash);
 	set_ini_value(section, L"Usb", p->usb);
 	set_ini_num(section, L"UsbKeyboard", p->usb_kbd);
 	set_ini_num(section, L"UsbTablet", p->usb_tablet);

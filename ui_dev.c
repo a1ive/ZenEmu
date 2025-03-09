@@ -14,13 +14,6 @@ ui_qemu_dev(struct nk_context* ctx)
 	nk_image_label(ctx, GET_PNG(IDR_PNG_USB), ZTXT(ZTXT_PERIPHERAL));
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.3f, 0.16f, 0.16f, 0.16f });
-	nk_space_label(ctx, ZTXT(ZTXT_DISPLAY));
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->vga, OPT_SZ, NULL);
-	nk_spacer(ctx);
-	nk_spacer(ctx);
-	nk_spacer(ctx);
-
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.3f, 0.16f, 0.16f, 0.16f });
 	nk_space_label(ctx, ZTXT(ZTXT_USB));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->usb, OPT_SZ, NULL);
 	if (!nk.ini->cur->usb[0])
