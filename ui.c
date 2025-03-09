@@ -14,8 +14,9 @@ get_ini_bool(LPCWSTR section, LPCWSTR key, nk_bool fallback)
 static void
 get_profile(ZEMU_QEMU_ARCH arch)
 {
+	int num;
 	LPCWSTR section, model, machine, display;
-	ZEMU_FW fw;
+	ZEMU_FW fw, fw_min, fw_max;
 	ZEMU_INI_PROFILE* p = &nk.ini->profile[arch];
 	switch (arch)
 	{
@@ -25,6 +26,8 @@ get_profile(ZEMU_QEMU_ARCH arch)
 		machine = L"pc";
 		display = L"vmware-svga";
 		fw = ZEMU_FW_X64_EFI;
+		fw_min = ZEMU_FW_X86_MIN;
+		fw_max = ZEMU_FW_X86_MAX;
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
 		section = L"Arm";
@@ -32,6 +35,8 @@ get_profile(ZEMU_QEMU_ARCH arch)
 		machine = L"virt";
 		display = L"ramfb";
 		fw = ZEMU_FW_AA64_EFI;
+		fw_min = ZEMU_FW_ARM_MIN;
+		fw_max = ZEMU_FW_ARM_MAX;
 		break;
 	default:
 		section = L"Unknown";
@@ -39,13 +44,22 @@ get_profile(ZEMU_QEMU_ARCH arch)
 		machine = L"virt";
 		display = L"VGA";
 		fw = 0;
+		fw_min = ZEMU_FW_MAX;
+		fw_max = ZEMU_FW_MAX;
 	}
 
-	strcpy_s(p->smp, OPT_SZ, get_ini_value(section, L"Smp", L"4"));
-	// TODO: check number range
+	num = get_ini_num(section, L"Smp", 4);
+	if (num <= 0)
+		num = 1;
+	snprintf(p->smp, OPT_SZ, "%d", num);
+
 	strcpy_s(p->model, OPT_SZ, get_ini_value(section, L"Model", model));
-	strcpy_s(p->mem, OPT_SZ, get_ini_value(section, L"Memory", L"4096"));
-	// TODO: check number range
+
+	num = get_ini_num(section, L"Memory", 4096);
+	if (num <= 0)
+		num = 1;
+	snprintf(p->mem, OPT_SZ, "%d", num);
+
 	strcpy_s(p->machine, OPT_SZ, get_ini_value(section, L"Machine", machine));
 	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_true);
 	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
@@ -54,10 +68,14 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", nk_true);
 	p->usb_tablet = get_ini_bool(section, L"UsbTablet", nk_true);
 	p->usb_mouse = get_ini_bool(section, L"UsbMouse", nk_false);
+	
 	p->fw = get_ini_num(section, L"Firmware", fw);
-	// TODO: check number range
+	if (p->fw < fw_min || p->fw > fw_max)
+		p->fw = fw;
+
 	p->boot = get_ini_num(section, L"BootTarget", ZEMU_BOOT_VHD);
-	// TODO: check number range
+	if (p->boot < 0 || p->boot >= ZEMU_BOOT_MAX)
+		p->boot = ZEMU_BOOT_VHD;
 }
 
 void
