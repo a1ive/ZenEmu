@@ -6,6 +6,16 @@
 #include "dev.h"
 #include "gettext.h"
 
+static inline void
+ui_hd_attr(struct nk_context* ctx, ZEMU_DEV_ATTR* attr)
+{
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.3f, 0.3f, 0.2f });
+	nk_spacer(ctx);
+	nk_checkbox_label(ctx, ZTXT(ZTXT_SNAPSHOT), &attr->snapshot);
+	nk_spacer(ctx);
+	nk_spacer(ctx);
+}
+
 static void
 obj_vhd(struct nk_context* ctx)
 {
@@ -13,6 +23,8 @@ obj_vhd(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
+
+	ui_hd_attr(ctx, &nk.ini->boot_vhd_attr);
 
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->boot_vhd);
@@ -52,6 +64,8 @@ obj_hd(struct nk_context* ctx)
 		nk.ini->hd_info = NULL;
 		nk.ini->hd_count = 0;
 	}
+
+	ui_hd_attr(ctx, &nk.ini->boot_hd_attr);
 }
 
 static void

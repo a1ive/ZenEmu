@@ -87,20 +87,30 @@ append_qemu_hw(void)
 	append_cmdline(L"-nic user,model=virtio-net-pci ");
 }
 
+static inline void
+append_hd_attr(ZEMU_DEV_ATTR* attr)
+{
+	if (attr->snapshot)
+		append_cmdline(L",snapshot=on");
+}
+
 static void
 append_qemu_bootdev(void)
 {
 	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:
-		append_cmdline(L"-hda \"%s\" -boot c ", rel_to_abs(nk.ini->boot_vhd));
+		append_cmdline(L"-drive file=\"%s\"", rel_to_abs(nk.ini->boot_vhd));
+		append_hd_attr(&nk.ini->boot_vhd_attr);
+		append_cmdline(L",index=0,media=disk -boot c ");
 		break;
 	case ZEMU_BOOT_ISO:
 		append_cmdline(L"-cdrom \"%s\" -boot d ", rel_to_abs(nk.ini->boot_iso));
 		break;
 	case ZEMU_BOOT_PD:
-		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw,index=0,media=disk -boot c ",
-			nk.ini->hd_info[nk.ini->boot_hd].index);
+		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu", nk.ini->hd_info[nk.ini->boot_hd].index);
+		append_hd_attr(&nk.ini->boot_hd_attr);
+		append_cmdline(L",format=raw,index=0,media=disk -boot c ");
 		break;
 	case ZEMU_BOOT_CD:
 		append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",

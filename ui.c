@@ -105,6 +105,9 @@ ui_ini_init(void)
 	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_ARM32_EFI], OPT_SZ, get_ini_value(L"Wim", L"ARM32_EFI", L"wimldr.arm"));
 	strcpy_s(nk.ini->qemu_wimhda, OPT_SZ, get_ini_value(L"Wim", L"Hda", L"wim.qcow2"));
 
+	nk.ini->boot_vhd_attr.snapshot = get_ini_bool(L"Vhd", L"Snapshot", nk_false);
+	nk.ini->boot_hd_attr.snapshot = get_ini_bool(L"Pd", L"Snapshot", nk_true);
+
 	nk.ini->cur = &nk.ini->profile[nk.ini->qemu_arch];
 	get_profile(ZEMU_QEMU_ARCH_X64);
 	get_profile(ZEMU_QEMU_ARCH_AA64);
@@ -164,6 +167,9 @@ ui_ini_save(void)
 	set_ini_value(L"Wim", L"AA64_EFI", nk.ini->qemu_wimldr[ZEMU_FW_AA64_EFI]);
 	set_ini_value(L"Wim", L"ARM32_EFI", nk.ini->qemu_wimldr[ZEMU_FW_ARM32_EFI]);
 	set_ini_value(L"Wim", L"Hda", nk.ini->qemu_wimhda);
+
+	set_ini_num(L"Vhd", L"Snapshot", nk.ini->boot_vhd_attr.snapshot);
+	set_ini_num(L"Pd", L"Snapshot", nk.ini->boot_hd_attr.snapshot);
 
 	set_profile(ZEMU_QEMU_ARCH_X64);
 	set_profile(ZEMU_QEMU_ARCH_AA64);

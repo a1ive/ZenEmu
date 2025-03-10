@@ -5,8 +5,6 @@
 #include "ui.h"
 #include "gettext.h"
 
-
-
 void
 ui_qemu_dev(struct nk_context* ctx)
 {
