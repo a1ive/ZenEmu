@@ -140,6 +140,10 @@ get_disk_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 		STORAGE_DEVICE_NUMBER sdn;
 		HANDLE if_dev_handle;
 
+		info[i].index = (DWORD)-1;
+		info[i].prefix = is_cd ? "CD" : "HD";
+		info[i].bus = "Unknown";
+
 		if (!SetupDiEnumDeviceInterfaces(dev_info_handle, NULL, &dev_guid, (DWORD)i, &if_data))
 			goto next_drive;
 		if (!SetupDiGetDeviceInterfaceDetailW(dev_info_handle, &if_data, (PSP_DEVICE_INTERFACE_DETAIL_DATA_W)&my_data,
@@ -181,10 +185,8 @@ get_disk_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 			goto next_drive;
 
 		info[i].size = get_disk_size(hd);
-		if (is_cd)
-			info[i].prefix = "CD";
-		else
-			info[i].prefix = sdd->RemovableMedia ? "RM" : "HD";
+		if (!is_cd && sdd->RemovableMedia)
+			info[i].prefix = "RM";
 		info[i].bus = get_bus_name(sdd->BusType);
 
 		if (sdd->VendorIdOffset)
@@ -204,10 +206,6 @@ get_disk_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 			trim_str(info[i].hw);
 		}
 
-		snprintf(info[i].text, MAX_PATH, "%s%lu:%s %s (%s)",
-			info[i].prefix, info[i].index, info[i].bus, info[i].hw,
-			get_human_size(info[i].size, human_units, 1024));
-
 	next_drive:
 		if (sdd)
 			free(sdd);
@@ -217,5 +215,14 @@ get_disk_list(BOOL is_cd, PHY_DRIVE_INFO** drive_list)
 	SetupDiDestroyDeviceInfoList(dev_info_handle);
 
 	qsort(info, count, sizeof(PHY_DRIVE_INFO), compare_disk_id);
-	return count;
+	for (i = 0; i < count; i++)
+	{
+		if (info[i].index == (DWORD)-1)
+			break;
+		snprintf(info[i].text, MAX_PATH, "%s%lu:%s %s (%s)",
+			info[i].prefix, info[i].index, info[i].bus, info[i].hw,
+			get_human_size(info[i].size, human_units, 1024));
+
+	}
+	return i;
 }

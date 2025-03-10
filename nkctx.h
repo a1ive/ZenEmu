@@ -48,11 +48,17 @@ nk_space_label(struct nk_context* ctx, const char* str);
 
 struct _ZEMU_INI_DATA;
 
+#define FONT_NAME_LEN 64
+
 typedef struct _NK_GUI_CTX
 {
 	HINSTANCE inst;
+	HINSTANCE prev;
+	LPWSTR cmdline;
+	int cmdshow;
 	HWND wnd;
 	WNDCLASSW wc;
+	WCHAR font_name[FONT_NAME_LEN];
 	GdipFont* font;
 	struct nk_context* ctx;
 	unsigned width;
@@ -71,10 +77,7 @@ typedef struct _NK_GUI_CTX
 extern NK_GUI_CTX nk;
 
 void
-nkctx_init(HINSTANCE inst,
-	int x, int y, unsigned width, unsigned height,
-	LPCWSTR class_name, LPCWSTR title,
-	LPCWSTR font_name, int font_size);
+nkctx_init(int x, int y, LPCWSTR class_name, LPCWSTR title);
 
 void
 nkctx_loop(void);

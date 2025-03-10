@@ -165,6 +165,9 @@
     <Image Include="icons\warn.png">
       <Filter>资源文件\icons</Filter>
     </Image>
+    <Image Include="icons\admin.png">
+      <Filter>资源文件\icons</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

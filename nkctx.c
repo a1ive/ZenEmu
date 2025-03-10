@@ -138,39 +138,28 @@ fail:
 }
 
 void
-nkctx_init(HINSTANCE inst,
-	int x, int y, unsigned width, unsigned height,
-	LPCWSTR class_name, LPCWSTR title,
-	LPCWSTR font_name, int font_size)
+nkctx_init(int x, int y, LPCWSTR class_name, LPCWSTR title)
 {
 	DWORD style = WS_POPUP | WS_VISIBLE;
 	DWORD exstyle = WS_EX_LAYERED;
 
-	ZeroMemory(&nk, sizeof(nk));
-
-	load_ini();
-	nk.inst = inst;
-	nk.width = width;
-	nk.height = height;
-	nk.font_size = font_size;
-
 	nk.wc.style = CS_DBLCLKS;
 	nk.wc.lpfnWndProc = nkctx_window_proc;
-	nk.wc.hInstance = inst;
-	nk.wc.hIcon = LoadIconW(inst, MAKEINTRESOURCEW(IDI_MAIN_ICON));
+	nk.wc.hInstance = nk.inst;
+	nk.wc.hIcon = LoadIconW(nk.inst, MAKEINTRESOURCEW(IDI_MAIN_ICON));
 	nk.wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
 	nk.wc.lpszClassName = class_name;
 	RegisterClassW(&nk.wc);
 
 	nk.wnd = CreateWindowExW(exstyle, class_name, title, style,
-		x, y, (int)width, (int)height,
-		NULL, NULL, inst, NULL);
+		x, y, (int)nk.width, (int)nk.height,
+		NULL, NULL, nk.inst, NULL);
 
 	SetLayeredWindowAttributes(nk.wnd, 0, 255, LWA_ALPHA);
 
 	nk.ctx = nk_gdip_init(nk.wnd, nk.width, nk.height);
 
-	nk.font = nk_gdip_load_font(font_name, nk.font_size);
+	nk.font = nk_gdip_load_font(nk.font_name, nk.font_size);
 	nk_gdip_set_font(nk.font);
 
 	for (WORD i = 0; i < sizeof(nk.image) / sizeof(nk.image[0]); i++)
