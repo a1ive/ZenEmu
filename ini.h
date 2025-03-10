@@ -84,6 +84,13 @@ typedef struct _ZEMU_DEV_ATTR
 	nk_bool snapshot;
 } ZEMU_DEV_ATTR;
 
+typedef enum _ZEMU_DEV_TYPE
+{
+	ZEMU_DEV_HD = 0,
+	ZEMU_DEV_CD,
+	ZEMU_DEV_MAX
+} ZEMU_DEV_TYPE;
+
 typedef struct _ZEMU_INI_DATA
 {
 	WCHAR pwd[MAX_PATH];
@@ -107,13 +114,12 @@ typedef struct _ZEMU_INI_DATA
 	
 	CHAR boot_vfd[MAX_PATH];
 
-	struct _PHY_DRIVE_INFO* hd_info;
-	DWORD hd_count;
+	struct _PHY_DRIVE_INFO* d_info[ZEMU_DEV_MAX];
+	DWORD d_count[ZEMU_DEV_MAX];
+
 	DWORD boot_hd;
 	ZEMU_DEV_ATTR boot_hd_attr;
 
-	struct _PHY_DRIVE_INFO* cd_info;
-	DWORD cd_count;
 	DWORD boot_cd;
 
 	CHAR boot_linux[MAX_PATH];

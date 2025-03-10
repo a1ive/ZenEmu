@@ -19,9 +19,9 @@ check_valid(void)
 	case ZEMU_BOOT_ISO:
 		return nk.ini->boot_iso[0] ? true : false;
 	case ZEMU_BOOT_PD:
-		return nk.ini->hd_count ? true : false;
+		return nk.ini->d_count[ZEMU_DEV_HD] ? true : false;
 	case ZEMU_BOOT_CD:
-		return nk.ini->cd_count ? true : false;
+		return nk.ini->d_count[ZEMU_DEV_CD] ? true : false;
 	case ZEMU_BOOT_VFD:
 		return nk.ini->boot_vfd[0] ? true : false;
 	case ZEMU_BOOT_PXE:

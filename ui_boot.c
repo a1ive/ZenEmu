@@ -47,24 +47,24 @@ obj_iso(struct nk_context* ctx)
 static void
 obj_hd(struct nk_context* ctx)
 {
-	if (nk.ini->hd_info == NULL)
-		nk.ini->hd_count = get_disk_list(FALSE, &nk.ini->hd_info);
+	if (nk.ini->d_info[ZEMU_DEV_HD] == NULL)
+		nk.ini->d_count[ZEMU_DEV_HD] = get_disk_list(FALSE, &nk.ini->d_info[ZEMU_DEV_HD]);
 
-	if (nk.ini->boot_hd >= nk.ini->hd_count)
+	if (nk.ini->boot_hd >= nk.ini->d_count[ZEMU_DEV_HD])
 		nk.ini->boot_hd = 0;
 
 	nk_space_label(ctx, ZTXT(ZTXT_PHYSICAL_DISK));
 
-	if (nk.ini->hd_count == 0)
+	if (nk.ini->d_count[ZEMU_DEV_HD] == 0)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
 	else
-		nk.ini->boot_hd = nk_disk_list(ctx, nk.ini->hd_info, nk.ini->hd_count, nk.ini->boot_hd,
-			(int)nk.title_height, UI_OBJ_WIDTH * nk.width);
+		nk.ini->boot_hd = nk_disk_list(ctx, nk.ini->d_info[ZEMU_DEV_HD], nk.ini->d_count[ZEMU_DEV_HD],
+			nk.ini->boot_hd, (int)nk.title_height, UI_OBJ_WIDTH * nk.width);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 	{
-		free(nk.ini->hd_info);
-		nk.ini->hd_info = NULL;
-		nk.ini->hd_count = 0;
+		free(nk.ini->d_info[ZEMU_DEV_HD]);
+		nk.ini->d_info[ZEMU_DEV_HD] = NULL;
+		nk.ini->d_count[ZEMU_DEV_HD] = 0;
 	}
 
 	ui_hd_attr(ctx, &nk.ini->boot_hd_attr);
@@ -73,24 +73,24 @@ obj_hd(struct nk_context* ctx)
 static void
 obj_cd(struct nk_context* ctx)
 {
-	if (nk.ini->cd_info == NULL)
-		nk.ini->cd_count = get_disk_list(TRUE, &nk.ini->cd_info);
+	if (nk.ini->d_info[ZEMU_DEV_CD] == NULL)
+		nk.ini->d_count[ZEMU_DEV_CD] = get_disk_list(TRUE, &nk.ini->d_info[ZEMU_DEV_CD]);
 
-	if (nk.ini->boot_cd >= nk.ini->cd_count)
+	if (nk.ini->boot_cd >= nk.ini->d_count[ZEMU_DEV_CD])
 		nk.ini->boot_cd = 0;
 
 	nk_space_label(ctx, ZTXT(ZTXT_CD_ROM));
 
-	if (nk.ini->cd_count == 0)
+	if (nk.ini->d_count[ZEMU_DEV_CD] == 0)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
 	else
-		nk.ini->boot_cd = nk_disk_list(ctx, nk.ini->cd_info, nk.ini->cd_count, nk.ini->boot_cd,
-			(int)nk.title_height, UI_OBJ_WIDTH * nk.width);
+		nk.ini->boot_cd = nk_disk_list(ctx, nk.ini->d_info[ZEMU_DEV_CD], nk.ini->d_count[ZEMU_DEV_CD],
+			nk.ini->boot_cd, (int)nk.title_height, UI_OBJ_WIDTH * nk.width);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 	{
-		free(nk.ini->cd_info);
-		nk.ini->cd_info = NULL;
-		nk.ini->cd_count = 0;
+		free(nk.ini->d_info[ZEMU_DEV_CD]);
+		nk.ini->d_info[ZEMU_DEV_CD] = NULL;
+		nk.ini->d_count[ZEMU_DEV_CD] = 0;
 	}
 }
 
