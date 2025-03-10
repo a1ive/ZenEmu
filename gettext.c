@@ -53,6 +53,7 @@ lang_en_us[ZTXT__MAX] =
 	[ZTXT_SAVE] = u8"Save",
 	[ZTXT_START] = u8"Start",
 	[ZTXT_LOGS] = u8"Logs",
+	[ZTXT_WARN_NON_ASCII] = u8"Paths containing commas or non-ASCII characters are NOT supported",
 	[ZTXT_UNSUPPORTED] = u8"Unsupported",
 };
 
@@ -102,6 +103,7 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_SAVE] = u8"保存",
 	[ZTXT_START] = u8"启动",
 	[ZTXT_LOGS] = u8"日志",
+	[ZTXT_WARN_NON_ASCII] = u8"不支持包含逗号或非ASCII字符的路径",
 	[ZTXT_UNSUPPORTED] = u8"不支持",
 };
 

@@ -13,6 +13,9 @@ obj_vhd(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_vhd);
 }
 
 static void
@@ -22,6 +25,9 @@ obj_iso(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_iso);
 }
 
 static void
@@ -79,6 +85,9 @@ obj_vfd(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vfd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vfd, MAX_PATH, FILTER_VFD);
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_vfd);
 }
 
 static void
@@ -92,6 +101,11 @@ obj_pxe(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_file, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->net_file, MAX_PATH, FILTER_ALL);
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->net_tftp);
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->net_file);
 }
 
 static void
@@ -119,6 +133,15 @@ obj_linux(struct nk_context* ctx)
 		if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 			ui_open_file(nk.ini->boot_shim, MAX_PATH, FILTER_EFI);
 	}
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_linux);
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_initrd);
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_dtb);
+	if (nk.show_warning == nk_false && !IS_BIOS)
+		nk.show_warning = check_path_invalid(nk.ini->boot_shim);
 }
 
 static void
@@ -128,6 +151,9 @@ obj_wim(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_wim, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_wim, MAX_PATH, FILTER_WIM);
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_wim);
 }
 
 static void
@@ -137,6 +163,9 @@ obj_dir(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dir, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->boot_dir, MAX_PATH);
+
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->boot_dir);
 }
 
 void

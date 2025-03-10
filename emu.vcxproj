@@ -236,6 +236,7 @@
     <Image Include="icons\refresh.png" />
     <Image Include="icons\start.png" />
     <Image Include="icons\usb.png" />
+    <Image Include="icons\warn.png" />
     <Image Include="nuklear.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -60,6 +60,7 @@ typedef struct _NK_GUI_CTX
 	unsigned font_size;
 	float title_height;
 	float sq;
+	nk_bool show_warning;
 
 	struct nk_image image[IDR_PNG_MAX - IDR_PNG_MIN];
 

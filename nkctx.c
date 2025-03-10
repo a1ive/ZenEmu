@@ -4,6 +4,7 @@
 #include "ini.h"
 #include "ui.h"
 #include "dev.h"
+#include "gettext.h"
 #include "resource.h"
 #include "version.h"
 
@@ -194,6 +195,13 @@ nkctx_main_window(struct nk_context* ctx, float width, float height)
 	struct nk_rect rect = nk_layout_widget_bounds(ctx);
 	nk.sq = rect.h / rect.w;
 	nk_label(ctx, "v" NKGUI_VERSION_STR " " NKGUI_COPYRIGHT, NK_TEXT_CENTERED);
+	if (nk.show_warning == nk_true)
+	{
+		nk.show_warning = nk_false;
+		nk_layout_row_dynamic(ctx, 0, 1);
+		nk_image_label(ctx, GET_PNG(IDR_PNG_WARN), ZTXT(ZTXT_WARN_NON_ASCII));
+	}
+	nk.show_warning = check_path_invalid(ucs2_to_utf8(nk.ini->pwd));
 
 	ui_qemu_dir(ctx);
 	ui_qemu_cpu(ctx);

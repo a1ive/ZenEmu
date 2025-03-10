@@ -16,6 +16,9 @@ ui_qemu_dir(struct nk_context* ctx)
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->qemu_dir, MAX_PATH);
 
+	if (nk.show_warning == nk_false)
+		nk.show_warning = check_path_invalid(nk.ini->qemu_dir);
+
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.4f, 0.4f });
 	nk_space_label(ctx, ZTXT(ZTXT_ARCH));
 	UI_OPTION("x86_64", nk.ini->qemu_arch, ZEMU_QEMU_ARCH_X64);

@@ -177,3 +177,18 @@ rel_to_abs(LPCSTR path)
 	swprintf(abs_path, MAX_PATH, L"%s\\%s", nk.ini->pwd, wpath);
 	return abs_path;
 }
+
+nk_bool check_path_invalid(const char* str)
+{
+	if (!str)
+		return nk_false;
+	while (*str)
+	{
+		if (*str == ',')
+			return nk_true;
+		if ((unsigned char)*str >= 128)
+			return nk_true;
+		str++;
+	}
+	return nk_false;
+}

@@ -22,7 +22,8 @@
 #define IDR_PNG_REFRESH                 125
 #define IDR_PNG_START                   126
 #define IDR_PNG_USB                     127
+#define IDR_PNG_WARN                    128
 
-#define IDR_PNG_MAX                     128
+#define IDR_PNG_MAX                     129
 
 #define IDT_TIMER_1S                    2001

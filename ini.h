@@ -118,7 +118,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR net_file[MAX_PATH];
 
 	CHAR boot_dir[MAX_PATH];
-
+	
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;
 } ZEMU_INI_DATA;
@@ -144,3 +144,6 @@ set_ini_num(LPCWSTR section, LPCWSTR key, int value);
 
 LPCWSTR
 rel_to_abs(LPCSTR path);
+
+nk_bool
+check_path_invalid(const char* str);
