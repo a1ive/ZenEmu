@@ -16,6 +16,8 @@ ui_hd_attr(struct nk_context* ctx, ZEMU_DEV_ATTR* attr)
 	nk_spacer(ctx);
 }
 
+#define UI_OBJ_WIDTH (0.8f - nk.sq)
+
 static void
 obj_vhd(struct nk_context* ctx)
 {
@@ -57,7 +59,7 @@ obj_hd(struct nk_context* ctx)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
 	else
 		nk.ini->boot_hd = nk_disk_list(ctx, nk.ini->hd_info, nk.ini->hd_count, nk.ini->boot_hd,
-			(int)nk.title_height, 0.7f * nk.width);
+			(int)nk.title_height, UI_OBJ_WIDTH * nk.width);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 	{
 		free(nk.ini->hd_info);
@@ -83,7 +85,7 @@ obj_cd(struct nk_context* ctx)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
 	else
 		nk.ini->boot_cd = nk_disk_list(ctx, nk.ini->cd_info, nk.ini->cd_count, nk.ini->boot_cd,
-			(int)nk.title_height, 0.7f * nk.width);
+			(int)nk.title_height, UI_OBJ_WIDTH * nk.width);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 	{
 		free(nk.ini->cd_info);
@@ -218,7 +220,7 @@ ui_qemu_boot(struct nk_context* ctx)
 	if (IS_BIOS)
 		nk_widget_disable_end(ctx);
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, UI_OBJ_WIDTH, nk.sq });
 	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:

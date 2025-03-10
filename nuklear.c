@@ -89,7 +89,7 @@ nk_disk_list(struct nk_context* ctx, PHY_DRIVE_INFO* items, DWORD count,
 	float x_padding = 2 * window_padding.y + 2 * item_spacing.y;
 	size.x = (width > x_padding) ? width - x_padding : width;
 
-	if (nk_combo_begin_text(ctx, items[selected].text, MAX_PATH, size))
+	if (nk_combo_begin_text(ctx, items[selected].text, nk_strlen(items[selected].text), size))
 	{
 		nk_layout_row_dynamic(ctx, (float)item_height, 1);
 		for (i = 0; i < count; ++i) {
