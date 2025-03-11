@@ -66,6 +66,8 @@ append_qemu_hw(void)
 	append_cmdline(L"-smp %s ", utf8_to_ucs2(nk.ini->cur->smp));
 	append_cmdline(L"-M %s,kernel-irqchip=%s", utf8_to_ucs2(nk.ini->cur->machine),
 		nk.ini->cur->irqchip ? L"on" : L"off");
+	if (nk.ini->cur->audio && nk.ini->cur->audio_spk)
+		append_cmdline(L",pcspk-audiodev=snd0");
 	if (nk.ini->qemu_arch)
 		append_cmdline(L",virtualization=%s ", nk.ini->cur->virt ? L"true" : L"false");
 	else
@@ -86,6 +88,13 @@ append_qemu_hw(void)
 	
 	if (nk.ini->cur->net && nk.ini->cur->netdev[0])
 		append_cmdline(L"-net nic,model=%s -net user ", utf8_to_ucs2(nk.ini->cur->netdev));
+
+	if (nk.ini->cur->audio)
+	{
+		append_cmdline(L"-audiodev %s,id=snd0 ", utf8_to_ucs2(nk.ini->cur->audiodev));
+		if (nk.ini->cur->audio_hda)
+			append_cmdline(L"-device intel-hda -device hda-output,audiodev=snd0 ");
+	}
 }
 
 static inline void

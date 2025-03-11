@@ -72,6 +72,10 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", nk_true);
 	p->usb_tablet = get_ini_bool(section, L"UsbTablet", nk_true);
 	p->usb_mouse = get_ini_bool(section, L"UsbMouse", nk_false);
+	p->audio = get_ini_bool(section, L"Audio", nk_false);
+	p->audio_hda = get_ini_bool(section, L"IntelHDA", nk_false);
+	p->audio_spk = get_ini_bool(section, L"PcSpeaker", nk_false);
+	strcpy_s(p->audiodev, OPT_SZ, get_ini_value(section, L"AudioBackend", L"dsound"));
 	
 	p->fw = get_ini_num(section, L"Firmware", fw);
 	if (p->fw < fw_min || p->fw > fw_max)
@@ -148,6 +152,10 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"UsbKeyboard", p->usb_kbd);
 	set_ini_num(section, L"UsbTablet", p->usb_tablet);
 	set_ini_num(section, L"UsbMouse", p->usb_mouse);
+	set_ini_num(section, L"Audio", p->audio);
+	set_ini_num(section, L"IntelHDA", p->audio_hda);
+	set_ini_num(section, L"PcSpeaker", p->audio_spk);
+	set_ini_value(section, L"AudioBackend", p->audiodev);
 	set_ini_num(section, L"Firmware", p->fw);
 	set_ini_num(section, L"BootTarget", p->boot);
 }

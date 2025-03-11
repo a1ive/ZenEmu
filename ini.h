@@ -78,6 +78,10 @@ typedef struct _ZEMU_INI_PROFILE
 	nk_bool usb_kbd;
 	nk_bool usb_tablet;
 	nk_bool usb_mouse;
+	nk_bool audio;
+	nk_bool audio_hda;
+	nk_bool audio_spk;
+	char audiodev[OPT_SZ];
 	ZEMU_FW fw;
 	ZEMU_BOOT_TARGET boot;
 } ZEMU_INI_PROFILE;
