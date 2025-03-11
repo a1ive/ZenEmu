@@ -71,6 +71,7 @@ typedef struct _ZEMU_INI_PROFILE
 	nk_bool virt; // ARM only
 	char vga[OPT_SZ];
 	nk_bool pflash;
+	CHAR net[OPT_SZ];
 	char usb[OPT_SZ];
 	nk_bool usb_kbd;
 	nk_bool usb_tablet;

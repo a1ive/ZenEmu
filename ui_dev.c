@@ -9,7 +9,7 @@ void
 ui_qemu_dev(struct nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, 0, 1);
-	nk_image_label(ctx, GET_PNG(IDR_PNG_USB), ZTXT(ZTXT_PERIPHERAL));
+	nk_image_label(ctx, GET_PNG(IDR_PNG_PC), ZTXT(ZTXT_PERIPHERAL));
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.3f, 0.16f, 0.16f, 0.16f });
 	nk_space_label(ctx, ZTXT(ZTXT_USB));
@@ -21,4 +21,10 @@ ui_qemu_dev(struct nk_context* ctx)
 	nk_checkbox_label(ctx, ZTXT(ZTXT_TABLET), &nk.ini->cur->usb_tablet);
 	if (!nk.ini->cur->usb[0])
 		nk_widget_disable_end(ctx);
+
+	nk_space_label(ctx, ZTXT(ZTXT_NETWORK));
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->net, OPT_SZ, NULL);
+	nk_spacer(ctx);
+	nk_spacer(ctx);
+	nk_spacer(ctx);
 }

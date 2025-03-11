@@ -84,7 +84,8 @@ append_qemu_hw(void)
 			append_cmdline(L"-device usb-mouse ");
 	}
 	
-	append_cmdline(L"-nic user,model=virtio-net-pci ");
+	if (nk.ini->cur->net[0])
+		append_cmdline(L"-net nic,model=%s ", utf8_to_ucs2(nk.ini->cur->net));
 }
 
 static inline void
