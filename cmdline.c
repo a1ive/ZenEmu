@@ -85,7 +85,7 @@ append_qemu_hw(void)
 	}
 	
 	if (nk.ini->cur->net[0])
-		append_cmdline(L"-net nic,model=%s ", utf8_to_ucs2(nk.ini->cur->net));
+		append_cmdline(L"-net nic,model=%s -net user ", utf8_to_ucs2(nk.ini->cur->net));
 }
 
 static inline void
