@@ -73,9 +73,9 @@ append_qemu_hw(void)
 	append_cmdline(L"-m %s ", utf8_to_ucs2(nk.ini->cur->mem));
 	append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vga));
 
-	if (nk.ini->cur->usb[0])
+	if (nk.ini->cur->usb && nk.ini->cur->usbctrl[0])
 	{
-		append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->usb));
+		append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->usbctrl));
 		if (nk.ini->cur->usb_kbd)
 			append_cmdline(L"-device usb-kbd ");
 		if (nk.ini->cur->usb_tablet)
@@ -84,8 +84,8 @@ append_qemu_hw(void)
 			append_cmdline(L"-device usb-mouse ");
 	}
 	
-	if (nk.ini->cur->net[0])
-		append_cmdline(L"-net nic,model=%s -net user ", utf8_to_ucs2(nk.ini->cur->net));
+	if (nk.ini->cur->net && nk.ini->cur->netdev[0])
+		append_cmdline(L"-net nic,model=%s -net user ", utf8_to_ucs2(nk.ini->cur->netdev));
 }
 
 static inline void

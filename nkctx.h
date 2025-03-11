@@ -60,6 +60,7 @@ typedef struct _NK_GUI_CTX
 	WNDCLASSW wc;
 	WCHAR font_name[FONT_NAME_LEN];
 	GdipFont* font;
+	struct nk_color color[NK_COLOR_COUNT];
 	struct nk_context* ctx;
 	unsigned width;
 	unsigned height;
@@ -67,6 +68,7 @@ typedef struct _NK_GUI_CTX
 	float title_height;
 	float sq;
 	nk_bool show_warning;
+	struct nk_style_button button_style;
 
 	struct nk_image image[IDR_PNG_MAX - IDR_PNG_MIN];
 

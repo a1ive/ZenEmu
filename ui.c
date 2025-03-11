@@ -65,8 +65,10 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
 	strcpy_s(p->vga, OPT_SZ, get_ini_value(section, L"Display", display));
 	p->pflash = get_ini_bool(section, L"Pflash", nk_false);
-	strcpy_s(p->net, OPT_SZ, get_ini_value(section, L"Network", L"e1000"));
-	strcpy_s(p->usb, OPT_SZ, get_ini_value(section, L"Usb", L"usb-ehci"));
+	p->net = get_ini_bool(section, L"Network", nk_true);
+	strcpy_s(p->netdev, OPT_SZ, get_ini_value(section, L"NetworkDevice", L"e1000"));
+	p->usb = get_ini_bool(section, L"Usb", nk_true);
+	strcpy_s(p->usbctrl, OPT_SZ, get_ini_value(section, L"UsbController", L"usb-ehci"));
 	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", nk_true);
 	p->usb_tablet = get_ini_bool(section, L"UsbTablet", nk_true);
 	p->usb_mouse = get_ini_bool(section, L"UsbMouse", nk_false);
@@ -139,8 +141,10 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"Virtualization", p->virt);
 	set_ini_value(section, L"Display", p->vga);
 	set_ini_num(section, L"Pflash", p->pflash);
-	set_ini_value(section, L"NetworkDevice", p->net);
-	set_ini_value(section, L"Usb", p->usb);
+	set_ini_num(section, L"Network", p->net);
+	set_ini_value(section, L"NetworkDevice", p->netdev);
+	set_ini_num(section, L"Usb", p->usb);
+	set_ini_value(section, L"UsbController", p->usbctrl);
 	set_ini_num(section, L"UsbKeyboard", p->usb_kbd);
 	set_ini_num(section, L"UsbTablet", p->usb_tablet);
 	set_ini_num(section, L"UsbMouse", p->usb_mouse);
