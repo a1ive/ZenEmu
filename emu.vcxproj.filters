@@ -1,172 +1,175 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
+    <Filter Include="Headers">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="资源文件">
+    <Filter Include="Sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="RC">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="资源文件\icons">
+    <Filter Include="RC\icons">
       <UniqueIdentifier>{b4a51450-6ef8-481d-a95b-51012e2e024e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="nuklear.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="nuklear_gdip.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="nkctx.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="version.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ini.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ui.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="cmdline.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="dev.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="gettext.h">
-      <Filter>头文件</Filter>
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="nuklear.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="nkctx.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ini.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_dir.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_cpu.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_mem.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_fw.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_boot.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_dev.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui_end.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="cmdline.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="dev.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="open_dialog.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="gettext.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ui.c">
-      <Filter>源文件</Filter>
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc">
-      <Filter>资源文件</Filter>
+      <Filter>RC</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="nuklear.ico">
-      <Filter>资源文件</Filter>
+      <Filter>RC</Filter>
     </Image>
     <Image Include="icons\cd.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\copy.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\cpu.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\dir.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\disk.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\edit.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\eth.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\firmware.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\floppy.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\info.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\memory.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\network.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\pc.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\pci.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\qemu.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\refresh.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\start.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\usb.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\warn.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\admin.png">
-      <Filter>资源文件\icons</Filter>
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\audio.png">
+      <Filter>RC\icons</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

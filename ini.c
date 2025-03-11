@@ -113,8 +113,8 @@ VOID load_ini(VOID)
 	wcscpy_s(nk.ini->ini, MAX_PATH, nk.ini->pwd);
 	PathCchAppend(nk.ini->ini, MAX_PATH, L"zemu.ini");
 
-	nk.width = get_ini_num(L"Gui", L"Width", 900);
-	nk.height = get_ini_num(L"Gui", L"Height", 1000);
+	nk.width = get_ini_num(L"Gui", L"Width", 640);
+	nk.height = get_ini_num(L"Gui", L"Height", 800);
 	nk.font_size = get_ini_num(L"Gui", L"FontSize", 16);
 	GetPrivateProfileStringW(L"Gui", L"Font", L"Courier New", nk.font_name, FONT_NAME_LEN, nk.ini->ini);
 

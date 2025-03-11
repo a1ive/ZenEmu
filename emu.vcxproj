@@ -219,6 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="icons\admin.png" />
+    <Image Include="icons\audio.png" />
     <Image Include="icons\cd.png" />
     <Image Include="icons\copy.png" />
     <Image Include="icons\cpu.png" />

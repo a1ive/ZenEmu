@@ -21,7 +21,7 @@ ui_hd_attr(struct nk_context* ctx, ZEMU_DEV_ATTR* attr)
 static void
 obj_vhd(struct nk_context* ctx)
 {
-	nk_space_label(ctx, ZTXT(ZTXT_DISK_IMAGE));
+	nk_space_label(ctx, ZTXT(ZTXT_FILE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vhd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vhd, MAX_PATH, FILTER_VHD);
@@ -35,7 +35,7 @@ obj_vhd(struct nk_context* ctx)
 static void
 obj_iso(struct nk_context* ctx)
 {
-	nk_space_label(ctx, ZTXT(ZTXT_ISO_IMAGE));
+	nk_space_label(ctx, ZTXT(ZTXT_FILE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_iso, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_iso, MAX_PATH, FILTER_ISO);
@@ -53,7 +53,7 @@ obj_hd(struct nk_context* ctx)
 	if (nk.ini->boot_hd >= nk.ini->d_count[ZEMU_DEV_HD])
 		nk.ini->boot_hd = 0;
 
-	nk_space_label(ctx, ZTXT(ZTXT_PHYSICAL_DISK));
+	nk_space_label(ctx, ZTXT(ZTXT_DEVICE));
 
 	if (nk.ini->d_count[ZEMU_DEV_HD] == 0)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
@@ -79,7 +79,7 @@ obj_cd(struct nk_context* ctx)
 	if (nk.ini->boot_cd >= nk.ini->d_count[ZEMU_DEV_CD])
 		nk.ini->boot_cd = 0;
 
-	nk_space_label(ctx, ZTXT(ZTXT_CD_ROM));
+	nk_space_label(ctx, ZTXT(ZTXT_DEVICE));
 
 	if (nk.ini->d_count[ZEMU_DEV_CD] == 0)
 		nk_label(ctx, ZTXT(ZTXT_NO_DEVICE), NK_TEXT_CENTERED);
@@ -97,7 +97,7 @@ obj_cd(struct nk_context* ctx)
 static void
 obj_vfd(struct nk_context* ctx)
 {
-	nk_space_label(ctx, ZTXT(ZTXT_FLOPPY_IMAGE));
+	nk_space_label(ctx, ZTXT(ZTXT_FILE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_vfd, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vfd, MAX_PATH, FILTER_VFD);
@@ -127,7 +127,7 @@ obj_pxe(struct nk_context* ctx)
 static void
 obj_linux(struct nk_context* ctx)
 {
-	nk_space_label(ctx, ZTXT(ZTXT_LINUX_KERNEL));
+	nk_space_label(ctx, ZTXT(ZTXT_KERNEL));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_linux, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_linux, MAX_PATH, FILTER_ALL);
@@ -163,7 +163,7 @@ obj_linux(struct nk_context* ctx)
 static void
 obj_wim(struct nk_context* ctx)
 {
-	nk_space_label(ctx, ZTXT(ZTXT_WIM_IMAGE));
+	nk_space_label(ctx, ZTXT(ZTXT_FILE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_wim, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_wim, MAX_PATH, FILTER_WIM);
