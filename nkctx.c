@@ -110,6 +110,9 @@ set_style(struct nk_context* ctx)
 
 	nk_style_from_table(ctx, nk.color);
 
+	nk.ctx->style.button.padding = nk_vec2(2.0f, 2.0f);
+	nk.ctx->style.button.rounding = 2.0f;
+
 	memcpy(&nk.button_style, &ctx->style.button, sizeof(struct nk_style_button));
 
 	nk.title_height = nk.font_size
@@ -174,7 +177,7 @@ nkctx_init(int x, int y, LPCWSTR class_name, LPCWSTR title)
 static void
 nkctx_main_window(struct nk_context* ctx, float width, float height)
 {
-	if (!nk_begin(ctx, "ZenEMU", nk_rect(0.0f, 0.0f, width, height),
+	if (!nk_begin_ex(ctx, "ZenEMU", nk_rect(0.0f, 0.0f, width, height),
 		NK_WINDOW_BACKGROUND | NK_WINDOW_CLOSABLE | NK_WINDOW_TITLE))
 	{
 		nk_end(ctx);

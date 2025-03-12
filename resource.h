@@ -25,7 +25,10 @@
 #define IDR_PNG_WARN                    128
 #define IDR_PNG_ADMIN                   129
 #define IDR_PNG_AUDIO                   130
+#define IDR_PNG_MINIMIZE                131
+#define IDR_PNG_MAXIMIZE                132
+#define IDR_PNG_CLOSE                   133
 
-#define IDR_PNG_MAX                     131
+#define IDR_PNG_MAX                     134
 
 #define IDT_TIMER_1S                    2001

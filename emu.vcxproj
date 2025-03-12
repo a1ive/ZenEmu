@@ -190,6 +190,7 @@
     <ClInclude Include="gettext.h" />
     <ClInclude Include="ini.h" />
     <ClInclude Include="nkctx.h" />
+    <ClInclude Include="nkctx_priv.h" />
     <ClInclude Include="nuklear.h" />
     <ClInclude Include="nuklear_gdip.h" />
     <ClInclude Include="resource.h" />
@@ -221,6 +222,7 @@
     <Image Include="icons\admin.png" />
     <Image Include="icons\audio.png" />
     <Image Include="icons\cd.png" />
+    <Image Include="icons\close.png" />
     <Image Include="icons\copy.png" />
     <Image Include="icons\cpu.png" />
     <Image Include="icons\dir.png" />
@@ -230,7 +232,9 @@
     <Image Include="icons\firmware.png" />
     <Image Include="icons\floppy.png" />
     <Image Include="icons\info.png" />
+    <Image Include="icons\maximize.png" />
     <Image Include="icons\memory.png" />
+    <Image Include="icons\minimize.png" />
     <Image Include="icons\network.png" />
     <Image Include="icons\pc.png" />
     <Image Include="icons\pci.png" />

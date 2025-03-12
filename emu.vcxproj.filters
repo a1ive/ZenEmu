@@ -48,6 +48,9 @@
     <ClInclude Include="gettext.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="nkctx_priv.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -169,6 +172,15 @@
       <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\audio.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\close.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\minimize.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\maximize.png">
       <Filter>RC\icons</Filter>
     </Image>
   </ItemGroup>
