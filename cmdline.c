@@ -87,7 +87,11 @@ append_qemu_hw(void)
 	}
 	
 	if (nk.ini->cur->net && nk.ini->cur->netdev[0])
-		append_cmdline(L"-net nic,model=%s -net user ", utf8_to_ucs2(nk.ini->cur->netdev));
+	{
+		append_cmdline(L"-net nic,model=%s ", utf8_to_ucs2(nk.ini->cur->netdev));
+		if (nk.ini->cur->boot != ZEMU_BOOT_PXE)
+			append_cmdline(L"-net user ");
+	}
 
 	if (nk.ini->cur->audio)
 	{
