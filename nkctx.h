@@ -27,7 +27,7 @@ nk_gdip_load_font(LPCWSTR name, int size);
 struct _PHY_DRIVE_INFO;
 DWORD
 nk_disk_list(struct nk_context* ctx, struct _PHY_DRIVE_INFO* items, DWORD count,
-	DWORD selected, int item_height, float width);
+	DWORD selected, int item_height);
 
 void
 nk_image_label(struct nk_context* ctx, struct nk_image img, const char* str);

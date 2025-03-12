@@ -66,7 +66,7 @@ fail:
 
 DWORD
 nk_disk_list(struct nk_context* ctx, PHY_DRIVE_INFO* items, DWORD count,
-	DWORD selected, int item_height, float width)
+	DWORD selected, int item_height)
 {
 	DWORD i = 0;
 	int max_height;
@@ -86,8 +86,7 @@ nk_disk_list(struct nk_context* ctx, PHY_DRIVE_INFO* items, DWORD count,
 	max_height += (int)item_spacing.y * 2 + (int)window_padding.y * 2;
 	size.y = max_height;
 	
-	float x_padding = 2 * window_padding.y + 2 * item_spacing.y;
-	size.x = (width > x_padding) ? width - x_padding : width;
+	size.x = nk_widget_width(ctx);
 
 	if (nk_combo_begin_text(ctx, items[selected].text, nk_strlen(items[selected].text), size))
 	{
