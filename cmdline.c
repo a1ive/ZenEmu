@@ -119,7 +119,7 @@ append_qemu_bootdev(void)
 		append_cmdline(L",index=0,media=disk -boot c ");
 		break;
 	case ZEMU_BOOT_ISO:
-		append_cmdline(L"-cdrom \"%s\" -boot d ", rel_to_abs(nk.ini->boot_iso));
+		append_cmdline(L"-drive file=\"%s\",index=0,media=cdrom -boot d ", rel_to_abs(nk.ini->boot_iso));
 		break;
 	case ZEMU_BOOT_PD:
 		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu", nk.ini->d_info[ZEMU_DEV_HD][nk.ini->boot_hd].index);
@@ -159,6 +159,32 @@ append_qemu_bootdev(void)
 	}
 }
 
+static void
+append_qemu_hdb(void)
+{
+	for (size_t i = 0; i < nk.ini->add_dev_count; i++)
+	{
+		ZEMU_ADD_DEV* dev = &nk.ini->add_dev[i];
+		if (!dev->is_active)
+			continue;
+		if (dev->is_device)
+		{
+			append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu,format=raw", dev->id);
+		}
+		else
+		{
+			if (!dev->path[0])
+				continue;
+			append_cmdline(L"-drive file=\"%s\"", rel_to_abs(dev->path));
+		}
+		append_hd_attr(&dev->attr);
+		if (dev->type == ZEMU_DEV_CD)
+			append_cmdline(L",media=cdrom ");
+		else
+			append_cmdline(L",media=disk ");
+	}
+}
+
 LPWSTR
 get_cmdline(void)
 {
@@ -166,6 +192,7 @@ get_cmdline(void)
 	append_qemu_bios();
 	append_qemu_hw();
 	append_qemu_bootdev();
+	append_qemu_hdb();
 
 	return static_cmdline;
 }
