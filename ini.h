@@ -98,6 +98,18 @@ typedef enum _ZEMU_DEV_TYPE
 	ZEMU_DEV_MAX
 } ZEMU_DEV_TYPE;
 
+typedef struct _ZEMU_ADD_DEV
+{
+	ZEMU_DEV_TYPE type;
+	ZEMU_DEV_ATTR attr;
+	nk_bool is_device;
+	nk_bool is_active;
+	DWORD id;
+	CHAR path[MAX_PATH];
+} ZEMU_ADD_DEV;
+
+#define MAX_ADD_DEV 4
+
 typedef struct _ZEMU_INI_DATA
 {
 	WCHAR pwd[MAX_PATH];
@@ -141,6 +153,9 @@ typedef struct _ZEMU_INI_DATA
 	CHAR net_file[MAX_PATH];
 
 	CHAR boot_dir[MAX_PATH];
+
+	size_t add_dev_count;
+	ZEMU_ADD_DEV add_dev[MAX_ADD_DEV];
 	
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;

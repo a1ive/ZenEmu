@@ -580,3 +580,67 @@ nk_space_label(struct nk_context* ctx, const char* str)
 	text.text = style->text.color;
 	nk_widget_text(&win->buffer, bounds, str, text_len, &text, NK_TEXT_LEFT, style->font);
 }
+
+static int
+nk_menu_begin_ex(struct nk_context* ctx, struct nk_window* win,
+	const char* id, int is_clicked, struct nk_rect header, struct nk_vec2 size)
+{
+	int is_open = 0;
+	int is_active = 0;
+	struct nk_rect body;
+	struct nk_window* popup;
+	nk_hash hash = nk_murmur_hash(id, (int)nk_strlen(id), NK_PANEL_MENU);
+
+	NK_ASSERT(ctx);
+	NK_ASSERT(ctx->current);
+	NK_ASSERT(ctx->current->layout);
+	if (!ctx || !ctx->current || !ctx->current->layout)
+		return 0;
+
+	body.x = header.x;
+	body.w = size.x;
+	body.y = header.y + header.h;
+	body.h = size.y;
+	if (body.x + body.w > win->bounds.w)
+		body.x -= body.w - nk_widget_width(ctx);
+	if (body.x < 0.0f)
+		body.x = 0.0f;
+
+	popup = win->popup.win;
+	is_open = popup ? nk_true : nk_false;
+	is_active = (popup && (win->popup.name == hash) && win->popup.type == NK_PANEL_MENU);
+	if ((is_clicked && is_open && !is_active) || (is_open && !is_active) ||
+		(!is_open && !is_active && !is_clicked)) return 0;
+	if (!nk_nonblock_begin(ctx, NK_WINDOW_NO_SCROLLBAR, body, header, NK_PANEL_MENU))
+		return 0;
+
+	win->popup.type = NK_PANEL_MENU;
+	win->popup.name = hash;
+	return 1;
+}
+
+nk_bool
+nk_menu_begin_image_ex(struct nk_context* ctx, const char* id, struct nk_image img,
+	struct nk_vec2 size)
+{
+	struct nk_window* win;
+	struct nk_rect header;
+	const struct nk_input* in;
+	int is_clicked = nk_false;
+	nk_flags state;
+
+	NK_ASSERT(ctx);
+	NK_ASSERT(ctx->current);
+	NK_ASSERT(ctx->current->layout);
+	if (!ctx || !ctx->current || !ctx->current->layout)
+		return 0;
+
+	win = ctx->current;
+	state = nk_widget(&header, ctx);
+	if (!state) return 0;
+	in = (state == NK_WIDGET_ROM || state == NK_WIDGET_DISABLED || win->layout->flags & NK_WINDOW_ROM) ? 0 : &ctx->input;
+	if (nk_do_button_image(&ctx->last_widget_state, &win->buffer, header,
+		img, NK_BUTTON_DEFAULT, &ctx->style.menu_button, in))
+		is_clicked = nk_true;
+	return nk_menu_begin_ex(ctx, win, id, is_clicked, header, size);
+}

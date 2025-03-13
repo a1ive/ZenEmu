@@ -19,6 +19,10 @@ nk_image_label(struct nk_context* ctx, struct nk_image img, const char* str);
 void
 nk_space_label(struct nk_context* ctx, const char* str);
 
+nk_bool
+nk_menu_begin_image_ex(struct nk_context* ctx, const char* id, struct nk_image img,
+	struct nk_vec2 size);
+
 #define NK_COLOR_YELLOW     {0xFF, 0xEA, 0x00, 0xff}
 #define NK_COLOR_RED        {0xFF, 0x17, 0x44, 0xff}
 #define NK_COLOR_GREEN      {0x00, 0xE6, 0x76, 0xff}

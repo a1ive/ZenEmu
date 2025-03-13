@@ -212,6 +212,7 @@
     <ClCompile Include="ui_dir.c" />
     <ClCompile Include="ui_end.c" />
     <ClCompile Include="ui_fw.c" />
+    <ClCompile Include="ui_hdb.c" />
     <ClCompile Include="ui_mem.c" />
     <ClCompile Include="ui_dev.c" />
   </ItemGroup>
@@ -219,6 +220,7 @@
     <ResourceCompile Include="nuklear.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="icons\add.png" />
     <Image Include="icons\admin.png" />
     <Image Include="icons\audio.png" />
     <Image Include="icons\cd.png" />
@@ -240,7 +242,9 @@
     <Image Include="icons\pci.png" />
     <Image Include="icons\qemu.png" />
     <Image Include="icons\refresh.png" />
+    <Image Include="icons\remove.png" />
     <Image Include="icons\start.png" />
+    <Image Include="icons\storage.png" />
     <Image Include="icons\usb.png" />
     <Image Include="icons\warn.png" />
     <Image Include="nuklear.ico" />

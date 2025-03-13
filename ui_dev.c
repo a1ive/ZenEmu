@@ -5,27 +5,6 @@
 #include "ui.h"
 #include "gettext.h"
 
-static void
-ui_dev_button(struct nk_context* ctx,
-	struct nk_image img, const char* label, nk_bool* value)
-{
-	if (*value)
-	{
-		nk.button_style.normal = nk_style_item_color(nk.color[NK_COLOR_BUTTON]);
-		nk.button_style.hover = nk_style_item_color(nk.color[NK_COLOR_WINDOW]);
-		nk.button_style.active = nk_style_item_color(nk.color[NK_COLOR_WINDOW]);
-	}
-	else
-	{
-		nk.button_style.normal = nk_style_item_color(nk.color[NK_COLOR_WINDOW]);
-		nk.button_style.hover = nk_style_item_color(nk.color[NK_COLOR_BUTTON]);
-		nk.button_style.active = nk_style_item_color(nk.color[NK_COLOR_BUTTON]);
-	}
-	if (nk_button_image_styled(ctx, &nk.button_style, img))
-		*value = !*value;
-	nk_label(ctx, label, NK_TEXT_LEFT);
-}
-
 void
 ui_qemu_dev(struct nk_context* ctx)
 {

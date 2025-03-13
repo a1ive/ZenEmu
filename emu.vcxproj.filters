@@ -101,6 +101,9 @@
     <ClCompile Include="ui.c">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ui_hdb.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc">
@@ -181,6 +184,15 @@
       <Filter>RC\icons</Filter>
     </Image>
     <Image Include="icons\maximize.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\add.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\remove.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\storage.png">
       <Filter>RC\icons</Filter>
     </Image>
   </ItemGroup>

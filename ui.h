@@ -46,6 +46,10 @@ ui_open_dir(CHAR* path, size_t len);
 	var = nk_option_label(ctx, (label), var == val) ? val : var
 
 void
+ui_dev_button(struct nk_context* ctx,
+	struct nk_image img, const char* label, nk_bool* value);
+
+void
 ui_ini_init(void);
 
 void
@@ -68,6 +72,9 @@ ui_qemu_dev(struct nk_context* ctx);
 
 void
 ui_qemu_boot(struct nk_context* ctx);
+
+void
+ui_qemu_hdb(struct nk_context* ctx);
 
 void
 ui_qemu_end(struct nk_context* ctx);
