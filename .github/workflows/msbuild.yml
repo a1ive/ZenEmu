@@ -37,10 +37,10 @@ jobs:
       run: |
         md zemu
         move x64\Release\zemu.exe zemu\
-        move firmware\bios.bin zemu\
-        move firmware\X64_EFI.fd zemu\
-        move firmware\IA32_EFI.fd zemu\
-        move firmware\AA64_EFI.fd zemu\
+        move firmware\bios.qcow2 zemu\
+        move firmware\X64_EFI.qcow2 zemu\
+        move firmware\IA32_EFI.qcow2 zemu\
+        move firmware\AA64_EFI.qcow2 zemu\
         move firmware\grub.exe zemu\
         move firmware\wim.qcow2 zemu\
 
