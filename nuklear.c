@@ -640,7 +640,7 @@ nk_menu_begin_image_ex(struct nk_context* ctx, const char* id, struct nk_image i
 	if (!state) return 0;
 	in = (state == NK_WIDGET_ROM || state == NK_WIDGET_DISABLED || win->layout->flags & NK_WINDOW_ROM) ? 0 : &ctx->input;
 	if (nk_do_button_image(&ctx->last_widget_state, &win->buffer, header,
-		img, NK_BUTTON_DEFAULT, &ctx->style.menu_button, in))
+		img, NK_BUTTON_DEFAULT, &ctx->style.button, in))
 		is_clicked = nk_true;
 	return nk_menu_begin_ex(ctx, win, id, is_clicked, header, size);
 }
