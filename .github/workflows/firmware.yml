@@ -14,6 +14,7 @@ jobs:
           sudo apt update
           sudo apt install -y build-essential git wget python3 acpica-tools nasm iasl uuid-dev
           sudo apt install -y gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
+          sudo apt install -y qemu-utils
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,6 +28,7 @@ jobs:
           mkdir -p output
           make -C seabios
           cp seabios/out/bios.bin output/bios.bin
+          qemu-img convert -O qcow2 -c output/bios.bin output/bios.qcow2
 
       - name: Build OVMF
         run: |
@@ -45,23 +47,25 @@ jobs:
           set -e
           make -C edk2/BaseTools
 
-          build -b RELEASE -t GCC5 -a ARM -p ArmVirtPkg/ArmVirtQemu.dsc
-          build -b RELEASE -t GCC5 -a AARCH64 -p ArmVirtPkg/ArmVirtQemu.dsc
-          build -b RELEASE -t GCC5 -a IA32 -p OvmfPkg/OvmfPkgIa32.dsc -D FD_SIZE_2MB
-          build -b RELEASE -t GCC5 -a X64 -p OvmfPkg/OvmfPkgX64.dsc -D FD_SIZE_2MB
+          FD_COMMON="-D NETWORK_HTTP_BOOT_ENABLE -D NETWORK_IP6_ENABLE -D NETWORK_TLS_ENABLE -D NETWORK_ISCSI_ENABLE -D NETWORK_ALLOW_HTTP_CONNECTIONS -D TPM2_ENABLE -D TPM2_CONFIG_ENABLE -D TPM1_ENABLE -D CAVIUM_ERRATUM_27456"
+          build -b RELEASE -t GCC5 -a AARCH64 -p ArmVirtPkg/ArmVirtQemu.dsc $FD_COMMON
+          build -b RELEASE -t GCC5 -a IA32 -p OvmfPkg/OvmfPkgIa32.dsc $FD_COMMON -D FD_SIZE_4MB
+          build -b RELEASE -t GCC5 -a X64 -p OvmfPkg/OvmfPkgX64.dsc $FD_COMMON -D FD_SIZE_4MB
 
           mkdir -p output
 
-          cp Build/ArmVirtQemu-ARM/RELEASE_GCC5/FV/QEMU_EFI.fd  output/ARM_EFI.fd
-          cp Build/ArmVirtQemu-ARM/RELEASE_GCC5/FV/QEMU_VARS.fd output/ARM_VARS.fd
-
           cp Build/ArmVirtQemu-AARCH64/RELEASE_GCC5/FV/QEMU_EFI.fd  output/AA64_EFI.fd
+          cp output/AA64_EFI.fd output/AA64_EFI.raw.fd
+          truncate -s 64M output/AA64_EFI.fd
+          qemu-img convert -O qcow2 -c output/AA64_EFI.fd output/AA64_EFI.qcow2
           cp Build/ArmVirtQemu-AARCH64/RELEASE_GCC5/FV/QEMU_VARS.fd output/AA64_VARS.fd
 
           cp Build/OvmfIa32/RELEASE_GCC5/FV/OVMF_CODE.fd output/IA32_EFI.fd
+          qemu-img convert -O qcow2 -c output/IA32_EFI.fd output/IA32_EFI.qcow2
           cp Build/OvmfIa32/RELEASE_GCC5/FV/OVMF_VARS.fd output/IA32_VARS.fd
 
           cp Build/OvmfX64/RELEASE_GCC5/FV/OVMF_CODE.fd output/X64_EFI.fd
+          qemu-img convert -O qcow2 -c output/X64_EFI.fd output/X64_EFI.qcow2
           cp Build/OvmfX64/RELEASE_GCC5/FV/OVMF_VARS.fd output/X64_VARS.fd
 
       - name: Upload firmware
