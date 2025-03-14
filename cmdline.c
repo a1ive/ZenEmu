@@ -62,7 +62,11 @@ append_qemu_bios(void)
 static void
 append_qemu_hw(void)
 {
-	append_cmdline(L"-cpu %s -accel tcg,thread=multi ", utf8_to_ucs2(nk.ini->cur->model));
+	append_cmdline(L"-cpu %s ", utf8_to_ucs2(nk.ini->cur->model));
+	if (nk.ini->cur->whpx)
+		append_cmdline(L"-accel whpx ");
+	else
+		append_cmdline(L"-accel tcg,thread=multi ");
 	append_cmdline(L"-smp %s ", utf8_to_ucs2(nk.ini->cur->smp));
 	append_cmdline(L"-M %s,kernel-irqchip=%s", utf8_to_ucs2(nk.ini->cur->machine),
 		nk.ini->cur->irqchip ? L"on" : L"off");
