@@ -161,7 +161,7 @@ append_qemu_bootdev(void)
 		append_cmdline(L"-drive file=\"%s\",snapshot=on ", rel_to_abs(nk.ini->qemu_wimhda));
 		break;
 	case ZEMU_BOOT_DIR:
-		append_cmdline(L"-drive file=fat:rw:\"%s\",format=raw,media=disk,snapshot=on ",
+		append_cmdline(L"-drive file=fat:\"%s\",format=raw,media=disk,snapshot=on ",
 			rel_to_abs(nk.ini->boot_dir));
 		break;
 	}
