@@ -11,6 +11,15 @@ ui_qemu_dev(struct nk_context* ctx)
 	nk_layout_row_dynamic(ctx, 0, 1);
 	nk_image_label(ctx, GET_PNG(IDR_PNG_PC), ZTXT(ZTXT_PERIPHERAL));
 
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[4]) { nk.sq, 0.2f - nk.sq, 0.3f, 0.5f });
+	ui_dev_button(ctx, GET_PNG(IDR_PNG_DISPLAY), ZTXT(ZTXT_DISPLAY), &nk.ini->cur->graphics);
+	if (!nk.ini->cur->graphics)
+		nk_widget_disable_begin(ctx);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->vgadev, OPT_SZ, NULL);
+	nk_spacer(ctx);
+	if (!nk.ini->cur->graphics)
+		nk_widget_disable_end(ctx);
+
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[6]) { nk.sq, 0.2f - nk.sq, 0.3f, 0.16f, 0.16f, 0.16f });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_USB), ZTXT(ZTXT_USB), &nk.ini->cur->usb);
 	if (!nk.ini->cur->usb)

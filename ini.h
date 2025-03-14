@@ -69,7 +69,8 @@ typedef struct _ZEMU_INI_PROFILE
 	char machine[OPT_SZ];
 	nk_bool irqchip;
 	nk_bool virt; // ARM only
-	char vga[OPT_SZ];
+	nk_bool graphics;
+	char vgadev[OPT_SZ];
 	nk_bool pflash;
 	nk_bool net;
 	char netdev[OPT_SZ];

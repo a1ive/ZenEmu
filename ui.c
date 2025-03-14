@@ -63,7 +63,8 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	strcpy_s(p->machine, OPT_SZ, get_ini_value(section, L"Machine", machine));
 	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_true);
 	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
-	strcpy_s(p->vga, OPT_SZ, get_ini_value(section, L"Display", display));
+	p->graphics = get_ini_bool(section, L"GuiWindow", nk_true);
+	strcpy_s(p->vgadev, OPT_SZ, get_ini_value(section, L"Display", display));
 	p->pflash = get_ini_bool(section, L"Pflash", nk_false);
 	p->net = get_ini_bool(section, L"Network", nk_true);
 	strcpy_s(p->netdev, OPT_SZ, get_ini_value(section, L"NetworkDevice", L"e1000"));
@@ -143,7 +144,8 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_value(section, L"Machine", p->machine);
 	set_ini_num(section, L"KernelIrqchip", p->irqchip);
 	set_ini_num(section, L"Virtualization", p->virt);
-	set_ini_value(section, L"Display", p->vga);
+	set_ini_num(section, L"GuiWindow", p->graphics);
+	set_ini_value(section, L"Display", p->vgadev);
 	set_ini_num(section, L"Pflash", p->pflash);
 	set_ini_num(section, L"Network", p->net);
 	set_ini_value(section, L"NetworkDevice", p->netdev);

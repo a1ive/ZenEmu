@@ -31,7 +31,8 @@
 #define IDR_PNG_ADD                     134
 #define IDR_PNG_REMOVE                  135
 #define IDR_PNG_STORAGE                 136
+#define IDR_PNG_DISPLAY                 137
 
-#define IDR_PNG_MAX                     137
+#define IDR_PNG_MAX                     138
 
 #define IDT_TIMER_1S                    2001

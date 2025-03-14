@@ -37,7 +37,7 @@ ui_qemu_fw(struct nk_context* ctx)
 		nk_spacer(ctx);
 	}
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.3f, 0.5f });
-	nk_space_label(ctx, ZTXT(ZTXT_DISPLAY));
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->vga, OPT_SZ, NULL);
+	nk_spacer(ctx);
 	nk_checkbox_label(ctx, ZTXT(ZTXT_PFLASH), &nk.ini->cur->pflash);
+	nk_spacer(ctx);
 }

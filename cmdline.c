@@ -73,7 +73,11 @@ append_qemu_hw(void)
 	else
 		append_cmdline(L" ");
 	append_cmdline(L"-m %s ", utf8_to_ucs2(nk.ini->cur->mem));
-	append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vga));
+
+	if (nk.ini->cur->graphics && nk.ini->cur->vgadev[0])
+		append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vgadev));
+	//if (!nk.ini->cur->graphics)
+		//append_cmdline(L"-nographic ");
 
 	if (nk.ini->cur->usb && nk.ini->cur->usbctrl[0])
 	{

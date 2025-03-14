@@ -229,6 +229,7 @@
     <Image Include="icons\cpu.png" />
     <Image Include="icons\dir.png" />
     <Image Include="icons\disk.png" />
+    <Image Include="icons\display.png" />
     <Image Include="icons\edit.png" />
     <Image Include="icons\eth.png" />
     <Image Include="icons\firmware.png" />
