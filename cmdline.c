@@ -114,28 +114,31 @@ append_qemu_bootdev(void)
 	switch (nk.ini->cur->boot)
 	{
 	case ZEMU_BOOT_VHD:
-		append_cmdline(L"-drive file=\"%s\"", rel_to_abs(nk.ini->boot_vhd));
+		append_cmdline(L"-drive file=\"%s\"",
+			rel_to_abs(nk.ini->boot_vhd));
 		append_hd_attr(&nk.ini->boot_vhd_attr);
-		append_cmdline(L",index=0,media=disk -boot c ");
+		append_cmdline(L",index=0,media=disk ");
 		break;
 	case ZEMU_BOOT_ISO:
-		append_cmdline(L"-drive file=\"%s\",index=0,media=cdrom -boot d ", rel_to_abs(nk.ini->boot_iso));
+		append_cmdline(L"-drive file=\"%s\",index=0,media=cdrom ",
+			rel_to_abs(nk.ini->boot_iso));
 		break;
 	case ZEMU_BOOT_PD:
-		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu", nk.ini->d_info[ZEMU_DEV_HD][nk.ini->boot_hd].index);
+		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu",
+			nk.ini->d_info[ZEMU_DEV_HD][nk.ini->boot_hd].index);
 		append_hd_attr(&nk.ini->boot_hd_attr);
-		append_cmdline(L",format=raw,index=0,media=disk -boot c ");
+		append_cmdline(L",format=raw,index=0,media=disk ");
 		break;
 	case ZEMU_BOOT_CD:
-		append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom -boot d ",
+		append_cmdline(L"-drive file=\\\\.\\CdRom%lu,format=raw,index=0,media=cdrom ",
 			nk.ini->d_info[ZEMU_DEV_CD][nk.ini->boot_cd].index);
 		break;
 	case ZEMU_BOOT_VFD:
-		append_cmdline(L"-fda \"%s\" -boot a ", rel_to_abs(nk.ini->boot_vfd));
+		append_cmdline(L"-fda \"%s\" ", rel_to_abs(nk.ini->boot_vfd));
 		break;
 	case ZEMU_BOOT_PXE:
 		append_cmdline(L"-net user,tftp=\"%s\",", rel_to_abs(nk.ini->net_tftp));
-		append_cmdline(L",bootfile=\"%s\" -boot n ", rel_to_abs(nk.ini->net_file));
+		append_cmdline(L",bootfile=\"%s\" ", rel_to_abs(nk.ini->net_file));
 		break;
 	case ZEMU_BOOT_LINUX:
 		append_cmdline(L"-kernel \"%s\" ", rel_to_abs(nk.ini->boot_linux));
@@ -154,9 +157,38 @@ append_qemu_bootdev(void)
 		append_cmdline(L"-drive file=\"%s\",snapshot=on ", rel_to_abs(nk.ini->qemu_wimhda));
 		break;
 	case ZEMU_BOOT_DIR:
-		append_cmdline(L"-drive file=fat:rw:\"%s\",format=raw,media=disk -boot c ", rel_to_abs(nk.ini->boot_dir));
+		append_cmdline(L"-drive file=fat:rw:\"%s\",format=raw,media=disk,snapshot=on ",
+			rel_to_abs(nk.ini->boot_dir));
 		break;
 	}
+}
+
+static void
+append_qemu_bootorder(void)
+{
+	switch (nk.ini->cur->boot)
+	{
+	case ZEMU_BOOT_VHD:
+	case ZEMU_BOOT_PD:
+	case ZEMU_BOOT_DIR:
+		append_cmdline(L"-boot c,");
+		break;
+	case ZEMU_BOOT_ISO:
+	case ZEMU_BOOT_CD:
+		append_cmdline(L"-boot d,");
+		break;
+	case ZEMU_BOOT_VFD:
+		append_cmdline(L"-boot a,");
+		break;
+	case ZEMU_BOOT_PXE:
+		append_cmdline(L"-boot n,");
+		break;
+	case ZEMU_BOOT_LINUX:
+	case ZEMU_BOOT_WIM:
+	default:
+		append_cmdline(L"-boot ");
+	}
+	append_cmdline(L"strict=on ");
 }
 
 static void
@@ -193,6 +225,7 @@ get_cmdline(void)
 	append_qemu_hw();
 	append_qemu_bootdev();
 	append_qemu_hdb();
+	append_qemu_bootorder();
 
 	return static_cmdline;
 }
