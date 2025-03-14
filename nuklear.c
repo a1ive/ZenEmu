@@ -270,9 +270,12 @@ nk_panel_begin_ex(struct nk_context* ctx, const char* title, enum nk_panel_type 
 			}
 		}
 
-		{/* window header title */
+		{
+			/* window header icon and title */
 			int text_len = nk_strlen(title);
 			struct nk_rect label = { 0,0,0,0 };
+			struct nk_rect icon;
+			struct nk_image img = GET_PNG(IDR_PNG_QEMU);
 			float t = font->width(font->userdata, font->height, title, text_len);
 			text.padding = nk_vec2(0, 0);
 
@@ -282,6 +285,14 @@ nk_panel_begin_ex(struct nk_context* ctx, const char* title, enum nk_panel_type 
 			label.h = font->height + 2 * style->window.header.label_padding.y;
 			label.w = t + 2 * style->window.header.spacing.x;
 			label.w = NK_CLAMP(0, label.w, header.x + header.w - label.x);
+
+			icon.w = icon.h = label.h;
+			icon.x = label.x;
+			icon.y = label.y;
+			nk_draw_image(out, icon, &img, nk_white);
+
+			label.x += icon.w + style->window.header.padding.x;
+
 			nk_widget_text(out, label, (const char*)title, text_len, &text, NK_TEXT_LEFT, font);
 		}
 	}
