@@ -38,6 +38,8 @@ lang_en_us[ZTXT__MAX] =
 	[ZTXT_TABLET] = u8"Tablet",
 	[ZTXT_AUDIO]  = u8"Audio",
 	[ZTXT_BACKEND] = u8"Backend",
+	[ZTXT_INTEL_HDA] = u8"Intel HDA",
+	[ZTXT_PC_SPEAKER] = u8"PC Speaker",
 	[ZTXT_BOOT_DEVICE] = u8"Boot Device",
 	[ZTXT_DISK_IMAGE] = u8"Disk Image",
 	[ZTXT_ISO_IMAGE] = u8"ISO Image",
@@ -104,6 +106,8 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_TABLET] = u8"触摸板",
 	[ZTXT_AUDIO] = u8"音频",
 	[ZTXT_BACKEND] = u8"后端",
+	[ZTXT_INTEL_HDA] = u8"Intel HDA",
+	[ZTXT_PC_SPEAKER] = u8"PC Speaker",
 	[ZTXT_BOOT_DEVICE] = u8"启动设备",
 	[ZTXT_DISK_IMAGE] = u8"磁盘镜像",
 	[ZTXT_ISO_IMAGE] = u8"ISO 镜像",
@@ -139,6 +143,74 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_UNSUPPORTED] = u8"不支持",
 };
 
+static const char*
+lang_zh_tw[ZTXT__MAX] =
+{
+	[ZTXT_QEMU] = u8"QEMU",
+	[ZTXT_PATH] = u8"路徑",
+	[ZTXT_ARCH] = u8"架構",
+	[ZTXT_CPU] = u8"CPU",
+	[ZTXT_SMP] = u8"核心數",
+	[ZTXT_NAME] = u8"名稱",
+	[ZTXT_MODEL] = u8"型號",
+	[ZTXT_MACHINE] = u8"機型",
+	[ZTXT_HYPER_V] = u8"Hyper-V",
+	[ZTXT_KERNEL_IRQCHIP] = u8"IRQ Chip",
+	[ZTXT_VIRT] = u8"虛擬化",
+	[ZTXT_MEMORY] = u8"記憶體",
+	[ZTXT_SIZE] = u8"大小",
+	[ZTXT_FIRMWARE] = u8"韌體",
+	[ZTXT_TYPE] = u8"型別",
+	[ZTXT_OPTIONS] = u8"選項",
+	[ZTXT_BOOT_MENU] = u8"啟動選單",
+	[ZTXT_TIMEOUT] = u8"超時",
+	[ZTXT_PFLASH] = u8"pflash",
+	[ZTXT_DISPLAY] = u8"顯示",
+	[ZTXT_NETWORK] = u8"網路",
+	[ZTXT_PERIPHERAL] = u8"外設",
+	[ZTXT_USB] = u8"USB",
+	[ZTXT_KEYBOARD] = u8"鍵盤",
+	[ZTXT_MOUSE] = u8"滑鼠",
+	[ZTXT_TABLET] = u8"觸控板",
+	[ZTXT_AUDIO] = u8"音訊",
+	[ZTXT_BACKEND] = u8"後端",
+	[ZTXT_INTEL_HDA] = u8"Intel HDA",
+	[ZTXT_PC_SPEAKER] = u8"PC Speaker",
+	[ZTXT_BOOT_DEVICE] = u8"啟動裝置",
+	[ZTXT_DISK_IMAGE] = u8"磁碟映象",
+	[ZTXT_ISO_IMAGE] = u8"ISO 映象",
+	[ZTXT_PHYSICAL_DISK] = u8"物理磁碟",
+	[ZTXT_CD_ROM] = u8"光碟",
+	[ZTXT_HARD_DISK] = u8"硬碟",
+	[ZTXT_FLOPPY_IMAGE] = u8"軟盤映象",
+	[ZTXT_PXE] = u8"PXE",
+	[ZTXT_TFTP_FOLDER] = u8"TFTP 資料夾",
+	[ZTXT_BOOT_FILE] = u8"啟動檔案",
+	[ZTXT_LINUX_KERNEL] = u8"Linux 核心",
+	[ZTXT_KERNEL] = u8"核心",
+	[ZTXT_INITRD] = u8"INITRD",
+	[ZTXT_CMDLINE] = u8"命令列",
+	[ZTXT_DTB] = u8"裝置樹",
+	[ZTXT_SHIM_EFI] = u8"shim.efi",
+	[ZTXT_WIM_IMAGE] = u8"WIM 映象",
+	[ZTXT_DIR_VVFAT] = u8"資料夾 (VVFAT)",
+	[ZTXT_DIR] = u8"資料夾",
+	[ZTXT_SNAPSHOT] = u8"快照",
+	[ZTXT_INTERFACE] = u8"介面",
+	[ZTXT_NO_DEVICE] = u8"無裝置",
+	[ZTXT_ADDITIONAL] = u8"附加儲存",
+	[ZTXT_FILE] = u8"檔案",
+	[ZTXT_DEVICE] = u8"裝置",
+	[ZTXT_COPY] = u8"複製",
+	[ZTXT_SAVE] = u8"儲存",
+	[ZTXT_START] = u8"啟動",
+	[ZTXT_LOGS] = u8"日誌",
+	[ZTXT_WARN_NOT_ADMIN] = u8"無管理員許可權，點選獲取",
+	[ZTXT_WARN_NON_ASCII] = u8"不支援包含逗號或非ASCII字元的路徑",
+	[ZTXT_WARN_OUT_OF_MEM] = u8"可用記憶體可能不足",
+	[ZTXT_UNSUPPORTED] = u8"不支援",
+};
+
 // https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oe376/6c085406-a698-4e12-9d4d-c3b0ee3dbc4a
 static LANGID static_lang_id;
 
@@ -155,6 +227,9 @@ ZTXT(GETTEXT_STR_ID id)
 	{
 	case 2052: // Chinese - People's Republic of China
 		str = lang_zh_cn[id];
+		break;
+	case 1028: // Chinese - Taiwan
+		str = lang_zh_tw[id];
 		break;
 	}
 	// 1033: English - United States
