@@ -192,7 +192,9 @@ append_qemu_bootorder(void)
 	default:
 		append_cmdline(L"-boot ");
 	}
-	append_cmdline(L"strict=on ");
+	if (nk.ini->cur->fw_menu)
+		append_cmdline(L"menu=on,");
+	append_cmdline(L"splash-time=%s,strict=on ", utf8_to_ucs2(nk.ini->cur->fw_timeout));
 }
 
 static void

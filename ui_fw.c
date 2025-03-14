@@ -36,8 +36,15 @@ ui_qemu_fw(struct nk_context* ctx)
 		nk_spacer(ctx);
 		nk_spacer(ctx);
 	}
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.3f, 0.5f });
-	nk_spacer(ctx);
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f });
+	nk_space_label(ctx, ZTXT(ZTXT_OPTIONS));
 	nk_checkbox_label(ctx, ZTXT(ZTXT_PFLASH), &nk.ini->cur->pflash);
+	nk_checkbox_label(ctx, ZTXT(ZTXT_BOOT_MENU), &nk.ini->cur->fw_menu);
+#ifdef ENABLE_SPLASH_TIMEOUT
+	nk_label(ctx, ZTXT(ZTXT_TIMEOUT), NK_TEXT_RIGHT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->fw_timeout, OPT_SZ, nk_filter_decimal);
+#else
 	nk_spacer(ctx);
+	nk_spacer(ctx);
+#endif
 }

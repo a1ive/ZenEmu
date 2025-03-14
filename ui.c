@@ -81,6 +81,9 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->fw = get_ini_num(section, L"Firmware", fw);
 	if (p->fw < fw_min || p->fw > fw_max)
 		p->fw = fw;
+	p->fw_menu = get_ini_bool(section, L"BootMenu", nk_false);
+	num = get_ini_num(section, L"Timeout", 1);
+	snprintf(p->fw_timeout, OPT_SZ, "%d", num);
 
 	p->boot = get_ini_num(section, L"BootTarget", ZEMU_BOOT_VHD);
 	if (p->boot < 0 || p->boot >= ZEMU_BOOT_MAX)
@@ -159,6 +162,8 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"PcSpeaker", p->audio_spk);
 	set_ini_value(section, L"AudioBackend", p->audiodev);
 	set_ini_num(section, L"Firmware", p->fw);
+	set_ini_num(section, L"BootMenu", p->fw_menu);
+	set_ini_value(section, L"Timeout", p->fw_timeout);
 	set_ini_num(section, L"BootTarget", p->boot);
 }
 
