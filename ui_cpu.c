@@ -17,10 +17,8 @@ ui_qemu_cpu(struct nk_context* ctx)
 	nk_checkbox_label(ctx, ZTXT(ZTXT_KERNEL_IRQCHIP), &nk.ini->cur->irqchip);
 	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
 		nk_checkbox_label(ctx, ZTXT(ZTXT_VIRT), &nk.ini->cur->virt);
-#if ENABLE_HYPER_V
 	else if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64)
 		nk_checkbox_label(ctx, ZTXT(ZTXT_HYPER_V), &nk.ini->cur->whpx);
-#endif
 	else
 		nk_spacer(ctx);
 
