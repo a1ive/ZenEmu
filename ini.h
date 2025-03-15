@@ -163,6 +163,7 @@ typedef struct _ZEMU_INI_DATA
 	
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;
+	HANDLE output_handle;
 } ZEMU_INI_DATA;
 
 #define IS_BIOS \

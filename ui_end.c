@@ -67,6 +67,18 @@ read_pipe_thread(LPVOID lparam)
 	return 0;
 }
 
+static nk_bool is_qemu_running()
+{
+	DWORD exitCode = 0;
+	if (!nk.ini->output_handle || nk.ini->output_handle == INVALID_HANDLE_VALUE)
+		return nk_false;
+	if (GetExitCodeProcess(nk.ini->output_handle, &exitCode))
+	{
+		return (exitCode == STILL_ACTIVE);
+	}
+	return nk_false;
+}
+
 static void
 copy_cmdline(void)
 {
@@ -112,6 +124,12 @@ run_qemu(void)
 	sa.bInheritHandle = TRUE;
 	sa.lpSecurityDescriptor = NULL;
 
+	if (nk.ini->output_handle && nk.ini->output_handle != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(nk.ini->output_handle);
+		nk.ini->output_handle = NULL;
+	}
+
 	if (!CreatePipe(&child_out_r, &child_out_w, &sa, 0))
 	{
 		MessageBoxW(NULL, L"Stdout pipe creation failed", L"Error", MB_OK);
@@ -141,7 +159,7 @@ run_qemu(void)
 		{
 			MessageBoxW(NULL, L"CreateThread failed", L"Error", MB_OK);
 		}
-		CloseHandle(pi.hProcess);
+		nk.ini->output_handle = pi.hProcess;
 		CloseHandle(pi.hThread);
 	}
 	else
@@ -160,6 +178,8 @@ ui_qemu_end(struct nk_context* ctx)
 	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_FLOPPY), ZTXT(ZTXT_SAVE), NK_TEXT_RIGHT))
 		save_ini();
 	nk_spacer(ctx);
+	if (is_qemu_running())
+		nk_widget_disable_begin(ctx);
 	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_START), ZTXT(ZTXT_START), NK_TEXT_RIGHT))
 	{
 		reset_log();
@@ -168,6 +188,8 @@ ui_qemu_end(struct nk_context* ctx)
 		else
 			strcpy_s(nk.ini->output, OUTBUF_SZ, "Missing arguments.");
 	}
+	if (is_qemu_running())
+		nk_widget_disable_end(ctx);
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 2, (float[2]) { 1.0f - nk.sq, nk.sq });
 	nk_image_label(ctx, GET_PNG(IDR_PNG_INFO), ZTXT(ZTXT_LOGS));
