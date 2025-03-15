@@ -96,9 +96,14 @@ append_qemu_hw(void)
 	
 	if (nk.ini->cur->net && nk.ini->cur->netdev[0])
 	{
-		append_cmdline(L"-net nic,model=%s ", utf8_to_ucs2(nk.ini->cur->netdev));
+		append_cmdline(L"-nic user,model=%s", utf8_to_ucs2(nk.ini->cur->netdev));
 		if (nk.ini->cur->boot != ZEMU_BOOT_PXE)
-			append_cmdline(L"-net user ");
+			append_cmdline(L" ");
+		else
+		{
+			append_cmdline(L",tftp=\"%s\",", rel_to_abs(nk.ini->net_tftp));
+			append_cmdline(L",bootfile=\"%s\" ", rel_to_abs(nk.ini->net_file));
+		}
 	}
 
 	if (nk.ini->cur->audio)
@@ -145,8 +150,6 @@ append_qemu_bootdev(void)
 		append_cmdline(L"-fda \"%s\" ", rel_to_abs(nk.ini->boot_vfd));
 		break;
 	case ZEMU_BOOT_PXE:
-		append_cmdline(L"-net user,tftp=\"%s\",", rel_to_abs(nk.ini->net_tftp));
-		append_cmdline(L",bootfile=\"%s\" ", rel_to_abs(nk.ini->net_file));
 		break;
 	case ZEMU_BOOT_LINUX:
 		append_cmdline(L"-kernel \"%s\" ", rel_to_abs(nk.ini->boot_linux));
