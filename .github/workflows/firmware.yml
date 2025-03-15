@@ -48,7 +48,7 @@ jobs:
           make -C edk2/BaseTools
 
           FD_COMMON="-D NETWORK_HTTP_BOOT_ENABLE -D NETWORK_IP6_ENABLE -D NETWORK_TLS_ENABLE -D NETWORK_ISCSI_ENABLE -D NETWORK_ALLOW_HTTP_CONNECTIONS -D TPM2_ENABLE -D TPM2_CONFIG_ENABLE -D TPM1_ENABLE -D CAVIUM_ERRATUM_27456"
-          build -b RELEASE -t GCC5 -a AARCH64 -p ArmVirtPkg/ArmVirtQemu.dsc $FD_COMMON
+          build -b RELEASE -t GCC5 -a AARCH64 -p ArmVirtPkg/ArmVirtQemu.dsc
           build -b RELEASE -t GCC5 -a IA32 -p OvmfPkg/OvmfPkgIa32.dsc $FD_COMMON -D FD_SIZE_4MB
           build -b RELEASE -t GCC5 -a X64 -p OvmfPkg/OvmfPkgX64.dsc $FD_COMMON -D FD_SIZE_4MB
 
