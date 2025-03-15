@@ -153,7 +153,7 @@ append_qemu_bootdev(void)
 		if (nk.ini->boot_initrd[0])
 			append_cmdline(L"-initrd \"%s\" ", rel_to_abs(nk.ini->boot_initrd));
 		if (nk.ini->boot_kcmd[0])
-			append_cmdline(L"-append \"%s\" ", rel_to_abs(nk.ini->boot_kcmd));
+			append_cmdline(L"-append \"%s\" ", utf8_to_ucs2(nk.ini->boot_kcmd));
 		if (nk.ini->boot_dtb[0])
 			append_cmdline(L"-dtb \"%s\" ", rel_to_abs(nk.ini->boot_dtb));
 		if (!IS_BIOS && nk.ini->boot_shim[0])
