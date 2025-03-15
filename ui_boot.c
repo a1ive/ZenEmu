@@ -140,7 +140,7 @@ obj_linux(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dtb, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_dtb, MAX_PATH, FILTER_DTB);
-	if (!IS_BIOS)
+	if (IS_X86_EFI)
 	{
 		nk_space_label(ctx, ZTXT(ZTXT_SHIM_EFI));
 		nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_shim, MAX_PATH, NULL);
@@ -154,7 +154,7 @@ obj_linux(struct nk_context* ctx)
 		nk.show_warning = check_path_invalid(nk.ini->boot_initrd);
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->boot_dtb);
-	if (nk.show_warning == nk_false && !IS_BIOS)
+	if (nk.show_warning == nk_false && IS_X86_EFI)
 		nk.show_warning = check_path_invalid(nk.ini->boot_shim);
 }
 
