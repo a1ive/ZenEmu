@@ -246,6 +246,8 @@ nkctx_loop(void)
 		//set_style(nk.ctx);
 		nkctx_main_window(nk.ctx, (float)nk.width, (float)nk.height);
 
+		ui_popup_window(nk.ctx, (float)nk.width, (float)nk.height);
+
 		/* Draw */
 		nk_gdip_render(NK_ANTI_ALIASING_ON, (struct nk_color)NK_COLOR_BLACK);
 	}
@@ -257,6 +259,7 @@ nkctx_update(WPARAM wparam)
 	switch (wparam)
 	{
 		case IDT_TIMER_1S:
+			nk.tilck++;
 			nk.statex.dwLength = sizeof(MEMORYSTATUSEX);
 			GlobalMemoryStatusEx(&nk.statex);
 			break;

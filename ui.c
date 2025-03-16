@@ -216,3 +216,32 @@ ui_dev_button(struct nk_context* ctx,
 		*value = !*value;
 	nk_label(ctx, label, NK_TEXT_LEFT);
 }
+
+static UINT64 popup_tilck;
+static const char* popup_msg;
+static DWORD popup_icon = IDR_PNG_INFO;
+
+void
+ui_popup_window(struct nk_context* ctx, float width, float height)
+{
+	if (popup_tilck < nk.tilck || popup_msg == NULL)
+		return;
+
+	if (nk_begin_ex(ctx, "#POPUP_WIN",
+		nk_rect(0.1f * width, 0.5f * height, 0.8f * width, 2.0f * nk.title_height),
+		NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR))
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		nk_image_label(ctx, GET_PNG(popup_icon), popup_msg);
+	}
+
+	nk_end(ctx);
+}
+
+void
+ui_popup_msg(const char* msg, DWORD icon)
+{
+	popup_tilck = nk.tilck + 1;
+	popup_msg = msg;
+	popup_icon = icon;
+}

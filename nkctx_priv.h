@@ -57,6 +57,7 @@ typedef struct _NK_GUI_CTX
 	float sq;
 	nk_bool show_warning;
 	struct nk_style_button button_style;
+	UINT64 tilck;
 
 	struct nk_image image[IDR_PNG_MAX - IDR_PNG_MIN];
 

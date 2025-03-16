@@ -50,6 +50,12 @@ ui_dev_button(struct nk_context* ctx,
 	struct nk_image img, const char* label, nk_bool* value);
 
 void
+ui_popup_window(struct nk_context* ctx, float width, float height);
+
+void
+ui_popup_msg(const char* msg, DWORD icon);
+
+void
 ui_ini_init(void);
 
 void

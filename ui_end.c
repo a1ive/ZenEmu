@@ -174,9 +174,15 @@ ui_qemu_end(struct nk_context* ctx)
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.2f, 0.3f, 0.3f });
 	
 	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_COPY), ZTXT(ZTXT_COPY), NK_TEXT_RIGHT))
+	{
 		copy_cmdline();
+		ui_popup_msg(ZTXT(ZTXT_MSG_COPIED), IDR_PNG_INFO);
+	}
 	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_FLOPPY), ZTXT(ZTXT_SAVE), NK_TEXT_RIGHT))
+	{
 		save_ini();
+		ui_popup_msg(ZTXT(ZTXT_MSG_SAVED), IDR_PNG_INFO);
+	}
 	nk_spacer(ctx);
 	if (is_qemu_running())
 		nk_widget_disable_begin(ctx);
@@ -186,7 +192,7 @@ ui_qemu_end(struct nk_context* ctx)
 		if (check_valid())
 			run_qemu();
 		else
-			strcpy_s(nk.ini->output, OUTBUF_SZ, "Missing arguments.");
+			ui_popup_msg(ZTXT(ZTXT_MSG_MISSING_ARGS), IDR_PNG_WARN);
 	}
 	if (is_qemu_running())
 		nk_widget_disable_end(ctx);
