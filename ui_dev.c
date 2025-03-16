@@ -5,38 +5,90 @@
 #include "ui.h"
 #include "gettext.h"
 
+static const char* edit_vga_list[] =
+{
+	"VGA", "vmware-svga", "ramfb",
+	"virtio-vga", "virtio-gpu",
+	"qxl-vga", "qxl", "bochs-display",
+};
+
+static const char* edit_usb_list[] =
+{
+	"qemu-xhci", "nec-usb-xhci",
+	"usb-ehci", "ich9-usb-ehci1",
+};
+
+static const char* edit_net_list[] =
+{
+	"e1000", "rtl8139", "virtio", "vmxnet3",
+};
+
 void
 ui_qemu_dev(struct nk_context* ctx)
 {
 	nk_layout_row_dynamic(ctx, 0, 1);
 	nk_image_label(ctx, GET_PNG(IDR_PNG_PC), ZTXT(ZTXT_PERIPHERAL));
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[4]) { nk.sq, 0.2f - nk.sq, 0.3f, 0.5f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 7,
+		(float[7]) { nk.sq, 0.2f - nk.sq, 0.3f - nk.sq, nk.sq, 0.16f, 0.16f, 0.16f });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_DISPLAY), ZTXT(ZTXT_DISPLAY), &nk.ini->cur->graphics);
 	if (!nk.ini->cur->graphics)
 		nk_widget_disable_begin(ctx);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->vgadev, OPT_SZ, NULL);
+	if (nk_menu_begin_image_ex(ctx, "#EDIT_VGA", GET_PNG(IDR_PNG_DOWN), nk_vec2(200, 300)))
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		for (size_t i = 0; i < ARRAYSIZE(edit_vga_list); i++)
+		{
+			if (nk_menu_item_label(ctx, edit_vga_list[i], NK_TEXT_LEFT))
+				strcpy_s(nk.ini->cur->vgadev, OPT_SZ, edit_vga_list[i]);
+		}
+		nk_menu_end(ctx);
+	}
+	nk_spacer(ctx);
+	nk_spacer(ctx);
 	nk_spacer(ctx);
 	if (!nk.ini->cur->graphics)
 		nk_widget_disable_end(ctx);
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[6]) { nk.sq, 0.2f - nk.sq, 0.3f, 0.16f, 0.16f, 0.16f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 7,
+		(float[7]) { nk.sq, 0.2f - nk.sq, 0.3f - nk.sq, nk.sq, 0.16f, 0.16f, 0.16f });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_USB), ZTXT(ZTXT_USB), &nk.ini->cur->usb);
 	if (!nk.ini->cur->usb)
 		nk_widget_disable_begin(ctx);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->usbctrl, OPT_SZ, NULL);
+	if (nk_menu_begin_image_ex(ctx, "#EDIT_USB", GET_PNG(IDR_PNG_DOWN), nk_vec2(200, 300)))
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		for (size_t i = 0; i < ARRAYSIZE(edit_usb_list); i++)
+		{
+			if (nk_menu_item_label(ctx, edit_usb_list[i], NK_TEXT_LEFT))
+				strcpy_s(nk.ini->cur->usbctrl, OPT_SZ, edit_usb_list[i]);
+		}
+		nk_menu_end(ctx);
+	}
 	nk_checkbox_label(ctx, ZTXT(ZTXT_KEYBOARD), &nk.ini->cur->usb_kbd);
 	nk_checkbox_label(ctx, ZTXT(ZTXT_MOUSE), &nk.ini->cur->usb_mouse);
 	nk_checkbox_label(ctx, ZTXT(ZTXT_TABLET), &nk.ini->cur->usb_tablet);
 	if (!nk.ini->cur->usb)
 		nk_widget_disable_end(ctx);
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[6]) { nk.sq, 0.2f - nk.sq, 0.3f, 0.16f, 0.16f, 0.16f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 7,
+		(float[7]) { nk.sq, 0.2f - nk.sq, 0.3f - nk.sq, nk.sq, 0.16f, 0.16f, 0.16f });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_NETWORK), ZTXT(ZTXT_NETWORK), &nk.ini->cur->net);
 	if (!nk.ini->cur->net)
 		nk_widget_disable_begin(ctx);
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->netdev, OPT_SZ, NULL);
-	nk_spacer(ctx);
+	if (nk_menu_begin_image_ex(ctx, "#EDIT_NET", GET_PNG(IDR_PNG_DOWN), nk_vec2(200, 300)))
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		for (size_t i = 0; i < ARRAYSIZE(edit_net_list); i++)
+		{
+			if (nk_menu_item_label(ctx, edit_net_list[i], NK_TEXT_LEFT))
+				strcpy_s(nk.ini->cur->netdev, OPT_SZ, edit_net_list[i]);
+		}
+		nk_menu_end(ctx);
+	}
 	nk_spacer(ctx);
 	nk_spacer(ctx);
 	if (!nk.ini->cur->net)
