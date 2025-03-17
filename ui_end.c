@@ -222,6 +222,6 @@ ui_qemu_end(struct nk_context* ctx)
 	nk_image_label(ctx, GET_PNG(IDR_PNG_INFO), ZTXT(ZTXT_LOGS));
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 		reset_log();
-	nk_layout_row_dynamic(ctx, 100, 1);
+	nk_layout_row_dynamic(ctx, 300, 1);
 	nk_label_wrap(ctx, nk.ini->output);
 }
