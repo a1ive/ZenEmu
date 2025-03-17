@@ -68,6 +68,76 @@ fail:
 }
 
 static nk_bool
+nk_do_button_ex(nk_flags* state,
+	struct nk_command_buffer* out, struct nk_rect bounds,
+	struct nk_image img, const char* str, int len,
+	enum nk_button_behavior behavior, const struct nk_style_button* style,
+	const struct nk_user_font* font, const struct nk_input* in)
+{
+	int ret;
+	struct nk_rect icon;
+	struct nk_rect content;
+
+	NK_ASSERT(style);
+	NK_ASSERT(state);
+	NK_ASSERT(font);
+	NK_ASSERT(out);
+	if (!out || !font || !style || !str)
+		return nk_false;
+
+	ret = nk_do_button(state, out, bounds, style, in, behavior, &content);
+	icon.y = bounds.y + style->padding.y;
+	icon.w = icon.h = bounds.h - 2 * style->padding.y;
+	icon.x = bounds.x + 2 * style->padding.x;
+
+	icon.x += style->image_padding.x;
+	icon.y += style->image_padding.y;
+	icon.w -= 2 * style->image_padding.x;
+	icon.h -= 2 * style->image_padding.y;
+
+	if (content.w > icon.w)
+	{
+		content.x += icon.w;
+		content.w -= icon.w;
+	}
+
+	if (style->draw_begin)
+		style->draw_begin(out, style->userdata);
+	nk_draw_button_text_image(out, &bounds, &content, &icon, *state, style, str, len, font, &img);
+	if (style->draw_end)
+		style->draw_end(out, style->userdata);
+	return ret;
+}
+
+nk_bool nk_button_ex(struct nk_context* ctx, struct nk_image img, const char* label)
+{
+	struct nk_window* win;
+	struct nk_panel* layout;
+	const struct nk_input* in;
+
+	struct nk_rect bounds;
+	enum nk_widget_layout_states state;
+	int len = nk_strlen(label);
+
+	NK_ASSERT(ctx);
+	NK_ASSERT(ctx->current);
+	NK_ASSERT(ctx->current->layout);
+	if (!ctx || !ctx->current || !ctx->current->layout)
+		return 0;
+
+	win = ctx->current;
+	layout = win->layout;
+
+	state = nk_widget(&bounds, ctx);
+	if (!state)
+		return 0;
+	in = (state == NK_WIDGET_ROM || state == NK_WIDGET_DISABLED || layout->flags & NK_WINDOW_ROM) ? 0 : &ctx->input;
+	return nk_do_button_ex(&ctx->last_widget_state, &win->buffer,
+		bounds, img, label, len, ctx->button_behavior,
+		&ctx->style.button, ctx->style.font, in);
+}
+
+static nk_bool
 nk_panel_begin_ex(struct nk_context* ctx, const char* title, enum nk_panel_type panel_type)
 {
 	struct nk_input* in;

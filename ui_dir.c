@@ -48,7 +48,7 @@ ui_qemu_dir(struct nk_context* ctx)
 	if (!is_admin())
 	{
 		nk_layout_row_dynamic(ctx, 0, 1);
-		if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_ADMIN), ZTXT(ZTXT_WARN_NOT_ADMIN), NK_TEXT_CENTERED))
+		if (nk_button_ex(ctx, GET_PNG(IDR_PNG_ADMIN), ZTXT(ZTXT_WARN_NOT_ADMIN)))
 			relaunch_elevated();
 	}
 

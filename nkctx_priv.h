@@ -4,6 +4,8 @@
 GdipFont*
 nk_gdip_load_font(LPCWSTR name, int size);
 
+nk_bool nk_button_ex(struct nk_context* ctx, struct nk_image img, const char* label);
+
 nk_bool
 nk_begin_ex(struct nk_context* ctx, const char* title,
 	struct nk_rect bounds, nk_flags flags);

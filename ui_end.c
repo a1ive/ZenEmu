@@ -188,26 +188,26 @@ ui_qemu_end(struct nk_context* ctx)
 {
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.2f, 0.3f, 0.3f });
 	
-	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_COPY), ZTXT(ZTXT_COPY), NK_TEXT_RIGHT))
+	if (nk_button_ex(ctx, GET_PNG(IDR_PNG_COPY), ZTXT(ZTXT_COPY)))
 	{
 		copy_cmdline();
 		ui_popup_msg(ZTXT(ZTXT_MSG_COPIED), IDR_PNG_INFO);
 	}
-	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_FLOPPY), ZTXT(ZTXT_SAVE), NK_TEXT_RIGHT))
+	if (nk_button_ex(ctx, GET_PNG(IDR_PNG_FLOPPY), ZTXT(ZTXT_SAVE)))
 	{
 		save_ini();
 		ui_popup_msg(ZTXT(ZTXT_MSG_SAVED), IDR_PNG_INFO);
 	}
 	if (is_qemu_running())
 	{
-		if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_HALT), ZTXT(ZTXT_STOP), NK_TEXT_RIGHT))
+		if (nk_button_ex(ctx, GET_PNG(IDR_PNG_HALT), ZTXT(ZTXT_STOP)))
 			kill_qemu();
 	}
 	else
 		nk_spacer(ctx);
 	if (is_qemu_running())
 		nk_widget_disable_begin(ctx);
-	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_START), ZTXT(ZTXT_START), NK_TEXT_RIGHT))
+	if (nk_button_ex(ctx, GET_PNG(IDR_PNG_START), ZTXT(ZTXT_START)))
 	{
 		reset_log();
 		if (check_valid())
