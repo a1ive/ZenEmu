@@ -298,6 +298,8 @@ lang_tr_tr[ZTXT__MAX] =
 	[ZTXT_MSG_COPIED] = u8"Panoya kopyalandı",
 	[ZTXT_MSG_SAVED] = u8"Yapılandırma kaydedildi",
 	[ZTXT_MSG_MISSING_ARGS] = u8"Eksik argümanlar",
+	[ZTXT_MSG_KILLED] = u8"QEMU işlemi sonlandırıldı",
+	[ZTXT_MSG_KILL_FAILED] = u8"QEMU işlemi sonlandırılamadı",
 	[ZTXT_UNSUPPORTED] = u8"Desteklenmiyor",
 };
 
