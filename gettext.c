@@ -68,6 +68,7 @@ lang_en_us[ZTXT__MAX] =
 	[ZTXT_COPY] = u8"Copy",
 	[ZTXT_SAVE] = u8"Save",
 	[ZTXT_START] = u8"Start",
+	[ZTXT_STOP] = u8"Stop",
 	[ZTXT_LOGS] = u8"Logs",
 	[ZTXT_WARN_NOT_ADMIN] = u8"No administrator privileges. Click to obtain.",
 	[ZTXT_WARN_NON_ASCII] = u8"Paths with commas or non-ASCII characters are NOT supported",
@@ -75,6 +76,8 @@ lang_en_us[ZTXT__MAX] =
 	[ZTXT_MSG_COPIED] = u8"Copied to clipboard",
 	[ZTXT_MSG_SAVED] = u8"Configuration saved",
 	[ZTXT_MSG_MISSING_ARGS] = u8"Missing arguments",
+	[ZTXT_MSG_KILLED] = u8"QEMU process has been terminated",
+	[ZTXT_MSG_KILL_FAILED] = u8"Unable to terminate QEMU process",
 	[ZTXT_UNSUPPORTED] = u8"Unsupported",
 };
 
@@ -139,6 +142,7 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_COPY] = u8"复制",
 	[ZTXT_SAVE] = u8"保存",
 	[ZTXT_START] = u8"启动",
+	[ZTXT_STOP] = u8"终止",
 	[ZTXT_LOGS] = u8"日志",
 	[ZTXT_WARN_NOT_ADMIN] = u8"无管理员权限，点击获取",
 	[ZTXT_WARN_NON_ASCII] = u8"不支持包含逗号或非ASCII字符的路径",
@@ -146,6 +150,8 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_MSG_COPIED] = u8"已复制到剪贴板",
 	[ZTXT_MSG_SAVED] = u8"已保存配置",
 	[ZTXT_MSG_MISSING_ARGS] = u8"缺少参数",
+	[ZTXT_MSG_KILLED] = u8"已中止QEMU进程",
+	[ZTXT_MSG_KILL_FAILED] = u8"无法中止QEMU进程",
 	[ZTXT_UNSUPPORTED] = u8"不支持",
 };
 
@@ -210,6 +216,7 @@ lang_zh_tw[ZTXT__MAX] =
 	[ZTXT_COPY] = u8"複製",
 	[ZTXT_SAVE] = u8"儲存",
 	[ZTXT_START] = u8"啟動",
+	[ZTXT_STOP] = u8"終止",
 	[ZTXT_LOGS] = u8"日誌",
 	[ZTXT_WARN_NOT_ADMIN] = u8"無管理員許可權，點選獲取",
 	[ZTXT_WARN_NON_ASCII] = u8"不支援包含逗號或非ASCII字元的路徑",
@@ -217,6 +224,8 @@ lang_zh_tw[ZTXT__MAX] =
 	[ZTXT_MSG_COPIED] = u8"已複製到剪貼簿",
 	[ZTXT_MSG_SAVED] = u8"已儲存配置",
 	[ZTXT_MSG_MISSING_ARGS] = u8"缺少引數",
+	[ZTXT_MSG_KILLED] = u8"已中止QEMU程序",
+	[ZTXT_MSG_KILL_FAILED] = u8"無法中止QEMU程序",
 	[ZTXT_UNSUPPORTED] = u8"不支援",
 };
 
