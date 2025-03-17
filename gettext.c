@@ -290,6 +290,7 @@ lang_tr_tr[ZTXT__MAX] =
 	[ZTXT_COPY] = u8"   Kopyala",
 	[ZTXT_SAVE] = u8"  Kaydet",
 	[ZTXT_START] = u8"BAŞLAT",
+	[ZTXT_STOP] = u8"DUR",
 	[ZTXT_LOGS] = u8"Günlükler",
 	[ZTXT_WARN_NOT_ADMIN] = u8"Yönetici ayrıcalıkları yok. Edinmek için tıklayın.",
 	[ZTXT_WARN_NON_ASCII] = u8"Virgül veya ASCII olmayan karakterler içeren yollar DESTEKLENMEZ",
