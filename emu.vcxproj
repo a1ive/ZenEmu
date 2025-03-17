@@ -235,6 +235,7 @@
     <Image Include="icons\eth.png" />
     <Image Include="icons\firmware.png" />
     <Image Include="icons\floppy.png" />
+    <Image Include="icons\halt.png" />
     <Image Include="icons\info.png" />
     <Image Include="icons\maximize.png" />
     <Image Include="icons\memory.png" />

@@ -168,6 +168,21 @@ run_qemu(void)
 	}
 }
 
+static void
+kill_qemu(void)
+{
+	if (!nk.ini->output_handle || nk.ini->output_handle == INVALID_HANDLE_VALUE)
+		return;
+	if (TerminateProcess(nk.ini->output_handle, 0))
+	{
+		CloseHandle(nk.ini->output_handle);
+		nk.ini->output_handle = NULL;
+		ui_popup_msg(ZTXT(ZTXT_MSG_KILLED), IDR_PNG_INFO);
+	}
+	else
+		ui_popup_msg(ZTXT(ZTXT_MSG_KILL_FAILED), IDR_PNG_WARN);
+}
+
 void
 ui_qemu_end(struct nk_context* ctx)
 {
@@ -183,7 +198,13 @@ ui_qemu_end(struct nk_context* ctx)
 		save_ini();
 		ui_popup_msg(ZTXT(ZTXT_MSG_SAVED), IDR_PNG_INFO);
 	}
-	nk_spacer(ctx);
+	if (is_qemu_running())
+	{
+		if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_HALT), ZTXT(ZTXT_STOP), NK_TEXT_RIGHT))
+			kill_qemu();
+	}
+	else
+		nk_spacer(ctx);
 	if (is_qemu_running())
 		nk_widget_disable_begin(ctx);
 	if (nk_button_image_label(ctx, GET_PNG(IDR_PNG_START), ZTXT(ZTXT_START), NK_TEXT_RIGHT))

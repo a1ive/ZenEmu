@@ -201,6 +201,9 @@
     <Image Include="icons\down.png">
       <Filter>RC\icons</Filter>
     </Image>
+    <Image Include="icons\halt.png">
+      <Filter>RC\icons</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
