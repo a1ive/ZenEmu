@@ -27,6 +27,28 @@ ui_open_file(CHAR* path, size_t len, LPCWSTR filter)
 		strcpy_s(path, len, ucs2_to_utf8(buf));
 }
 
+void
+ui_open_file_by_dir(CHAR* path, size_t len, LPCSTR dir, LPCWSTR filter)
+{
+	WCHAR buf[MAX_PATH];
+	OPENFILENAMEW ofn;
+	LPCWSTR parent = rel_to_abs(dir);
+	ZeroMemory(&ofn, sizeof(ofn));
+	swprintf(buf, MAX_PATH, L"%s\\FILE", parent);
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = nk.wnd;
+	ofn.lpstrFile = buf;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = parent;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_EXPLORER | OFN_NOCHANGEDIR;
+	if (GetOpenFileNameW(&ofn) == TRUE)
+		strcpy_s(path, len, ucs2_to_utf8(PathFindFileNameW(buf)));
+}
+
 static int CALLBACK
 browse_callback_fn(HWND wnd, UINT msg, LPARAM lparam, LPARAM data)
 {

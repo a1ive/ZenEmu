@@ -114,7 +114,7 @@ obj_pxe(struct nk_context* ctx)
 	nk_space_label(ctx, ZTXT(ZTXT_BOOT_FILE));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_file, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
-		ui_open_file(nk.ini->net_file, MAX_PATH, FILTER_ALL);
+		ui_open_file_by_dir(nk.ini->net_file, MAX_PATH, nk.ini->net_tftp, FILTER_ALL);
 
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->net_tftp);

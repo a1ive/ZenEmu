@@ -118,8 +118,8 @@ append_qemu_hw(void)
 		else
 		{
 			fix_dir_path(nk.ini->net_tftp, MAX_PATH);
-			append_cmdline(L",tftp=\"%s\",", rel_to_abs(nk.ini->net_tftp));
-			append_cmdline(L",bootfile=\"%s\" ", rel_to_abs(nk.ini->net_file));
+			append_cmdline(L",tftp=\"%s\"", rel_to_abs(nk.ini->net_tftp));
+			append_cmdline(L",bootfile=\"%s\" ", utf8_to_ucs2(nk.ini->net_file));
 		}
 	}
 
