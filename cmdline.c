@@ -67,7 +67,8 @@ append_qemu_hw(void)
 		append_cmdline(L"-accel whpx ");
 	else
 		append_cmdline(L"-accel tcg,thread=multi ");
-	append_cmdline(L"-smp %s ", utf8_to_ucs2(nk.ini->cur->smp));
+	if (nk.ini->cur->smp[0])
+		append_cmdline(L"-smp %s ", utf8_to_ucs2(nk.ini->cur->smp));
 	append_cmdline(L"-M %s,kernel-irqchip=%s", utf8_to_ucs2(nk.ini->cur->machine),
 		nk.ini->cur->irqchip ? L"on" : L"off");
 	if (nk.ini->cur->audio && nk.ini->cur->audio_spk)
@@ -76,7 +77,8 @@ append_qemu_hw(void)
 		append_cmdline(L",virtualization=%s ", nk.ini->cur->virt ? L"true" : L"false");
 	else
 		append_cmdline(L" ");
-	append_cmdline(L"-m %s ", utf8_to_ucs2(nk.ini->cur->mem));
+	if (nk.ini->cur->mem[0])
+		append_cmdline(L"-m %s ", utf8_to_ucs2(nk.ini->cur->mem));
 
 	if (nk.ini->cur->graphics && nk.ini->cur->vgadev[0])
 		append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vgadev));
