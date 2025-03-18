@@ -152,6 +152,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR boot_shim[MAX_PATH];
 
 	CHAR boot_wim[MAX_PATH];
+	int boot_wim_index;
 
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];

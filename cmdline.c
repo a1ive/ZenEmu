@@ -182,8 +182,14 @@ append_qemu_bootdev(void)
 	case ZEMU_BOOT_WIM:
 		append_cmdline(L"-kernel \"%s\" ", rel_to_abs(nk.ini->qemu_wimldr[nk.ini->cur->fw]));
 		append_cmdline(L"-initrd \"%s\" ", rel_to_abs(nk.ini->boot_wim));
-		if (!IS_BIOS)
-			append_cmdline(L"-append \"rawwim gui\" ");
+		if (IS_BIOS)
+			append_cmdline(L"-append \"--config-file=\\\""
+				"find --set-root --ignore-floppies --ignore-cd _.QEMU_HDA._;;"
+				"kernel /wimboot rawwim gui index=%d;;"
+				"initrd @boot.wim=(rd)+1 @bootmgr.exe=/bootmgr.exe @bcd=/bcd @boot.sdi=/boot.sdi @wgl4_boot.ttf=/wgl4_boot.ttf"
+				"\\\"\" ", nk.ini->boot_wim_index);
+		else
+			append_cmdline(L"-append \"rawwim gui index=%d\" ", nk.ini->boot_wim_index);
 		append_cmdline(L"-drive file=\"%s\",snapshot=on ", rel_to_abs(nk.ini->qemu_wimhda));
 		break;
 	case ZEMU_BOOT_DIR:
