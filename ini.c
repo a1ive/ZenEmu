@@ -165,11 +165,12 @@ set_ini_num(LPCWSTR section, LPCWSTR key, int value)
 static BOOL
 is_absolute_path(const WCHAR* path)
 {
-	if (wcslen(path) >= 3)
-	{
-		if (iswalpha(path[0]) && path[1] == L':' && path[2] == L'\\')
-			return TRUE;
-	}
+	if (!iswalpha(path[0]))
+		return FALSE;
+	if (path[1] != L':')
+		return FALSE;
+	if (path[2] == L'\\' || path[2] == L'\0')
+		return TRUE;
 	return FALSE;
 }
 

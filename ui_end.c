@@ -25,13 +25,13 @@ check_valid(void)
 	case ZEMU_BOOT_VFD:
 		return nk.ini->boot_vfd[0] ? true : false;
 	case ZEMU_BOOT_PXE:
-		return (nk.ini->net_file[0] && nk.ini->net_tftp[0]) ? true : false;
+		return nk.ini->net_file[0] ? true : false;
 	case ZEMU_BOOT_LINUX:
 		return nk.ini->boot_linux[0] ? true : false;
 	case ZEMU_BOOT_WIM:
 		return nk.ini->boot_wim[0] ? true : false;
 	case ZEMU_BOOT_DIR:
-		return nk.ini->boot_dir[0] ? true : false;
+		return true;
 	}
 	return false;
 }

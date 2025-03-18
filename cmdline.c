@@ -42,6 +42,20 @@ fail:
 	MessageBoxW(NULL, L"Set cmdline failed", L"Error", MB_ICONERROR);
 }
 
+static inline void
+fix_dir_path(char* path, size_t path_size)
+{
+	size_t len = strlen(path);
+	if (len == 0)
+	{
+		strcpy_s(path, path_size, ucs2_to_utf8(nk.ini->pwd));
+	}
+	else if (path[len - 1] == '\\')
+	{
+		path[len - 1] = '\0';
+	}
+}
+
 static void
 append_qemu_path(void)
 {
@@ -103,6 +117,7 @@ append_qemu_hw(void)
 			append_cmdline(L" ");
 		else
 		{
+			fix_dir_path(nk.ini->net_tftp, MAX_PATH);
 			append_cmdline(L",tftp=\"%s\",", rel_to_abs(nk.ini->net_tftp));
 			append_cmdline(L",bootfile=\"%s\" ", rel_to_abs(nk.ini->net_file));
 		}
@@ -172,6 +187,7 @@ append_qemu_bootdev(void)
 		append_cmdline(L"-drive file=\"%s\",snapshot=on ", rel_to_abs(nk.ini->qemu_wimhda));
 		break;
 	case ZEMU_BOOT_DIR:
+		fix_dir_path(nk.ini->boot_dir, MAX_PATH);
 		append_cmdline(L"-drive file=fat:\"%s\",format=raw,media=disk,snapshot=on ",
 			rel_to_abs(nk.ini->boot_dir));
 		break;
