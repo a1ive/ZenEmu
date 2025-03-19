@@ -92,9 +92,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>zemu</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>zemu</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,7 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -126,7 +128,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -148,7 +150,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -170,7 +172,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -184,38 +186,6 @@
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="cmdline.h" />
-    <ClInclude Include="dev.h" />
-    <ClInclude Include="gettext.h" />
-    <ClInclude Include="ini.h" />
-    <ClInclude Include="nkctx.h" />
-    <ClInclude Include="nkctx_priv.h" />
-    <ClInclude Include="nuklear.h" />
-    <ClInclude Include="nuklear_gdip.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="ui.h" />
-    <ClInclude Include="version.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="cmdline.c" />
-    <ClCompile Include="dev.c" />
-    <ClCompile Include="gettext.c" />
-    <ClCompile Include="ini.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="nkctx.c" />
-    <ClCompile Include="nuklear.c" />
-    <ClCompile Include="open_dialog.c" />
-    <ClCompile Include="ui.c" />
-    <ClCompile Include="ui_boot.c" />
-    <ClCompile Include="ui_cpu.c" />
-    <ClCompile Include="ui_dir.c" />
-    <ClCompile Include="ui_end.c" />
-    <ClCompile Include="ui_fw.c" />
-    <ClCompile Include="ui_hdb.c" />
-    <ClCompile Include="ui_mem.c" />
-    <ClCompile Include="ui_dev.c" />
-  </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc" />
   </ItemGroup>
@@ -254,6 +224,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cmdline.c" />
+    <ClCompile Include="src\dev.c" />
+    <ClCompile Include="src\gettext.c" />
+    <ClCompile Include="src\ini.c" />
+    <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\nkctx.c" />
+    <ClCompile Include="src\nuklear.c" />
+    <ClCompile Include="src\open_dialog.c" />
+    <ClCompile Include="src\ui.c" />
+    <ClCompile Include="src\ui_boot.c" />
+    <ClCompile Include="src\ui_cpu.c" />
+    <ClCompile Include="src\ui_dev.c" />
+    <ClCompile Include="src\ui_dir.c" />
+    <ClCompile Include="src\ui_end.c" />
+    <ClCompile Include="src\ui_fw.c" />
+    <ClCompile Include="src\ui_hdb.c" />
+    <ClCompile Include="src\ui_mem.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\cmdline.h" />
+    <ClInclude Include="include\dev.h" />
+    <ClInclude Include="include\gettext.h" />
+    <ClInclude Include="include\ini.h" />
+    <ClInclude Include="include\nkctx.h" />
+    <ClInclude Include="include\nkctx_priv.h" />
+    <ClInclude Include="include\nuklear.h" />
+    <ClInclude Include="include\nuklear_gdip.h" />
+    <ClInclude Include="include\ui.h" />
+    <ClInclude Include="include\version.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

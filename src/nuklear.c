@@ -33,7 +33,7 @@
 
 #include "dev.h"
 #include "ui.h"
-#include "resource.h"
+#include "../resource.h"
 #include "nkctx_priv.h"
 
 GdipFont*

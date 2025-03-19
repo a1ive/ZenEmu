@@ -8,7 +8,7 @@
 #include <limits.h>
 #include <time.h>
 
-#include "resource.h"
+#include "../resource.h"
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO

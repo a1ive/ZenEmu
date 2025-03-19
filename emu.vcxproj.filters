@@ -18,94 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="nuklear.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="nuklear_gdip.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="nkctx.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="version.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ini.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ui.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="cmdline.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dev.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="gettext.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="nkctx_priv.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="nuklear.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="nkctx.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ini.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_dir.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_cpu.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_mem.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_fw.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_boot.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_dev.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_end.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="cmdline.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="dev.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="open_dialog.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="gettext.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_hdb.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="nuklear.rc">
       <Filter>RC</Filter>
     </ResourceCompile>
@@ -207,5 +119,93 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cmdline.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dev.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gettext.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ini.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nkctx.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nuklear.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\open_dialog.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_boot.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_cpu.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_dev.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_dir.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_end.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_fw.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_hdb.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_mem.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\cmdline.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\dev.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gettext.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ini.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nkctx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nkctx_priv.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nuklear.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nuklear_gdip.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\version.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

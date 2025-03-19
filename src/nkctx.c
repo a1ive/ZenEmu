@@ -5,7 +5,6 @@
 #include "ui.h"
 #include "dev.h"
 #include "gettext.h"
-#include "resource.h"
 #include "version.h"
 
 #include <windowsx.h>
