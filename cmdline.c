@@ -164,7 +164,7 @@ append_qemu_bootdev(void)
 			nk.ini->d_info[ZEMU_DEV_CD][nk.ini->boot_cd].index);
 		break;
 	case ZEMU_BOOT_VFD:
-		append_cmdline(L"-fda \"%s\" ", rel_to_abs(nk.ini->boot_vfd));
+		append_cmdline(L"-drive file=\"%s\",index=0,if=floppy ", rel_to_abs(nk.ini->boot_vfd));
 		break;
 	case ZEMU_BOOT_PXE:
 		break;
