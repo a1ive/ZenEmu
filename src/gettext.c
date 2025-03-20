@@ -260,6 +260,90 @@ lang_zh_tw[ZTXT__MAX] =
 };
 
 static const char*
+lang_ja_jp[ZTXT__MAX] =
+{
+	[ZTXT_QEMU] = u8"QEMU",
+	[ZTXT_PATH] = u8"パス",
+	[ZTXT_ARCH] = u8"アーキ",
+	[ZTXT_CPU] = u8"CPU",
+	[ZTXT_SMP] = u8"コア数",
+	[ZTXT_NAME] = u8"名前",
+	[ZTXT_MODEL] = u8"モデル",
+	[ZTXT_MACHINE] = u8"マシン",
+	[ZTXT_HYPER_V] = u8"Hyper-V",
+	[ZTXT_KERNEL_IRQCHIP] = u8"IRQチップ",
+	[ZTXT_VIRT] = u8"仮想化",
+	[ZTXT_MEMORY] = u8"メモリ",
+	[ZTXT_SIZE] = u8"サイズ",
+	[ZTXT_FIRMWARE] = u8"ファーム",
+	[ZTXT_TYPE] = u8"タイプ",
+	[ZTXT_OPTIONS] = u8"オプション",
+	[ZTXT_BOOT_MENU] = u8"起動メニュー",
+	[ZTXT_TIMEOUT] = u8"タイムアウト",
+	[ZTXT_PFLASH] = u8"pflash",
+	[ZTXT_DISPLAY] = u8"表示",
+	[ZTXT_FULLSCREEN] = u8"全画面",
+	[ZTXT_NETWORK] = u8"ネット",
+	[ZTXT_PERIPHERAL] = u8"周辺機器",
+	[ZTXT_USB] = u8"USB",
+	[ZTXT_KEYBOARD] = u8"キーボード",
+	[ZTXT_MOUSE] = u8"マウス",
+	[ZTXT_TABLET] = u8"タブレット",
+	[ZTXT_AUDIO] = u8"オーディオ",
+	[ZTXT_BACKEND] = u8"Backend",
+	[ZTXT_INTEL_HDA] = u8"Intel HDA",
+	[ZTXT_PC_SPEAKER] = u8"PC Speaker",
+	[ZTXT_BOOT_DEVICE] = u8"起動デバイス",
+	[ZTXT_DISK_IMAGE] = u8"ディスクイメージ",
+	[ZTXT_ISO_IMAGE] = u8"ISOイメージ",
+	[ZTXT_PHYSICAL_DISK] = u8"物理ディスク",
+	[ZTXT_CD_ROM] = u8"CD-ROM",
+	[ZTXT_HARD_DISK] = u8"HDD",
+	[ZTXT_FLOPPY] = u8"フロッピー",
+	[ZTXT_FLOPPY_IMAGE] = u8"フロッピーイメージ",
+	[ZTXT_PXE] = u8"PXE",
+	[ZTXT_TFTP_FOLDER] = u8"TFTPフォルダ",
+	[ZTXT_BOOT_FILE] = u8"ブートファイル",
+	[ZTXT_LINUX_KERNEL] = u8"Linuxカーネル",
+	[ZTXT_KERNEL] = u8"カーネル",
+	[ZTXT_INITRD] = u8"INITRD",
+	[ZTXT_CMDLINE] = u8"cmdline",
+	[ZTXT_DTB] = u8"DTB",
+	[ZTXT_SHIM_EFI] = u8"shim.efi",
+	[ZTXT_WIM_IMAGE] = u8"WIMイメージ",
+	[ZTXT_WIM_INDEX] = u8"イメージ番号",
+	[ZTXT_DIR_VVFAT] = u8"フォルダ (VVFAT)",
+	[ZTXT_DIR] = u8"フォルダ",
+	[ZTXT_SNAPSHOT] = u8"スナップショット",
+	[ZTXT_INTERFACE] = u8"インタフェース",
+	[ZTXT_NO_DEVICE] = u8"デバイスなし",
+	[ZTXT_ADDITIONAL] = u8"追加ストレージ",
+	[ZTXT_FILE] = u8"ファイル",
+	[ZTXT_DEVICE] = u8"デバイス",
+	[ZTXT_COPY] = u8"コピー",
+	[ZTXT_SAVE] = u8"保存",
+	[ZTXT_START] = u8"開始",
+	[ZTXT_STOP] = u8"停止",
+	[ZTXT_SCREENSHOT] = u8"スクショ",
+	[ZTXT_SAVE_TO] = u8"保存先",
+	[ZTXT_CLIPBOARD] = u8"クリップボード",
+	[ZTXT_LOGS] = u8"ログ",
+	[ZTXT_WARN_NOT_ADMIN] = u8"管理者権限なし(クリックで取得)",
+	[ZTXT_WARN_NON_ASCII] = u8"非ASCIIかコンマを含むパスは非対応",
+	[ZTXT_WARN_OUT_OF_MEM] = u8"メモリ不足の可能性あり",
+	[ZTXT_WARN_FULLSCREEN] = u8"全画面表示中 (Ctrl+Alt+Fで切替)",
+	[ZTXT_WARN_NOT_BOOTABLE] = u8"起動不可の可能性あり",
+	[ZTXT_MSG_COPIED] = u8"クリップボードにコピー済み",
+	[ZTXT_MSG_SAVED] = u8"設定を保存しました",
+	[ZTXT_MSG_MISSING_ARGS] = u8"引数不足",
+	[ZTXT_MSG_KILLED] = u8"QEMUプロセスを終了しました",
+	[ZTXT_MSG_KILL_FAILED] = u8"QEMUプロセスを終了できません",
+	[ZTXT_MSG_PNG_OK] = u8"スクショを保存しました",
+	[ZTXT_MSG_PNG_ERR] = u8"スクショ保存失敗",
+	[ZTXT_UNSUPPORTED] = u8"非対応",
+};
+
+static const char*
 lang_tr_tr[ZTXT__MAX] =
 {
 	[ZTXT_QEMU] = u8"QEMU",
@@ -352,6 +436,9 @@ ZTXT(GETTEXT_STR_ID id)
 		break;
 	case 1028: // Chinese - Taiwan
 		str = lang_zh_tw[id];
+		break;
+	case 1041: // Japanese
+		str = lang_ja_jp[id];
 		break;
 	case 1055: // Türkçe - Türkiye Cumhuriyeti
 		str = lang_tr_tr[id];
