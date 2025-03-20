@@ -69,6 +69,9 @@ lang_en_us[ZTXT__MAX] =
 	[ZTXT_SAVE] = u8"Save",
 	[ZTXT_START] = u8"Start",
 	[ZTXT_STOP] = u8"Stop",
+	[ZTXT_SCREENSHOT] = u8"Screenshot",
+	[ZTXT_SAVE_TO] = u8"Save To",
+	[ZTXT_CLIPBOARD] = u8"Clipboard",
 	[ZTXT_LOGS] = u8"Logs",
 	[ZTXT_WARN_NOT_ADMIN] = u8"No administrator privileges. Click to obtain.",
 	[ZTXT_WARN_NON_ASCII] = u8"Paths with commas or non-ASCII characters are NOT supported",
@@ -78,6 +81,8 @@ lang_en_us[ZTXT__MAX] =
 	[ZTXT_MSG_MISSING_ARGS] = u8"Missing arguments",
 	[ZTXT_MSG_KILLED] = u8"QEMU process has been terminated",
 	[ZTXT_MSG_KILL_FAILED] = u8"Unable to terminate QEMU process",
+	[ZTXT_MSG_PNG_OK] = u8"Screenshot saved",
+	[ZTXT_MSG_PNG_ERR] = u8"Failed to save screenshot",
 	[ZTXT_UNSUPPORTED] = u8"Unsupported",
 };
 
@@ -143,6 +148,9 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_SAVE] = u8"保存",
 	[ZTXT_START] = u8"启动",
 	[ZTXT_STOP] = u8"终止",
+	[ZTXT_SCREENSHOT] = u8"屏幕截图",
+	[ZTXT_SAVE_TO] = u8"保存到",
+	[ZTXT_CLIPBOARD] = u8"剪贴板",
 	[ZTXT_LOGS] = u8"日志",
 	[ZTXT_WARN_NOT_ADMIN] = u8"无管理员权限，点击获取",
 	[ZTXT_WARN_NON_ASCII] = u8"不支持包含逗号或非ASCII字符的路径",
@@ -152,6 +160,8 @@ lang_zh_cn[ZTXT__MAX] =
 	[ZTXT_MSG_MISSING_ARGS] = u8"缺少参数",
 	[ZTXT_MSG_KILLED] = u8"已中止QEMU进程",
 	[ZTXT_MSG_KILL_FAILED] = u8"无法中止QEMU进程",
+	[ZTXT_MSG_PNG_OK] = u8"已保存截图",
+	[ZTXT_MSG_PNG_ERR] = u8"保存截图失败",
 	[ZTXT_UNSUPPORTED] = u8"不支持",
 };
 
@@ -217,6 +227,9 @@ lang_zh_tw[ZTXT__MAX] =
 	[ZTXT_SAVE] = u8"儲存",
 	[ZTXT_START] = u8"啟動",
 	[ZTXT_STOP] = u8"終止",
+	[ZTXT_SCREENSHOT] = u8"螢幕截圖",
+	[ZTXT_SAVE_TO] = u8"儲存到",
+	[ZTXT_CLIPBOARD] = u8"剪貼簿",
 	[ZTXT_LOGS] = u8"日誌",
 	[ZTXT_WARN_NOT_ADMIN] = u8"無管理員許可權，點選獲取",
 	[ZTXT_WARN_NON_ASCII] = u8"不支援包含逗號或非ASCII字元的路徑",
@@ -226,6 +239,8 @@ lang_zh_tw[ZTXT__MAX] =
 	[ZTXT_MSG_MISSING_ARGS] = u8"缺少引數",
 	[ZTXT_MSG_KILLED] = u8"已中止QEMU程序",
 	[ZTXT_MSG_KILL_FAILED] = u8"無法中止QEMU程序",
+	[ZTXT_MSG_PNG_OK] = u8"已儲存截圖",
+	[ZTXT_MSG_PNG_ERR] = u8"儲存截圖失敗",
 	[ZTXT_UNSUPPORTED] = u8"不支援",
 };
 

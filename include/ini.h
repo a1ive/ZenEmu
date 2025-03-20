@@ -114,6 +114,13 @@ typedef struct _ZEMU_ADD_DEV
 
 #define MAX_ADD_DEV 4
 
+typedef enum _ZEMU_SCREEN_SAVE
+{
+	ZEMU_SCREEN_TO_FILE = 0,
+	ZEMU_SCREEN_TO_CLIP,
+	ZEMU_SCREEN_TO_MAX
+} ZEMU_SCREEN_SAVE;
+
 typedef struct _ZEMU_INI_DATA
 {
 	WCHAR pwd[MAX_PATH];
@@ -126,6 +133,8 @@ typedef struct _ZEMU_INI_DATA
 
 	CHAR qemu_wimldr[ZEMU_FW_MAX][OPT_SZ];
 	CHAR qemu_wimhda[OPT_SZ];
+
+	ZEMU_SCREEN_SAVE qemu_screenshot;
 
 	ZEMU_INI_PROFILE profile[ZEMU_QEMU_ARCH_MAX];
 	ZEMU_INI_PROFILE* cur;
@@ -165,6 +174,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;
 	HANDLE output_handle;
+	DWORD output_pid;
 } ZEMU_INI_DATA;
 
 #define IS_BIOS \

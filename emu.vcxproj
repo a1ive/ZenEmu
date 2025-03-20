@@ -193,10 +193,12 @@
     <Image Include="icons\add.png" />
     <Image Include="icons\admin.png" />
     <Image Include="icons\audio.png" />
+    <Image Include="icons\camera.png" />
     <Image Include="icons\cd.png" />
     <Image Include="icons\close.png" />
     <Image Include="icons\copy.png" />
     <Image Include="icons\cpu.png" />
+    <Image Include="icons\dice.png" />
     <Image Include="icons\dir.png" />
     <Image Include="icons\disk.png" />
     <Image Include="icons\display.png" />
@@ -219,6 +221,7 @@
     <Image Include="icons\start.png" />
     <Image Include="icons\storage.png" />
     <Image Include="icons\usb.png" />
+    <Image Include="icons\vm.png" />
     <Image Include="icons\warn.png" />
     <Image Include="nuklear.ico" />
   </ItemGroup>
@@ -230,6 +233,7 @@
     <ClCompile Include="src\dev.c" />
     <ClCompile Include="src\gettext.c" />
     <ClCompile Include="src\ini.c" />
+    <ClCompile Include="src\lodepng.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\nkctx.c" />
     <ClCompile Include="src\nuklear.c" />
@@ -239,16 +243,18 @@
     <ClCompile Include="src\ui_cpu.c" />
     <ClCompile Include="src\ui_dev.c" />
     <ClCompile Include="src\ui_dir.c" />
-    <ClCompile Include="src\ui_end.c" />
+    <ClCompile Include="src\ui_start.c" />
     <ClCompile Include="src\ui_fw.c" />
     <ClCompile Include="src\ui_hdb.c" />
     <ClCompile Include="src\ui_mem.c" />
+    <ClCompile Include="src\ui_end.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cmdline.h" />
     <ClInclude Include="include\dev.h" />
     <ClInclude Include="include\gettext.h" />
     <ClInclude Include="include\ini.h" />
+    <ClInclude Include="include\lodepng.h" />
     <ClInclude Include="include\nkctx.h" />
     <ClInclude Include="include\nkctx_priv.h" />
     <ClInclude Include="include\nuklear.h" />

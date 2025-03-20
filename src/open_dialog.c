@@ -49,6 +49,25 @@ ui_open_file_by_dir(CHAR* path, size_t len, LPCSTR dir, LPCWSTR filter)
 		strcpy_s(path, len, ucs2_to_utf8(PathFindFileNameW(buf)));
 }
 
+BOOL
+ui_save_file(LPWSTR path, size_t len, LPCWSTR filter, LPCWSTR ext)
+{
+	OPENFILENAMEW ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = nk.wnd;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = path;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT;
+	ofn.lpstrDefExt = ext;
+	return GetSaveFileNameW(&ofn);
+}
+
 static int CALLBACK
 browse_callback_fn(HWND wnd, UINT msg, LPARAM lparam, LPARAM data)
 {

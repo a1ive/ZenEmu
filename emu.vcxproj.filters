@@ -116,6 +116,15 @@
     <Image Include="icons\halt.png">
       <Filter>RC\icons</Filter>
     </Image>
+    <Image Include="icons\camera.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\dice.png">
+      <Filter>RC\icons</Filter>
+    </Image>
+    <Image Include="icons\vm.png">
+      <Filter>RC\icons</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -160,7 +169,7 @@
     <ClCompile Include="src\ui_dir.c">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui_end.c">
+    <ClCompile Include="src\ui_start.c">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="src\ui_fw.c">
@@ -170,6 +179,12 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="src\ui_mem.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui_end.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lodepng.c">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -205,6 +220,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lodepng.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

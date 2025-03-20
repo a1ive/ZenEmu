@@ -345,7 +345,7 @@ nk_panel_begin_ex(struct nk_context* ctx, const char* title, enum nk_panel_type 
 			int text_len = nk_strlen(title);
 			struct nk_rect label = { 0,0,0,0 };
 			struct nk_rect icon;
-			struct nk_image img = GET_PNG(IDR_PNG_QEMU);
+			struct nk_image img = GET_PNG(IDR_PNG_VM);
 			float t = font->width(font->userdata, font->height, title, text_len);
 			text.padding = nk_vec2(0, 0);
 

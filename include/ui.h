@@ -31,6 +31,9 @@
 	L"WIM Image (wim)\0*.WIM\0" \
 	 "All Files\0*.*\0"
 
+#define FILTER_PNG \
+	L"Portable Network Graphics (png)\0*.PNG\0"
+
 #define FILTER_ALL \
 	L"All Files\0*.*\0"
 
@@ -39,6 +42,9 @@ ui_open_file(CHAR* path, size_t len, LPCWSTR filter);
 
 void
 ui_open_file_by_dir(CHAR* path, size_t len, LPCSTR dir, LPCWSTR filter);
+
+BOOL
+ui_save_file(LPWSTR path, size_t len, LPCWSTR filter, LPCWSTR ext);
 
 void
 ui_open_dir(CHAR* path, size_t len);
@@ -57,6 +63,10 @@ ui_popup_window(struct nk_context* ctx, float width, float height);
 
 void
 ui_popup_msg(const char* msg, DWORD icon);
+
+nk_bool ui_is_qemu_running(void);
+
+void ui_reset_log(void);
 
 void
 ui_ini_init(void);
@@ -84,6 +94,9 @@ ui_qemu_boot(struct nk_context* ctx);
 
 void
 ui_qemu_hdb(struct nk_context* ctx);
+
+void
+ui_qemu_start(struct nk_context* ctx);
 
 void
 ui_qemu_end(struct nk_context* ctx);
