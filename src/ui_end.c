@@ -104,7 +104,7 @@ save_screenshot(ZEMU_SCREEN_SAVE save_to, HDC hdc, HBITMAP hbitmap, UINT w, UINT
 		WCHAR path[MAX_PATH];
 		SYSTEMTIME st;
 		GetSystemTime(&st);
-		swprintf(path, MAX_PATH, L"zemu-%u%u%u%u%u%u.png",
+		swprintf(path, MAX_PATH, L"zemu-%04u%02u%02u%02u%02u%02u.png",
 			st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 		if (!ui_save_file(path, MAX_PATH, FILTER_PNG, L"png"))
 			return FALSE;
@@ -121,7 +121,7 @@ save_screenshot(ZEMU_SCREEN_SAVE save_to, HDC hdc, HBITMAP hbitmap, UINT w, UINT
 
 static BOOL get_screenshot(HWND hwnd)
 {
-	int x = 0, y = 0, w = 0, h = 0;
+	int w = 0, h = 0;
 	HDC screen = NULL;
 	HDC hdc = NULL;
 	HBITMAP hbitmap = NULL;
@@ -137,13 +137,18 @@ static BOOL get_screenshot(HWND hwnd)
 	if (IsIconic(hwnd))
 		ShowWindow(hwnd, SW_RESTORE);
 	SetForegroundWindow(hwnd);
-	if (!GetWindowRect(hwnd, &rec))
+	if (!GetClientRect(hwnd, &rec))
 	{
 		MessageBoxW(NULL, L"Could not get QEMU window size", L"ERROR", MB_OK | MB_ICONERROR);
 		return FALSE;
 	}
-	x = rec.left;
-	y = rec.top;
+	POINT pt = { rec.left, rec.top };
+	if (!ClientToScreen(hwnd, &pt))
+	{
+		MessageBoxW(NULL, L"Could not get QEMU window position", L"ERROR", MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+
 	w = rec.right - rec.left;
 	h = rec.bottom - rec.top;
 
@@ -161,7 +166,7 @@ static BOOL get_screenshot(HWND hwnd)
 		goto out;
 	}
 	SelectObject(hdc, hbitmap);
-	rc = BitBlt(hdc, 0, 0, w, h, screen, x, y, SRCCOPY);
+	rc = BitBlt(hdc, 0, 0, w, h, screen, pt.x, pt.y, SRCCOPY);
 	if (rc != TRUE)
 	{
 		MessageBoxW(NULL, L"BitBlt failed", L"ERROR", MB_OK | MB_ICONERROR);
