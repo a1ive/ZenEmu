@@ -135,6 +135,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR qemu_wimhda[OPT_SZ];
 
 	ZEMU_SCREEN_SAVE qemu_screenshot;
+	nk_bool qemu_fullscreen;
 
 	ZEMU_INI_PROFILE profile[ZEMU_QEMU_ARCH_MAX];
 	ZEMU_INI_PROFILE* cur;

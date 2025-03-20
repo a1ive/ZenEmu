@@ -96,8 +96,8 @@ append_qemu_hw(void)
 
 	if (nk.ini->cur->graphics && nk.ini->cur->vgadev[0])
 		append_cmdline(L"-device %s ", utf8_to_ucs2(nk.ini->cur->vgadev));
-	//if (!nk.ini->cur->graphics)
-		//append_cmdline(L"-nographic ");
+	if (nk.ini->qemu_fullscreen)
+		append_cmdline(L"-full-screen ");
 
 	if (nk.ini->cur->usb && nk.ini->cur->usbctrl[0])
 	{

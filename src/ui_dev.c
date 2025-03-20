@@ -45,11 +45,17 @@ ui_qemu_dev(struct nk_context* ctx)
 		}
 		nk_menu_end(ctx);
 	}
-	nk_spacer(ctx);
-	nk_spacer(ctx);
-	nk_spacer(ctx);
 	if (!nk.ini->cur->graphics)
 		nk_widget_disable_end(ctx);
+	nk_spacer(ctx);
+	nk_spacer(ctx);
+	nk_checkbox_label(ctx, ZTXT(ZTXT_FULLSCREEN), &nk.ini->qemu_fullscreen);
+
+	if (nk.ini->qemu_fullscreen)
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		nk_image_label(ctx, GET_PNG(IDR_PNG_INFO), ZTXT(ZTXT_WARN_FULLSCREEN));
+	}
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 7,
 		(float[7]) { nk.sq, 0.2f - nk.sq, 0.3f - nk.sq, nk.sq, 0.16f, 0.16f, 0.16f });
