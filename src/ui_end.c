@@ -187,8 +187,8 @@ void
 ui_qemu_end(struct nk_context* ctx)
 {
 	nk_bool is_running = ui_is_qemu_running();
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.3f, 0.2f, 0.2f, 0.3f });
-	nk_image_label(ctx, GET_PNG(IDR_PNG_VM), ZTXT(ZTXT_SAVE_TO));
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.3f, 0.25f, 0.25f, 0.2f });
+	nk_image_label(ctx, GET_PNG(IDR_PNG_CAMERA), ZTXT(ZTXT_SAVE_TO));
 	UI_OPTION(ZTXT(ZTXT_FILE), nk.ini->qemu_screenshot, ZEMU_SCREEN_TO_FILE);
 	UI_OPTION(ZTXT(ZTXT_CLIPBOARD), nk.ini->qemu_screenshot, ZEMU_SCREEN_TO_CLIP);
 	if (!is_running)

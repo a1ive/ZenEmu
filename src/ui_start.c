@@ -189,7 +189,7 @@ ui_qemu_start(struct nk_context* ctx)
 {
 	nk_bool is_running = ui_is_qemu_running();
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.2f, 0.3f, 0.3f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f });
 	
 	if (nk_button_ex(ctx, GET_PNG(IDR_PNG_COPY), ZTXT(ZTXT_COPY)))
 	{
@@ -201,6 +201,7 @@ ui_qemu_start(struct nk_context* ctx)
 		save_ini();
 		ui_popup_msg(ZTXT(ZTXT_MSG_SAVED), IDR_PNG_INFO);
 	}
+	nk_spacer(ctx);
 	if (is_running)
 	{
 		if (nk_button_ex(ctx, GET_PNG(IDR_PNG_HALT), ZTXT(ZTXT_STOP)))

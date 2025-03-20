@@ -94,7 +94,7 @@ ui_qemu_dev(struct nk_context* ctx)
 	if (!nk.ini->cur->net)
 		nk_widget_disable_end(ctx);
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[6]) { nk.sq, 0.2f - nk.sq, 0.2f, 0.2f, 0.1f, 0.3f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 6, (float[6]) { nk.sq, 0.2f - nk.sq, 0.2f, 0.2f, 0.2f, 0.2f });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_AUDIO), ZTXT(ZTXT_AUDIO), &nk.ini->cur->audio);
 	if (!nk.ini->cur->audio)
 		nk_widget_disable_begin(ctx);
