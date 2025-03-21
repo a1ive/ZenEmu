@@ -68,6 +68,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->pflash = get_ini_bool(section, L"Pflash", nk_true);
 	p->net = get_ini_bool(section, L"Network", nk_true);
 	strcpy_s(p->netdev, OPT_SZ, get_ini_value(section, L"NetworkDevice", L"e1000"));
+	strcpy_s(p->netmac, MAC_SZ, get_ini_value(section, L"NetworkMacAddr", L""));
 	p->usb = get_ini_bool(section, L"Usb", nk_true);
 	strcpy_s(p->usbctrl, OPT_SZ, get_ini_value(section, L"UsbController", L"usb-ehci"));
 	p->usb_kbd = get_ini_bool(section, L"UsbKeyboard", nk_true);
@@ -158,6 +159,8 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"Pflash", p->pflash);
 	set_ini_num(section, L"Network", p->net);
 	set_ini_value(section, L"NetworkDevice", p->netdev);
+	if (p->netmac[0])
+		set_ini_value(section, L"NetworkMacAddr", p->netmac);
 	set_ini_num(section, L"Usb", p->usb);
 	set_ini_value(section, L"UsbController", p->usbctrl);
 	set_ini_num(section, L"UsbKeyboard", p->usb_kbd);
