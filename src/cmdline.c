@@ -87,8 +87,8 @@ append_qemu_hw(void)
 		nk.ini->cur->irqchip ? L"on" : L"off");
 	if (nk.ini->cur->audio && nk.ini->cur->audio_spk)
 		append_cmdline(L",pcspk-audiodev=snd0");
-	if (nk.ini->qemu_arch)
-		append_cmdline(L",virtualization=%s ", nk.ini->cur->virt ? L"true" : L"false");
+	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64 && nk.ini->cur->virt)
+		append_cmdline(L",virtualization=true ");
 	else
 		append_cmdline(L" ");
 	if (nk.ini->cur->mem[0])

@@ -23,7 +23,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	case ZEMU_QEMU_ARCH_X64:
 		section = L"X86";
 		model = L"max";
-		machine = L"pc";
+		machine = L"q35";
 		display = L"vmware-svga";
 		fw = ZEMU_FW_X64_EFI;
 		fw_min = ZEMU_FW_X86_MIN;
@@ -31,7 +31,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
 		section = L"Arm";
-		model = L"cortex-a72";
+		model = L"max";
 		machine = L"virt";
 		display = L"ramfb";
 		fw = ZEMU_FW_AA64_EFI;
