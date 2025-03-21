@@ -100,6 +100,8 @@ obj_vfd(struct nk_context* ctx)
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file(nk.ini->boot_vfd, MAX_PATH, FILTER_VFD);
 
+	ui_hd_attr(ctx, &nk.ini->boot_vfd_attr);
+
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->boot_vfd);
 }
@@ -222,6 +224,8 @@ obj_dir(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_dir, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->boot_dir, MAX_PATH);
+
+	ui_hd_attr(ctx, &nk.ini->boot_dir_attr);
 
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->boot_dir);

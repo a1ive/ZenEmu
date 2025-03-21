@@ -94,9 +94,22 @@ typedef struct _ZEMU_INI_PROFILE
 	ZEMU_BOOT_TARGET boot;
 } ZEMU_INI_PROFILE;
 
+typedef enum _ZEMU_DEV_IF
+{
+	ZEMU_DEV_IF_DEFAULT = 0,
+	ZEMU_DEV_IF_IDE,
+	ZEMU_DEV_IF_SCSI,
+	ZEMU_DEV_IF_SD,
+	ZEMU_DEV_IF_MTD,
+	ZEMU_DEV_IF_VIRTIO,
+	ZEMU_DEV_IF_HDMAX,
+	ZEMU_DEV_IF_FLOPPY
+} ZEMU_DEV_IF;
+
 typedef struct _ZEMU_DEV_ATTR
 {
 	nk_bool snapshot;
+	ZEMU_DEV_IF devif;
 } ZEMU_DEV_ATTR;
 
 typedef enum _ZEMU_DEV_TYPE
@@ -150,6 +163,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR boot_iso[MAX_PATH];
 	
 	CHAR boot_vfd[MAX_PATH];
+	ZEMU_DEV_ATTR boot_vfd_attr;
 
 	struct _PHY_DRIVE_INFO* d_info[ZEMU_DEV_MAX];
 	DWORD d_count[ZEMU_DEV_MAX];
@@ -172,6 +186,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR net_file[MAX_PATH];
 
 	CHAR boot_dir[MAX_PATH];
+	ZEMU_DEV_ATTR boot_dir_attr;
 
 	size_t add_dev_count;
 	ZEMU_ADD_DEV add_dev[MAX_ADD_DEV];

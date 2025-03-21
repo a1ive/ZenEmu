@@ -134,10 +134,33 @@ append_qemu_hw(void)
 }
 
 static inline void
-append_hd_attr(ZEMU_DEV_ATTR* attr)
+append_disk_attr(ZEMU_DEV_ATTR* attr)
 {
 	if (attr->snapshot)
 		append_cmdline(L",snapshot=on");
+	switch (attr->devif)
+	{
+	case ZEMU_DEV_IF_IDE:
+		append_cmdline(L",if=ide");
+		break;
+	case ZEMU_DEV_IF_SCSI:
+		append_cmdline(L",if=scsi");
+		break;
+	case ZEMU_DEV_IF_SD:
+		append_cmdline(L",if=sd");
+		break;
+	case ZEMU_DEV_IF_MTD:
+		append_cmdline(L",if=mtd");
+		break;
+	case ZEMU_DEV_IF_VIRTIO:
+		append_cmdline(L",if=virtio");
+		break;
+	case ZEMU_DEV_IF_FLOPPY:
+		append_cmdline(L",if=floppy");
+		break;
+	default:
+		break;
+	}
 }
 
 static void
@@ -148,7 +171,7 @@ append_qemu_bootdev(void)
 	case ZEMU_BOOT_VHD:
 		append_cmdline(L"-drive file=\"%s\"",
 			rel_to_abs(nk.ini->boot_vhd));
-		append_hd_attr(&nk.ini->boot_vhd_attr);
+		append_disk_attr(&nk.ini->boot_vhd_attr);
 		append_cmdline(L",index=0,media=disk ");
 		break;
 	case ZEMU_BOOT_ISO:
@@ -158,7 +181,7 @@ append_qemu_bootdev(void)
 	case ZEMU_BOOT_PD:
 		append_cmdline(L"-drive file=\\\\.\\PhysicalDrive%lu",
 			nk.ini->d_info[ZEMU_DEV_HD][nk.ini->boot_hd].index);
-		append_hd_attr(&nk.ini->boot_hd_attr);
+		append_disk_attr(&nk.ini->boot_hd_attr);
 		append_cmdline(L",format=raw,index=0,media=disk ");
 		break;
 	case ZEMU_BOOT_CD:
@@ -166,7 +189,10 @@ append_qemu_bootdev(void)
 			nk.ini->d_info[ZEMU_DEV_CD][nk.ini->boot_cd].index);
 		break;
 	case ZEMU_BOOT_VFD:
-		append_cmdline(L"-drive file=\"%s\",index=0,if=floppy ", rel_to_abs(nk.ini->boot_vfd));
+		append_cmdline(L"-drive file=\"%s\"",
+			rel_to_abs(nk.ini->boot_vfd));
+		append_disk_attr(&nk.ini->boot_vfd_attr);
+		append_cmdline(L",index=0,media=disk ");
 		break;
 	case ZEMU_BOOT_PXE:
 		break;
@@ -196,8 +222,11 @@ append_qemu_bootdev(void)
 		break;
 	case ZEMU_BOOT_DIR:
 		fix_dir_path(nk.ini->boot_dir, MAX_PATH);
-		append_cmdline(L"-drive file=fat:\"%s\",format=raw,media=disk,snapshot=on ",
+		append_cmdline(L"-drive file=fat%s\"%s\"",
+			nk.ini->boot_dir_attr.snapshot ? L":" : L":rw:",
 			rel_to_abs(nk.ini->boot_dir));
+		append_disk_attr(&nk.ini->boot_dir_attr);
+		append_cmdline(L",format=raw,index=0,media=disk ");
 		break;
 	}
 }
@@ -250,7 +279,7 @@ append_qemu_hdb(void)
 				continue;
 			append_cmdline(L"-drive file=\"%s\"", rel_to_abs(dev->path));
 		}
-		append_hd_attr(&dev->attr);
+		append_disk_attr(&dev->attr);
 		if (dev->type == ZEMU_DEV_CD)
 			append_cmdline(L",media=cdrom ");
 		else

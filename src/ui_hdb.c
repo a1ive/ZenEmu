@@ -30,12 +30,14 @@ ui_qemu_hdb(struct nk_context* ctx)
 		{
 			nk.ini->add_dev[nk.ini->add_dev_count].type = ZEMU_DEV_HD;
 			nk.ini->add_dev[nk.ini->add_dev_count].is_active = nk_true;
+			nk.ini->add_dev[nk.ini->add_dev_count].attr.snapshot = nk_true;
 			nk.ini->add_dev_count++;
 		}
 		if (nk_menu_item_image_label(ctx, GET_PNG(IDR_PNG_CD), ZTXT(ZTXT_CD_ROM), NK_TEXT_RIGHT))
 		{
 			nk.ini->add_dev[nk.ini->add_dev_count].type = ZEMU_DEV_CD;
 			nk.ini->add_dev[nk.ini->add_dev_count].is_active = nk_true;
+			nk.ini->add_dev[nk.ini->add_dev_count].attr.snapshot = nk_true;
 			nk.ini->add_dev_count++;
 		}
 		nk_menu_end(ctx);
@@ -52,6 +54,7 @@ ui_qemu_hdb(struct nk_context* ctx)
 	for (size_t i = 0; i < nk.ini->add_dev_count; i++)
 	{
 		ZEMU_ADD_DEV* dev = &nk.ini->add_dev[i];
+		BOOL is_cd = (dev->type == ZEMU_DEV_CD) ? TRUE : FALSE;
 		nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { nk.sq, 0.2f - nk.sq, 0.2f, 0.2f, 0.4f });
 		ui_dev_button(ctx, imgs[dev->type], names[dev->type], &dev->is_active);
 
@@ -60,12 +63,14 @@ ui_qemu_hdb(struct nk_context* ctx)
 
 		UI_OPTION(ZTXT(ZTXT_FILE), dev->is_device, nk_false);
 		UI_OPTION(ZTXT(ZTXT_DEVICE), dev->is_device, nk_true);
-		nk_checkbox_label(ctx, ZTXT(ZTXT_SNAPSHOT), &dev->attr.snapshot);
+		if (is_cd)
+			nk_spacer(ctx);
+		else
+			nk_checkbox_label(ctx, ZTXT(ZTXT_SNAPSHOT), &dev->attr.snapshot);
 		
 		nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.8f - nk.sq, nk.sq });
 		if (dev->is_device)
 		{
-			BOOL is_cd = (dev->type == ZEMU_DEV_CD) ? TRUE : FALSE;
 			if (nk.ini->d_info[dev->type] == NULL)
 				nk.ini->d_count[dev->type] = get_disk_list(is_cd, &nk.ini->d_info[dev->type]);
 
