@@ -42,7 +42,7 @@ ui_qemu_dev(struct nk_context* ctx)
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_DISPLAY), ZTXT(ZTXT_DISPLAY), &nk.ini->cur->graphics);
 	if (!nk.ini->cur->graphics)
 		nk_widget_disable_begin(ctx);
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->vgadev, OPT_SZ, NULL);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->vgadev, OPT_SZ, nk_filter_ascii);
 	if (nk_menu_begin_image_ex(ctx, "#EDIT_VGA", GET_PNG(IDR_PNG_DOWN), nk_vec2(200, 300)))
 	{
 		nk_layout_row_dynamic(ctx, 0, 1);
@@ -70,7 +70,7 @@ ui_qemu_dev(struct nk_context* ctx)
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_USB), ZTXT(ZTXT_USB), &nk.ini->cur->usb);
 	if (!nk.ini->cur->usb)
 		nk_widget_disable_begin(ctx);
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->usbctrl, OPT_SZ, NULL);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->usbctrl, OPT_SZ, nk_filter_ascii);
 	if (nk_menu_begin_image_ex(ctx, "#EDIT_USB", GET_PNG(IDR_PNG_DOWN), nk_vec2(200, 300)))
 	{
 		nk_layout_row_dynamic(ctx, 0, 1);
@@ -92,7 +92,7 @@ ui_qemu_dev(struct nk_context* ctx)
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_NETWORK), ZTXT(ZTXT_NETWORK), &nk.ini->cur->net);
 	if (!nk.ini->cur->net)
 		nk_widget_disable_begin(ctx);
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->netdev, OPT_SZ, NULL);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->netdev, OPT_SZ, nk_filter_ascii);
 	if (nk_menu_begin_image_ex(ctx, "#EDIT_NET", GET_PNG(IDR_PNG_DOWN), nk_vec2(200, 300)))
 	{
 		nk_layout_row_dynamic(ctx, 0, 1);
@@ -127,7 +127,7 @@ ui_qemu_dev(struct nk_context* ctx)
 	else
 		nk_checkbox_label(ctx, ZTXT(ZTXT_PC_SPEAKER), &nk.ini->cur->audio_spk);
 	nk_label(ctx, ZTXT(ZTXT_BACKEND), NK_TEXT_RIGHT);
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->audiodev, OPT_SZ, NULL);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->audiodev, OPT_SZ, nk_filter_ascii);
 	if (!nk.ini->cur->audio)
 		nk_widget_disable_end(ctx);
 }

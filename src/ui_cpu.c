@@ -24,7 +24,7 @@ ui_qemu_cpu(struct nk_context* ctx)
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.3f, 0.2f, 0.3f });
 	nk_space_label(ctx, ZTXT(ZTXT_MODEL));
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->model, OPT_SZ, NULL);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->model, OPT_SZ, nk_filter_ascii);
 	nk_label(ctx, ZTXT(ZTXT_MACHINE), NK_TEXT_RIGHT);
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->machine, OPT_SZ, NULL);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->machine, OPT_SZ, nk_filter_ascii);
 }
