@@ -187,6 +187,9 @@
     <ClCompile Include="src\lodepng.c">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="src\wim.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cmdline.h">

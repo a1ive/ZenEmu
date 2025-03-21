@@ -209,3 +209,6 @@ rel_to_abs(LPCSTR path);
 
 nk_bool
 check_path_invalid(const char* str);
+
+uint64_t
+get_file_header(LPCWSTR path, void* header, size_t header_len);

@@ -49,6 +49,9 @@ ui_save_file(LPWSTR path, size_t len, LPCWSTR filter, LPCWSTR ext);
 void
 ui_open_dir(CHAR* path, size_t len);
 
+nk_bool
+ui_check_wim_header(uint32_t* num_images, uint32_t* boot);
+
 #define GET_PNG(x) nk.image[x - IDR_PNG_MIN]
 
 #define UI_OPTION(label, var, val) \

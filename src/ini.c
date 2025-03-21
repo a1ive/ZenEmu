@@ -202,3 +202,35 @@ nk_bool check_path_invalid(const char* str)
 	}
 	return nk_false;
 }
+
+uint64_t
+get_file_header(LPCWSTR path, void* header, size_t header_len)
+{
+	FILE* fp = _wfopen(path, L"rb");
+	if (!fp)
+		return 0;
+
+	if (_fseeki64(fp, 0, SEEK_END) != 0)
+		goto fail;
+
+	long long size = _ftelli64(fp);
+	if (size < 0)
+		goto fail;
+	uint64_t file_size = (uint64_t)size;
+
+	if (file_size < header_len)
+		goto fail;
+
+	rewind(fp);
+
+	size_t read_bytes = fread(header, 1, header_len, fp);
+
+	if (read_bytes != header_len)
+		goto fail;
+
+	fclose(fp);
+	return file_size;
+fail:
+	fclose(fp);
+	return 0;
+}

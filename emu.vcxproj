@@ -248,6 +248,7 @@
     <ClCompile Include="src\ui_hdb.c" />
     <ClCompile Include="src\ui_mem.c" />
     <ClCompile Include="src\ui_end.c" />
+    <ClCompile Include="src\wim.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cmdline.h" />

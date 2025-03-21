@@ -161,10 +161,55 @@ obj_linux(struct nk_context* ctx)
 static void
 obj_wim(struct nk_context* ctx)
 {
+	static uint32_t count = 0;
+	static uint32_t boot = 0;
+	static nk_bool need_check = nk_false;
+	static nk_bool result = nk_true;
+	static char buf[OPT_SZ];
+	nk_flags eflags = 0;
+
 	nk_space_label(ctx, ZTXT(ZTXT_FILE));
-	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_wim, MAX_PATH, NULL);
+	eflags = nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->boot_wim, MAX_PATH, NULL);
+	if ((eflags & NK_EDIT_INACTIVE) &&
+		(eflags & NK_EDIT_DEACTIVATED || eflags & NK_EDIT_COMMITED))
+		need_check = nk_true;
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
+	{
 		ui_open_file(nk.ini->boot_wim, MAX_PATH, FILTER_WIM);
+		need_check = nk_true;
+	}
+	if (need_check)
+	{
+		result = ui_check_wim_header(&count, &boot);
+		need_check = nk_false;
+	}
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { 0.2f, 0.2f, 0.6f });
+	nk_space_label(ctx, ZTXT(ZTXT_WIM_INDEX));
+	if (nk.ini->boot_wim_index == 0)
+		strcpy_s(buf, OPT_SZ, "[BOOT]");
+	else
+		snprintf(buf, OPT_SZ, "[%u]", nk.ini->boot_wim_index);
+	if (nk_combo_begin_label(ctx, buf, nk_vec2(nk_widget_width(ctx), 200)))
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		for (uint32_t i = 0; i <= count; i++)
+		{
+			if (i == 0)
+				strcpy_s(buf, OPT_SZ, "[BOOT]");
+			else
+				snprintf(buf, OPT_SZ, "[%u]%c", i, (i == boot) ? '*' : '\0');
+			if (nk_combo_item_label(ctx, buf, NK_TEXT_LEFT))
+				nk.ini->boot_wim_index = (int)i;
+		}
+		nk_combo_end(ctx);
+	}
+	nk_spacer(ctx);
+
+	if (!result)
+	{
+		nk_layout_row_dynamic(ctx, 0, 1);
+		nk_image_label(ctx, GET_PNG(IDR_PNG_WARN), ZTXT(ZTXT_WARN_NOT_BOOTABLE));
+	}
 
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->boot_wim);
