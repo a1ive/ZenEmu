@@ -59,6 +59,9 @@ typedef enum _ZEMU_BOOT_TARGET
 #define OPT_SZ 32
 #define KCMD_SZ 4096
 
+// X2-XX-XX-XX-XX-XX
+#define MAC_SZ 18
+
 struct _PHY_DRIVE_INFO;
 
 typedef struct _ZEMU_INI_PROFILE
@@ -75,6 +78,7 @@ typedef struct _ZEMU_INI_PROFILE
 	nk_bool pflash;
 	nk_bool net;
 	char netdev[OPT_SZ];
+	char netmac[MAC_SZ];
 	nk_bool usb;
 	char usbctrl[OPT_SZ];
 	nk_bool usb_kbd;

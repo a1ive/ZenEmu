@@ -113,6 +113,8 @@ append_qemu_hw(void)
 	if (nk.ini->cur->net && nk.ini->cur->netdev[0])
 	{
 		append_cmdline(L"-nic user,model=%s", utf8_to_ucs2(nk.ini->cur->netdev));
+		if (nk.ini->cur->netmac[0])
+			append_cmdline(L",mac=%s", utf8_to_ucs2(nk.ini->cur->netmac));
 		if (nk.ini->cur->boot != ZEMU_BOOT_PXE)
 			append_cmdline(L" ");
 		else

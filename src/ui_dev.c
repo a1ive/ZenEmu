@@ -23,6 +23,14 @@ static const char* edit_net_list[] =
 	"e1000", "rtl8139", "virtio", "vmxnet3",
 };
 
+static nk_bool
+filter_mac(const struct nk_text_edit* box, nk_rune unicode)
+{
+	if ((box->cursor + 1) % 3 == 0)
+		return unicode == ':' ? nk_true : nk_false;
+	return isxdigit(unicode) ? nk_true : nk_false;
+}
+
 void
 ui_qemu_dev(struct nk_context* ctx)
 {
@@ -80,7 +88,7 @@ ui_qemu_dev(struct nk_context* ctx)
 		nk_widget_disable_end(ctx);
 
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 7,
-		(float[7]) { nk.sq, 0.2f - nk.sq, 0.3f - nk.sq, nk.sq, 0.16f, 0.16f, 0.16f });
+		(float[7]) { nk.sq, 0.2f - nk.sq, 0.3f - nk.sq, nk.sq, 0.1f, 0.4f - nk.sq, nk.sq });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_NETWORK), ZTXT(ZTXT_NETWORK), &nk.ini->cur->net);
 	if (!nk.ini->cur->net)
 		nk_widget_disable_begin(ctx);
@@ -95,8 +103,17 @@ ui_qemu_dev(struct nk_context* ctx)
 		}
 		nk_menu_end(ctx);
 	}
-	nk_spacer(ctx);
-	nk_spacer(ctx);
+	nk_label(ctx, ZTXT(ZTXT_MAC_ADDRESS), NK_TEXT_RIGHT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->cur->netmac, MAC_SZ, filter_mac);
+	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DICE)))
+	{
+		uint8_t mac[6];
+		for (size_t i = 0; i < 6; i++)
+			mac[i] = (uint8_t)rand();
+		sprintf_s(nk.ini->cur->netmac, MAC_SZ, "%02X:%02X:%02X:%02X:%02X:%02X",
+			mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+		nk.ini->cur->netmac[1] = '2';
+	}
 	if (!nk.ini->cur->net)
 		nk_widget_disable_end(ctx);
 
