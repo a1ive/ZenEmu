@@ -208,5 +208,6 @@ ui_qemu_end(struct nk_context* ctx)
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_REFRESH)))
 		ui_reset_log();
 	nk_layout_row_dynamic(ctx, 300, 1);
-	nk_label_wrap(ctx, nk.ini->output);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_SELECTABLE | NK_EDIT_MULTILINE,
+		nk.ini->output, OUTBUF_SZ, NULL);
 }
