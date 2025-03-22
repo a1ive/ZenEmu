@@ -105,4 +105,7 @@ ui_open_dir(CHAR* path, size_t len)
 		strcpy_s(path, len, ucs2_to_utf8(dir));
 		CoTaskMemFree(pidl);
 	}
+	size_t path_len = strlen(path);
+	if (path_len > 0 && path[path_len - 1] == '\\')
+		path[path_len - 1] = '\0';
 }
