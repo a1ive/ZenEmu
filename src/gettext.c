@@ -370,6 +370,7 @@ lang_tr_tr[ZTXT__MAX] =
 	[ZTXT_TIMEOUT] = u8"Zaman Aşımı",
 	[ZTXT_PFLASH] = u8"pflash",
 	[ZTXT_DISPLAY] = u8"Ekran",
+	[ZTXT_FULLSCREEN] = u8"Tam Ekran",
 	[ZTXT_NETWORK] = u8"Ağ",
 	[ZTXT_MAC_ADDRESS] = u8"MAC",
 	[ZTXT_PERIPHERAL] = u8"Bilgisayar",
