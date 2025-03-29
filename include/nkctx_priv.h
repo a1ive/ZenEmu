@@ -50,7 +50,8 @@ typedef struct _NK_GUI_CTX
 	WNDCLASSW wc;
 	WCHAR font_name[FONT_NAME_LEN];
 	GdipFont* font;
-	nk_bool font_resize;
+	nk_bool dpi_scaling;
+	double dpi_factor;
 	struct nk_color color[NK_COLOR_COUNT];
 	struct nk_context* ctx;
 	unsigned width;

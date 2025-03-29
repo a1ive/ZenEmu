@@ -17,6 +17,33 @@ NK_GUI_CTX nk;
 #define REGION_MASK_TOP     (1 << 2)
 #define REGION_MASK_BOTTOM  (1 << 3)
 
+static UINT m_dpi = USER_DEFAULT_SCREEN_DPI;
+
+static void
+set_dpi_scaling(HWND wnd)
+{
+	if (nk.font)
+	{
+		nk_gdipfont_del(nk.font);
+		nk.font = NULL;
+	}
+	if (nk.dpi_scaling)
+	{
+		RECT rect = { 0 };
+		UINT dpi = GetDpiForWindow(wnd);
+		nk.dpi_factor = 1.0 * dpi / m_dpi;
+		m_dpi = dpi;
+		nk.font_size = (int)(nk.font_size * nk.dpi_factor);
+		// resize window
+		GetWindowRect(wnd, &rect);
+		SetWindowPos(wnd, NULL, 0, 0,
+			(int)((rect.right - rect.left) * nk.dpi_factor), (int)((rect.bottom - rect.top) * nk.dpi_factor),
+			SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+	}
+	nk.font = nk_gdip_load_font(nk.font_name, nk.font_size);
+	nk_gdip_set_font(nk.font);
+}
+
 static LRESULT CALLBACK
 nkctx_window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -29,6 +56,7 @@ nkctx_window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		nkctx_update(wparam);
 		break;
 	case WM_DPICHANGED:
+		set_dpi_scaling(wnd);
 		break;
 	case WM_NCHITTEST:
 		{
@@ -162,8 +190,7 @@ nkctx_init(int x, int y, LPCWSTR class_name, LPCWSTR title)
 
 	nk.ctx = nk_gdip_init(nk.wnd, nk.width, nk.height);
 
-	nk.font = nk_gdip_load_font(nk.font_name, nk.font_size);
-	nk_gdip_set_font(nk.font);
+	set_dpi_scaling(nk.wnd);
 
 	for (WORD i = 0; i < sizeof(nk.image) / sizeof(nk.image[0]); i++)
 		nk.image[i] = load_png(i + IDR_PNG_MIN);
