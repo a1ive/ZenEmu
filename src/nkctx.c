@@ -57,7 +57,7 @@ nkctx_window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			case REGION_MASK_BOTTOM | REGION_MASK_RIGHT: return HTBOTTOMRIGHT;
 			}
 			if (y <= (LONG)(rect.top + nk.title_height) &&
-				x <= (LONG)(rect.right - 3 * nk.title_height))
+				x <= (LONG)(rect.right - nk.title_height))
 				return HTCAPTION;
 		}
 		break;
@@ -111,6 +111,7 @@ set_style(struct nk_context* ctx)
 
 	nk.ctx->style.button.padding = nk_vec2(2.0f, 2.0f);
 	nk.ctx->style.button.rounding = 2.0f;
+	nk.ctx->style.window.scrollbar_size = nk_vec2(16.0f, 16.0f);
 
 	memcpy(&nk.button_style, &ctx->style.button, sizeof(struct nk_style_button));
 

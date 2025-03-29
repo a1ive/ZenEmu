@@ -4,13 +4,6 @@
 #include "ini.h"
 #include "ui.h"
 
-static inline nk_bool
-get_ini_bool(LPCWSTR section, LPCWSTR key, nk_bool fallback)
-{
-	int value = get_ini_num(section, key, (int)fallback);
-	return value ? nk_true : nk_false;
-}
-
 static void
 get_profile(ZEMU_QEMU_ARCH arch)
 {

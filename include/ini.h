@@ -219,6 +219,13 @@ get_ini_num(LPCWSTR section, LPCWSTR key, int fallback);
 VOID
 set_ini_num(LPCWSTR section, LPCWSTR key, int value);
 
+static inline nk_bool
+get_ini_bool(LPCWSTR section, LPCWSTR key, nk_bool fallback)
+{
+	int value = get_ini_num(section, key, (int)fallback);
+	return value ? nk_true : nk_false;
+}
+
 LPCWSTR
 rel_to_abs(LPCSTR path);
 
