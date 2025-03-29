@@ -125,9 +125,9 @@ VOID load_ini(VOID)
 
 VOID save_ini(VOID)
 {
-	set_ini_num(L"Gui", L"Width", (int)nk.width);
-	set_ini_num(L"Gui", L"Height", (int)nk.height);
-	set_ini_num(L"Gui", L"FontSize", nk.font_size);
+	set_ini_num(L"Gui", L"Width", (int)(nk.width / nk.dpi_factor));
+	set_ini_num(L"Gui", L"Height", (int)(nk.height / nk.dpi_factor));
+	set_ini_num(L"Gui", L"FontSize", (int)(nk.font_size / nk.dpi_factor));
 	WritePrivateProfileStringW(L"Gui", L"Font", nk.font_name, nk.ini->ini);
 	set_ini_num(L"Gui", L"DpiScaling", nk.dpi_scaling);
 	ui_ini_save();
