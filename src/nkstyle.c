@@ -53,13 +53,13 @@ void
 nkctx_set_style(struct nk_context* ctx)
 {
 	nk.color[NK_COLOR_TEXT] = nk_rgba(20, 20, 20, 255);
-	nk.color[NK_COLOR_WINDOW] = nk_rgba(202, 212, 214, 215);
+	nk.color[NK_COLOR_WINDOW] = nk_rgba(215, 215, 215, 230);
 	nk.color[NK_COLOR_HEADER] = nk_rgba(137, 182, 224, 220);
 	nk.color[NK_COLOR_BORDER] = nk_rgba(140, 159, 173, 255);
 	nk.color[NK_COLOR_BUTTON] = nk_rgba(137, 182, 224, 255);
 	nk.color[NK_COLOR_BUTTON_HOVER] = nk_rgba(142, 187, 229, 255);
 	nk.color[NK_COLOR_BUTTON_ACTIVE] = nk_rgba(147, 192, 234, 255);
-	nk.color[NK_COLOR_TOGGLE] = nk_rgba(177, 210, 210, 255);
+	nk.color[NK_COLOR_TOGGLE] = nk_rgba(230, 230, 230, 255);
 	nk.color[NK_COLOR_TOGGLE_HOVER] = nk_rgba(182, 215, 215, 255);
 	nk.color[NK_COLOR_TOGGLE_CURSOR] = nk_rgba(137, 182, 224, 255);
 	nk.color[NK_COLOR_SELECT] = nk_rgba(177, 210, 210, 255);
