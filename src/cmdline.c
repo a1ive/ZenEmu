@@ -129,7 +129,8 @@ append_qemu_hw(void)
 
 	if (nk.ini->cur->audio)
 	{
-		append_cmdline(L"-audiodev %s,id=snd0 ", utf8_to_ucs2(nk.ini->cur->audiodev));
+		if (nk.ini->cur->audiodev[0])
+			append_cmdline(L"-audiodev %s,id=snd0 ", utf8_to_ucs2(nk.ini->cur->audiodev));
 		if (nk.ini->cur->audio_hda)
 			append_cmdline(L"-device intel-hda -device hda-output,audiodev=snd0 ");
 	}
