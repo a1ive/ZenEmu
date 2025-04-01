@@ -238,6 +238,7 @@
     <ClCompile Include="src\lodepng.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\nkctx.c" />
+    <ClCompile Include="src\nkstyle.c" />
     <ClCompile Include="src\nuklear.c" />
     <ClCompile Include="src\open_dialog.c" />
     <ClCompile Include="src\ui.c" />

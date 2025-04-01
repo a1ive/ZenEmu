@@ -197,6 +197,9 @@
     <ClCompile Include="ews\ews.c">
       <Filter>EWS</Filter>
     </ClCompile>
+    <ClCompile Include="src\nkstyle.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cmdline.h">

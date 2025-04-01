@@ -24,6 +24,15 @@
 #include "nkctx_priv.h"
 
 void
+nkctx_set_dpi_scaling(HWND wnd);
+
+struct nk_image
+nkctx_load_png(WORD id);
+
+void
+nkctx_set_style(struct nk_context* ctx);
+
+void
 nkctx_init(int x, int y, LPCWSTR class_name, LPCWSTR title);
 
 void
