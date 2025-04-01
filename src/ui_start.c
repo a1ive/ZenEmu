@@ -69,12 +69,19 @@ read_pipe_thread(LPVOID lparam)
 
 nk_bool ui_is_qemu_running(void)
 {
-	DWORD exitCode = 0;
+	DWORD rc = 0;
 	if (!nk.ini->output_handle || nk.ini->output_handle == INVALID_HANDLE_VALUE)
-		return nk_false;
-	if (GetExitCodeProcess(nk.ini->output_handle, &exitCode))
+		goto fail;
+	if (GetExitCodeProcess(nk.ini->output_handle, &rc))
 	{
-		return (exitCode == STILL_ACTIVE);
+		if (rc == STILL_ACTIVE)
+			return nk_true;
+	}
+fail:
+	if (nk.ini->ews)
+	{
+		ews_stop(nk.ini->ews);
+		nk.ini->ews = NULL;
 	}
 	return nk_false;
 }
@@ -111,6 +118,16 @@ copy_cmdline(void)
 static void
 run_qemu(void)
 {
+	if (nk.ini->cur->boot == ZEMU_BOOT_PXE && nk.ini->net_http)
+	{
+		nk.ini->ews = ews_start(80, nk.ini->net_tftp);
+		if (!nk.ini->ews)
+		{
+			MessageBoxW(NULL, L"Could not start HTTP server", L"ERROR", MB_OK | MB_ICONERROR);
+			return;
+		}
+	}
+
 	reset_cmdline();
 	LPWSTR cmdline = get_cmdline();
 

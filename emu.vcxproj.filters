@@ -16,6 +16,9 @@
     <Filter Include="RC\icons">
       <UniqueIdentifier>{b4a51450-6ef8-481d-a95b-51012e2e024e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EWS">
+      <UniqueIdentifier>{e8f206a1-8351-4d28-a825-466926306d37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc">
@@ -191,6 +194,9 @@
     <ClCompile Include="src\wim.c">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ews\ews.c">
+      <Filter>EWS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cmdline.h">
@@ -228,6 +234,12 @@
     </ClInclude>
     <ClInclude Include="include\lodepng.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ews\EmbeddableWebServer.h">
+      <Filter>EWS</Filter>
+    </ClInclude>
+    <ClInclude Include="ews\ews.h">
+      <Filter>EWS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

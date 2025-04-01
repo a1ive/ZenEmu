@@ -121,6 +121,7 @@ ui_ini_init(void)
 	nk.ini->boot_vfd_attr.devif = ZEMU_DEV_IF_FLOPPY;
 	nk.ini->boot_vfd_attr.snapshot = get_ini_bool(L"Vfd", L"Snapshot", nk_true);
 	nk.ini->boot_dir_attr.snapshot = get_ini_bool(L"Vvfat", L"Snapshot", nk_true);
+	nk.ini->net_http = get_ini_bool(L"Pxe", L"Http", nk_true);
 
 	nk.ini->cur = &nk.ini->profile[nk.ini->qemu_arch];
 	get_profile(ZEMU_QEMU_ARCH_X64);
@@ -202,6 +203,7 @@ ui_ini_save(void)
 	set_ini_num(L"Pd", L"Snapshot", nk.ini->boot_hd_attr.snapshot);
 	set_ini_num(L"Vfd", L"Snapshot", nk.ini->boot_vfd_attr.snapshot);
 	set_ini_num(L"Vvfat", L"Snapshot", nk.ini->boot_dir_attr.snapshot);
+	set_ini_num(L"Pxe", L"Http", nk.ini->net_http);
 
 	set_profile(ZEMU_QEMU_ARCH_X64);
 	set_profile(ZEMU_QEMU_ARCH_AA64);

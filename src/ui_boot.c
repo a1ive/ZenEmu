@@ -109,7 +109,7 @@ obj_vfd(struct nk_context* ctx)
 static void
 obj_pxe(struct nk_context* ctx)
 {
-	nk_space_label(ctx, ZTXT(ZTXT_TFTP_FOLDER));
+	nk_space_label(ctx, ZTXT(ZTXT_DIR));
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_tftp, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_dir(nk.ini->net_tftp, MAX_PATH);
@@ -117,6 +117,10 @@ obj_pxe(struct nk_context* ctx)
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_file, MAX_PATH, NULL);
 	if (nk_button_image(ctx, GET_PNG(IDR_PNG_DIR)))
 		ui_open_file_by_dir(nk.ini->net_file, MAX_PATH, nk.ini->net_tftp, FILTER_ALL);
+
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.3f, 0.3f, 0.2f });
+	nk_spacer(ctx);
+	nk_checkbox_label(ctx, ZTXT(ZTXT_HTTP), &nk.ini->net_http);
 
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->net_tftp);

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "nkctx.h"
+#include "../ews/ews.h"
 
 #define CONV_BUFSZ 65535
 #define CONV_BUFSZW (CONV_BUFSZ / sizeof(WCHAR))
@@ -184,6 +185,7 @@ typedef struct _ZEMU_INI_DATA
 
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];
+	nk_bool net_http;
 
 	CHAR boot_dir[MAX_PATH];
 	ZEMU_DEV_ATTR boot_dir_attr;
@@ -191,6 +193,7 @@ typedef struct _ZEMU_INI_DATA
 	size_t add_dev_count;
 	ZEMU_ADD_DEV add_dev[MAX_ADD_DEV];
 	
+	EWS_SERVER* ews;
 	CHAR output[OUTBUF_SZ + 1];
 	size_t output_offset;
 	HANDLE output_handle;

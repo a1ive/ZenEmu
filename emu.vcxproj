@@ -230,6 +230,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ews\ews.c" />
     <ClCompile Include="src\cmdline.c" />
     <ClCompile Include="src\dev.c" />
     <ClCompile Include="src\gettext.c" />
@@ -252,6 +253,8 @@
     <ClCompile Include="src\wim.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ews\EmbeddableWebServer.h" />
+    <ClInclude Include="ews\ews.h" />
     <ClInclude Include="include\cmdline.h" />
     <ClInclude Include="include\dev.h" />
     <ClInclude Include="include\gettext.h" />
