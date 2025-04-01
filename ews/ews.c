@@ -6,9 +6,7 @@
 #include "ews.h"
 
 #pragma warning(disable:4101)
-#pragma warning(disable:4244)
 #pragma warning(disable:4267)
-#pragma warning(disable:4311)
 #pragma warning(disable:4996)
 #include "EmbeddableWebServer.h"
 
