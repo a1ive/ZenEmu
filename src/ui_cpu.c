@@ -15,7 +15,9 @@ static const char* edit_cpu_x86[] =
 
 static const char* edit_cpu_arm[] =
 {
-	"cortex-a53", "cortex-a57", "cortex-a72", "cortex-a76", "max",
+	"cortex-a7", "cortex-a15",
+	"cortex-a35", "cortex-a53", "cortex-a57", "cortex-a72", "cortex-a76",
+	"max",
 };
 
 static const char* edit_machine_x86[] =
@@ -39,7 +41,13 @@ ui_qemu_cpu(struct nk_context* ctx)
 	nk_spacer(ctx);
 	nk_checkbox_label(ctx, ZTXT(ZTXT_KERNEL_IRQCHIP), &nk.ini->cur->irqchip);
 	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
+	{
+		if (nk.ini->cur->fw == ZEMU_FW_ARM32_EFI)
+			nk_widget_disable_begin(ctx);
 		nk_checkbox_label(ctx, ZTXT(ZTXT_VIRT), &nk.ini->cur->virt);
+		if (nk.ini->cur->fw == ZEMU_FW_ARM32_EFI)
+			nk_widget_disable_end(ctx);
+	}
 	else if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64)
 		nk_checkbox_label(ctx, ZTXT(ZTXT_HYPER_V), &nk.ini->cur->whpx);
 	else

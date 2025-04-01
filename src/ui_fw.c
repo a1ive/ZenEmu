@@ -25,9 +25,7 @@ ui_qemu_fw(struct nk_context* ctx)
 	case ZEMU_QEMU_ARCH_AA64:
 	{
 		UI_OPTION("ARM64 EFI", nk.ini->cur->fw, ZEMU_FW_AA64_EFI);
-		nk_widget_disable_begin(ctx);
 		UI_OPTION("ARM32 EFI", nk.ini->cur->fw, ZEMU_FW_ARM32_EFI);
-		nk_widget_disable_end(ctx);
 		nk_spacer(ctx);
 		break;
 	}
