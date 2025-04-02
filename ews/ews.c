@@ -5,6 +5,14 @@
 
 #include "ews.h"
 
+#ifdef _CONSOLE
+#define ews_printf printf
+#define ews_printf_debug printf
+#else
+#define ews_printf
+#define ews_printf_debug(...)
+#endif
+
 #pragma warning(disable:4101)
 #pragma warning(disable:4267)
 #pragma warning(disable:4996)
@@ -31,13 +39,17 @@ struct Response *
 createResponseForRequest(const struct Request* request, struct Connection* connection)
 {
 	EWS_SERVER* ws = (EWS_SERVER*)connection->server->tag;
+	ews_printf("Request: %s\n", request->path);
 	if (strcmp(request->path, "/") == 0)
 	{
 		struct HeapString connectionDebugInfo = connectionDebugStringCreate(connection);
 		struct Response* response = responseAllocWithFormat(200, "OK", "text/html; charset=UTF-8",
-			"<html><head><title>Embedded C Web Server by Forrest Heller</title></head>"
+			"<html><head><title>EWS</title></head>"
 			"<body>"
+			"<h2>Embedded C Web Server by Forrest Heller</h2>"
 			"<h2>Version %s</h2>"
+			"<h2>Browse Files</h2>"
+			"<a href=\"/?\">ROOT</a><br>"
 			"<h2>Server Status</h2>"
 			"<table border=\"1\">\n"
 			"<tr><td>Active connections</td><td>%" PRId64 "</td></tr>\n"
@@ -65,6 +77,9 @@ createResponseForRequest(const struct Request* request, struct Connection* conne
 		return response;
 	}
 
+	if (strcmp(request->path, "/?") == 0)
+		return responseAllocServeFileFromRequestPath("/", "/", "/", ws->root);
+
 	return responseAllocServeFileFromRequestPath("/", request->path, request->pathDecoded, ws->root);
 }
 
@@ -81,6 +96,9 @@ EWS_SERVER* ews_start(uint16_t port, const char* root)
 	serverInit(&ws->server);
 	ws->server.tag = ws;
 
+#ifdef _CONSOLE
+	server_thread_func(ws);
+#else
 	ws->thread = CreateThread(NULL, 0, server_thread_func, ws, 0, NULL);
 	if (ws->thread == NULL)
 	{
@@ -88,6 +106,7 @@ EWS_SERVER* ews_start(uint16_t port, const char* root)
 		free(ws);
 		return NULL;
 	}
+#endif
 	return ws;
 }
 
@@ -96,8 +115,11 @@ void ews_stop(EWS_SERVER* ws)
 	if (!ws)
 		return;
 	serverStop(&ws->server);
-	WaitForSingleObject(ws->thread, INFINITE);
-	CloseHandle(ws->thread);
+	if (ws->thread)
+	{
+		WaitForSingleObject(ws->thread, INFINITE);
+		CloseHandle(ws->thread);
+	}
 	serverDeInit(&ws->server);
 	free(ws);
 }
