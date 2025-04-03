@@ -2262,12 +2262,9 @@ static int pathInformationGet(const char* path, struct PathInformation* info) {
 		return 1;
 	}
 	free(widePath);
-	/* If it's a hidden or system file, pretend it doesn't exist */
-	if (attributes & (FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM)) {
-		info->exists = false;
-	} else {
-		info->exists = true;
-	}
+
+	info->exists = true;
+
 	if (attributes & FILE_ATTRIBUTE_DIRECTORY) {
 		info->isDirectory = true;
 	} else {
@@ -2278,7 +2275,7 @@ static int pathInformationGet(const char* path, struct PathInformation* info) {
 
 static void printIPv4Addresses(uint16_t portInHostOrder){
 	/* I forgot how to do this */
-	ews_printf("(Printing bound interfaces is not supported on Windows. Try http://127.0.0.1:%u if you bound to all addresses or the localhost.)\n", portInHostOrder);
+	ews_printf("Try http://127.0.0.1:%u if you bound to all addresses or the localhost.\n", portInHostOrder);
 }
 
 static void ignoreSIGPIPE() {
