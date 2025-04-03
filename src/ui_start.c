@@ -120,7 +120,10 @@ run_qemu(void)
 {
 	if (nk.ini->cur->boot == ZEMU_BOOT_PXE && nk.ini->net_http)
 	{
-		nk.ini->ews = ews_start(80, nk.ini->net_tftp);
+		int port = atoi(nk.ini->net_http_port);
+		if (port <= 0 || port > 65535)
+			port = 80;
+		nk.ini->ews = ews_start((uint16_t)port, nk.ini->net_tftp);
 		if (!nk.ini->ews)
 		{
 			MessageBoxW(NULL, L"Could not start HTTP server", L"ERROR", MB_OK | MB_ICONERROR);

@@ -186,6 +186,7 @@ typedef struct _ZEMU_INI_DATA
 	CHAR net_tftp[MAX_PATH];
 	CHAR net_file[MAX_PATH];
 	nk_bool net_http;
+	CHAR net_http_port[OPT_SZ];
 
 	CHAR boot_dir[MAX_PATH];
 	ZEMU_DEV_ATTR boot_dir_attr;

@@ -121,6 +121,12 @@ obj_pxe(struct nk_context* ctx)
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 4, (float[4]) { 0.2f, 0.3f, 0.3f, 0.2f });
 	nk_spacer(ctx);
 	nk_checkbox_label(ctx, ZTXT(ZTXT_HTTP), &nk.ini->net_http);
+	if (!nk.ini->net_http)
+		nk_widget_disable_begin(ctx);
+	nk_label(ctx, ZTXT(ZTXT_PORT), NK_TEXT_RIGHT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, nk.ini->net_http_port, OPT_SZ, nk_filter_decimal);
+	if (!nk.ini->net_http)
+		nk_widget_disable_end(ctx);
 
 	if (nk.show_warning == nk_false)
 		nk.show_warning = check_path_invalid(nk.ini->net_tftp);
