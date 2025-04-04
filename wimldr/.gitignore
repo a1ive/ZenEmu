@@ -1,0 +1,11 @@
+*.s
+*.o
+*.a
+*.elf
+*.map
+*.efi
+wimldr.ia32
+wimldr.x64
+wimldr.aa64
+elf2efi32
+elf2efi64

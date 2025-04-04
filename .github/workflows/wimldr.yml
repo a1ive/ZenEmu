@@ -1,0 +1,39 @@
+name: Build and Upload wimldr
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          # Update package list and install required tools
+          sudo apt-get update
+          sudo apt-get install -y parted dosfstools qemu-utils build-essential gcc-aarch64-linux-gnu
+
+      - name: Run pack-hda.sh script
+        run: |
+          chmod +x pack-hda.sh
+          sudo ./pack-hda.sh
+
+      - name: Build wimldr
+        working-directory: wimldr
+        run: |
+          make
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wimldr
+          path: |
+            wim.qcow2
+            src/wimldr.x64
+            src/wimldr.ia32
+            src/wimldr.aa64
