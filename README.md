@@ -12,6 +12,7 @@ It helps users easily test different boot environments.
   - IA32 UEFI
   - x64 UEFI
   - ARM64 UEFI
+  - ARM32 UEFI
 - **Supported Image and Media Types**:
   - Hard disk images
   - ISO images
