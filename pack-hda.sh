@@ -25,6 +25,7 @@ mount ${LOOPDEV}p1 /mnt/hda_img
 
 # Copy all files from the wimhda/ directory into the mounted partition
 cp -r wimhda/* /mnt/hda_img/
+cp wimldr/wimldr /mnt/hda_img/
 
 # Unmount the partition and detach the loop device
 umount /mnt/hda_img

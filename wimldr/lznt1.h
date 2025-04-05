@@ -1,5 +1,8 @@
+#ifndef _LZNT1_H
+#define _LZNT1_H
+
 /*
- * Copyright (C) 2014 Michael Brown <mbrown@fensystems.co.uk>.
+ * Copyright (C) 2012 Michael Brown <mbrown@fensystems.co.uk>.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -20,44 +23,25 @@
 /**
  * @file
  *
- * Fatal errors
+ * LZNT1 decompression
  *
  */
 
-#include <stdarg.h>
-#include <stdio.h>
-#include "wimboot.h"
-#include "efi.h"
+#include <stdint.h>
 
-/**
- * Handle fatal errors
- *
- * @v fmt	Error message format string
- * @v ...	Arguments
- */
-void die ( const char *fmt, ... ) {
-	va_list args;
+/** Extract LZNT1 block length */
+#define LZNT1_BLOCK_LEN( header ) ( ( (header) & 0x0fff ) + 1 )
 
-	/* Print message */
-	va_start ( args, fmt );
-	vprintf ( fmt, args );
-	va_end ( args );
+/** Determine if LZNT1 block is compressed */
+#define LZNT1_BLOCK_COMPRESSED( header ) ( (header) & 0x8000 )
 
-	/* Wait for keypress */
-	printf ( "Press a key to reboot..." );
-	getchar();
-	printf ( "\n" );
-	/* Reboot system */
-#ifdef BIOS
-	reboot();
-#else
-	EFI_RUNTIME_SERVICES *rs;
-	rs = efi_systab->RuntimeServices;
-	rs->ResetSystem ( EfiResetWarm, 0, 0, NULL );
-#endif
+/** Extract LZNT1 compressed value length */
+#define LZNT1_VALUE_LEN( tuple, split ) \
+	( ( (tuple) & ( ( 1 << (split) ) - 1 ) ) + 3 )
 
-	printf ( "Failed to reboot\n" );
+/** Extract LZNT1 compressed value offset */
+#define LZNT1_VALUE_OFFSET( tuple, split ) ( ( (tuple) >> split ) + 1 )
 
-	/* Should be impossible to reach this */
-	__builtin_unreachable();
-}
+extern ssize_t lznt1_decompress ( const void *data, size_t len, void *buf );
+
+#endif /* _LZNT1_H */

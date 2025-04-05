@@ -818,8 +818,13 @@ void patch_wim ( struct vdisk_file *file, void *data,
 #define BCD_SUFFIX_EXE L".exe"
 #define BCD_SUFFIX_EFI L".efi"
 
+#ifdef BIOS
+#define BCD_SEARCH BCD_SUFFIX_EFI
+#define BCD_REPLACE BCD_SUFFIX_EXE
+#else
 #define BCD_SEARCH BCD_SUFFIX_EXE
 #define BCD_REPLACE BCD_SUFFIX_EFI
+#endif
 
 /**
  * Patch BCD file

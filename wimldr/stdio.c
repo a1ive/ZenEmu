@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "bootapp.h"
 #include "wimboot.h"
 #include "efi.h"
 
@@ -35,9 +36,6 @@
  * @v character		Character to print
  */
 int putchar ( int character ) {
-	EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *conout;
-	wchar_t wbuf[2];
-
 	/* Convert LF to CR,LF */
 	if ( character == '\n' )
 		putchar ( '\r' );
@@ -48,11 +46,22 @@ int putchar ( int character ) {
 			       : : "a" ( character ) );
 #endif
 
+#ifdef BIOS
+	struct bootapp_callback_params params;
+	memset ( &params, 0, sizeof ( params ) );
+	params.vector.interrupt = 0x10;
+	params.eax = ( 0x0e00 | character );
+	params.ebx = 0x0007;
+	call_interrupt ( &params );
+#else
 	/* Print character to EFI console as applicable */
+	EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *conout;
+	wchar_t wbuf[2];
 	conout = efi_systab->ConOut;
 	wbuf[0] = character;
 	wbuf[1] = 0;
 	conout->OutputString ( conout, wbuf );
+#endif
 
 	return 0;
 }
@@ -63,18 +72,25 @@ int putchar ( int character ) {
  * @ret character	Character
  */
 int getchar ( void ) {
+	int character;
+
+#ifdef BIOS
+	struct bootapp_callback_params params;
+	memset ( &params, 0, sizeof ( params ) );
+	params.vector.interrupt = 0x16;
+	call_interrupt ( &params );
+	character = params.al;
+#else
 	EFI_BOOT_SERVICES *bs;
 	EFI_SIMPLE_TEXT_INPUT_PROTOCOL *conin;
 	EFI_INPUT_KEY key;
 	UINTN index;
-	int character;
-
-	/* Get character */
 	bs = efi_systab->BootServices;
 	conin = efi_systab->ConIn;
 	bs->WaitForEvent ( 1, &conin->WaitForKey, &index );
 	conin->ReadKeyStroke ( conin, &key );
 	character = key.UnicodeChar;
+#endif
 
 	return character;
 }

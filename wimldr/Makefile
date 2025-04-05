@@ -5,16 +5,24 @@ SBAT_GENERATION := 1
 
 # Abstract target-independent objects
 #
-OBJECTS := prefix.o vsprintf.o string.o
-OBJECTS += vdisk.o cpio.o stdio.o xca.o die.o efi.o efimain.o
-OBJECTS += efiguid.o efifile.o efipath.o efiboot.o efiblock.o cmdline.o
-OBJECTS += patch.o huffman.o lzx.o wim.o wimfile.o pause.o sha1.o cookie.o
+OBJECTS := prefix.o vsprintf.o string.o cookie.o
+OBJECTS += vdisk.o cpio.o stdio.o xca.o die.o cmdline.o
+OBJECTS += patch.o huffman.o lzx.o wim.o wimfile.o pause.o sha1.o
+
+OBJ_EFI := $(OBJECTS)
+OBJ_EFI += efi.o efimain.o efiguid.o
+OBJ_EFI += efifile.o efipath.o efiboot.o efiblock.o
+
+OBJ_BIOS := $(OBJECTS)
+OBJ_BIOS += callback.o main.o startup.o
+OBJ_BIOS += int13.o lznt1.o memmap.o paging.o peloader.o
 
 # Target-dependent objects
 #
-OBJECTS_i386 := $(patsubst %.o,%.i386.o,$(OBJECTS))
-OBJECTS_x86_64 := $(patsubst %.o,%.x86_64.o,$(OBJECTS))
-OBJECTS_arm64 := $(patsubst %.o,%.arm64.o,$(OBJECTS))
+OBJECTS_i386 := $(patsubst %.o,%.i386.o,$(OBJ_EFI))
+OBJECTS_x86_64 := $(patsubst %.o,%.x86_64.o,$(OBJ_EFI))
+OBJECTS_arm64 := $(patsubst %.o,%.arm64.o,$(OBJ_EFI))
+OBJECTS_bios := $(patsubst %.o,%.bios.o,$(OBJ_BIOS))
 
 # Header files
 #
@@ -181,7 +189,11 @@ CFLAGS_arm64	+= $(call CFLAGS_COND,arm64)
 #
 # Final targets
 
-all : wimldr.x64 wimldr.ia32 wimldr.aa64
+all : wimldr.x64 wimldr.ia32 wimldr
+
+wimldr.elf : lib.bios.a Makefile
+	$(LD_i386) $(LDFLAGS) $(LDFLAGS_i386) -T bios.lds -o $@ -q \
+		-Map wimldr.bios.map prefix.bios.o lib.bios.a
 
 wimldr.%.elf : lib.%.a Makefile
 	$(LD_$*) $(LDFLAGS) $(LDFLAGS_$*) -T efi.lds -o $@ -q \
@@ -195,6 +207,9 @@ wimldr.x86_64.efi wimldr.arm64.efi : \
 wimldr.%.efi : wimldr.%.elf elf2efi64 Makefile
 	./elf2efi64 --hybrid $< $@
 
+wimldr : wimldr.elf Makefile
+	$(OBJCOPY) -Obinary $< $@
+
 wimldr.x64 : wimldr.x86_64.efi Makefile
 	$(CP) $< $@
 
@@ -203,6 +218,23 @@ wimldr.ia32 : wimldr.i386.efi Makefile
 
 wimldr.aa64 : wimldr.arm64.efi Makefile
 	$(CP) $< $@
+
+###############################################################################
+#
+# bios objects
+
+%.bios.s : %.S $(HEADERS) Makefile
+	$(CC_i386) $(CFLAGS) $(CFLAGS_i386) -DASSEMBLY -DBIOS -Ui386 -E $< -o $@
+
+%.bios.s : %.c $(HEADERS) Makefile
+	$(CC_i386) $(CFLAGS) $(CFLAGS_i386) -DBIOS -S $< -o $@
+
+%.bios.o : %.bios.s Makefile
+	$(AS_i386) $(ASFLAGS) $(ASFLAGS_i386) $< -o $@
+
+lib.bios.a : $(OBJECTS_bios) Makefile
+	$(RM) -f $@
+	$(AR_i386) -r -s $@ $(OBJECTS_bios)
 
 ###############################################################################
 #
@@ -269,9 +301,11 @@ elf2efi64 : elf2efi.c Makefile
 #
 # Cleanup
 
+.PHONY: clean
 clean :
 	$(RM) -f *.s *.o *.a *.elf *.map
 	$(RM) -f elf2efi32 elf2efi64
+	$(RM) -f wimldr wimldr.elf
 	$(RM) -f wimldr.ia32 wimldr.i386.*
 	$(RM) -f wimldr.x64 wimldr.x86_64.*
 	$(RM) -f wimldr.aa64 wimldr.arm64.*

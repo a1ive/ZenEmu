@@ -32,9 +32,35 @@
 #define DEBUG 1
 #endif
 
+/** Base segment address
+ *
+ * We place everything at 2000:0000, since this region is used by the
+ * Microsoft first-stage loaders (e.g. pxeboot.n12, etfsboot.com).
+ */
+#define BASE_SEG 0x2000
+
+/** Base linear address */
+#define BASE_ADDRESS ( BASE_SEG << 4 )
+
+/** 64 bit long mode code segment */
+#define LM_CS 0x10
+
+/** 32 bit protected mode flat code segment */
+#define FLAT_CS 0x20
+
+/** 32 bit protected mode flat data segment */
+#define FLAT_DS 0x30
+
+/** 16 bit real mode code segment */
+#define REAL_CS 0x50
+
+/** 16 bit real mode data segment */
+#define REAL_DS 0x60
+
 #ifndef ASSEMBLY
 
 #include <stdint.h>
+#include <bootapp.h>
 #include <cmdline.h>
 
 /** Construct wide-character version of a string constant */
@@ -103,6 +129,12 @@ static inline void bochsbp ( void ) {
 
 /* Mark parameter as unused */
 #define __unused __attribute__ (( unused ))
+
+#ifdef BIOS
+extern void call_real ( struct bootapp_callback_params *params );
+extern void call_interrupt ( struct bootapp_callback_params *params );
+extern void __attribute__ (( noreturn )) reboot ( void );
+#endif
 
 extern void __attribute__ (( noreturn, format ( printf, 1, 2 ) ))
 die ( const char *fmt, ... );
