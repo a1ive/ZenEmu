@@ -34,6 +34,6 @@ jobs:
           name: wimldr
           path: |
             wim.qcow2
-            src/wimldr.x64
-            src/wimldr.ia32
-            src/wimldr.aa64
+            wimldr/wimldr.x64
+            wimldr/wimldr.ia32
+            wimldr/wimldr.aa64
