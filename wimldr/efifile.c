@@ -31,12 +31,12 @@
 #include "wimboot.h"
 #include "vdisk.h"
 #include "cmdline.h"
+#include "cpio.h"
 #include "patch.h"
 #include "wimfile.h"
 #include "efi.h"
 #include "efifile.h"
 
-#define HDA_SGN_FILE L"_.QEMU_HDA._"
 #define WIM_SFS_FILE L"initrd"
 
 /** bootmgfw.efi path within WIM */
@@ -76,54 +76,6 @@ static const CHAR16 * efi_bootarch ( void ) {
 	return bootarch;
 }
 
-static void * efi_malloc ( UINTN size )
-{
-	EFI_BOOT_SERVICES *bs = efi_systab->BootServices;
-	EFI_STATUS efirc;
-	void *ptr = NULL;
-	efirc = bs->AllocatePool ( EfiLoaderData, size, &ptr );
-	if ( efirc != EFI_SUCCESS || ! ptr )
-		die ( "Could not allocate memory.\n" );
-	return ptr;
-}
-
-static void efi_free ( void *ptr )
-{
-	efi_systab->BootServices->FreePool ( ptr );
-	ptr = 0;
-}
-
-static EFI_HANDLE *
-efi_locate_handle ( EFI_GUID *protocol, UINTN *num_handles )
-{
-	EFI_BOOT_SERVICES *bs = efi_systab->BootServices;
-	EFI_STATUS status;
-	EFI_HANDLE *buffer;
-	UINTN buffer_size = 16 * sizeof ( EFI_HANDLE );
-
-	buffer = efi_malloc ( buffer_size );
-
-	status = bs->LocateHandle ( ByProtocol, protocol, NULL,
-								&buffer_size, buffer );
-	if ( status == EFI_BUFFER_TOO_SMALL )
-	{
-		efi_free ( buffer );
-		buffer = efi_malloc ( buffer_size );
-
-		status = bs->LocateHandle ( ByProtocol, protocol, NULL,
-									&buffer_size, buffer );
-	}
-
-	if ( status != EFI_SUCCESS )
-	{
-		efi_free ( buffer );
-		return 0;
-	}
-
-	*num_handles = buffer_size / sizeof ( EFI_HANDLE );
-	return buffer;
-}
-
 /**
  * Read from EFI file
  *
@@ -149,6 +101,19 @@ static void efi_read_file ( struct vdisk_file *vfile, void *data,
 		die ( "Could not read from file: %#lx\n",
 		      ( ( unsigned long ) efirc ) );
 	}
+}
+
+/**
+ * Read from file
+ *
+ * @v file		Virtual file
+ * @v data		Data buffer
+ * @v offset		Offset
+ * @v len		Length
+ */
+static void ldr_read_file ( struct vdisk_file *file, void *data,
+				size_t offset, size_t len ) {
+	memcpy ( data, ( file->opaque + offset ), len );
 }
 
 /**
@@ -208,90 +173,41 @@ void efi_extract_wim ( EFI_HANDLE handle ) {
 	bootwim = vfile;
 }
 
-static int extract_by_handle ( EFI_HANDLE handle ) {
-	EFI_BOOT_SERVICES *bs = efi_systab->BootServices;
-	union {
-		EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *fs;
-		void *interface;
-	} fs;
-	struct {
-		EFI_FILE_INFO file;
-		CHAR16 name[ VDISK_NAME_LEN + 1 /* WNUL */ ];
-	} __attribute__ (( packed )) info;
-	char name[ VDISK_NAME_LEN + 1 /* NUL */ ];
-	struct vdisk_file *vfile;
-	EFI_FILE_PROTOCOL *root;
-	EFI_FILE_PROTOCOL *file;
-	UINTN size;
-	CHAR16 *wname;
-	EFI_STATUS efirc;
+/**
+ * File handler
+ *
+ * @v name		File name
+ * @v data		File data
+ * @v len		Length
+ * @ret rc		Return status code
+ */
+static int add_file ( const char *name, void *data, size_t len ) {
+	struct vdisk_file *file;
+	char bootarch[32];
+	snprintf (bootarch, sizeof (bootarch), "%ls", efi_bootarch());
 
-	/* Open file system */
-	if ( ( efirc = bs->OpenProtocol ( handle,
-					  &efi_simple_file_system_protocol_guid,
-					  &fs.interface, efi_image_handle, NULL,
-					  EFI_OPEN_PROTOCOL_GET_PROTOCOL ))!=0){
-		DBG ( "...Skip %p, no filesystem.\n", handle );
-		return -1;
+	/* Store file */
+	file = vdisk_add_file ( name, data, len, ldr_read_file );
+
+	/* Check for special-case files */
+	if ( strcasecmp ( name, bootarch ) == 0 ) {
+		DBG ( "...found efi\n" );
+		bootmgfw = file;
+	} else if ( strcasecmp ( name, "bootmgfw.efi" ) == 0 ) {
+		DBG ( "...found bootmgfw.efi\n" );
+		bootmgfw = file;
+	} else if ( strcasecmp ( name, "BCD" ) == 0 ) {
+		DBG ( "...found BCD\n" );
+		vdisk_patch_file ( file, patch_bcd );
 	}
 
-	/* Open root directory */
-	if ( ( efirc = fs.fs->OpenVolume ( fs.fs, &root ) ) != 0 ) {
-		DBG ( "...Skip %p, no root.\n", handle );
-		return -1;
-	}
+	return 0;
+}
 
-	/* Close file system */
-	bs->CloseProtocol ( handle, &efi_simple_file_system_protocol_guid,
-			    efi_image_handle, NULL );
-
-	if ( ( efirc = root->Open ( root, &file, HDA_SGN_FILE,
-		EFI_FILE_MODE_READ, 0 ) ) != 0 ) {
-		DBG ( "...Skip %p, no sgn file.\n", handle );
-		return -1;
-	}
-	DBG ( "...Found sgn file in %p.\n", handle );
-
-	/* Read root directory */
-	while ( 1 ) {
-
-		/* Read directory entry */
-		size = sizeof ( info );
-		if ( ( efirc = root->Read ( root, &size, &info ) ) != 0 ) {
-			die ( "Could not read root directory: %#lx\n",
-			      ( ( unsigned long ) efirc ) );
-		}
-		if ( size == 0 )
-			break;
-
-		/* Ignore subdirectories */
-		if ( info.file.Attribute & EFI_FILE_DIRECTORY )
-			continue;
-
-		/* Open file */
-		wname = info.file.FileName;
-		if ( ( efirc = root->Open ( root, &file, wname,
-					    EFI_FILE_MODE_READ, 0 ) ) != 0 ) {
-			die ( "Could not open \"%ls\": %#lx\n",
-			      wname, ( ( unsigned long ) efirc ) );
-		}
-
-		/* Add file */
-		snprintf ( name, sizeof ( name ), "%ls", wname );
-		vfile = vdisk_add_file ( name, file, info.file.FileSize,
-					 efi_read_file );
-
-		/* Check for special-case files */
-		if ( ( wcscasecmp ( wname, efi_bootarch() ) == 0 ) ||
-		     ( wcscasecmp ( wname, L"bootmgfw.efi" ) == 0 ) ) {
-			DBG ( "...found bootmgfw.efi file %ls\n", wname );
-			bootmgfw = vfile;
-		} else if ( wcscasecmp ( wname, L"BCD" ) == 0 ) {
-			DBG ( "...found BCD\n" );
-			vdisk_patch_file ( vfile, patch_bcd );
-		}
-	}
-
+void efi_extract_hda ( void ) {
+	/* Extract files from loader */
+	if ( cpio_extract ( ldr_data, ldr_len, add_file ) != 0 )
+		die ( "FATAL: could not extract initrd files\n" );
 	/* Process WIM image */
 	if ( bootwim ) {
 		vdisk_patch_file ( bootwim, patch_wim );
@@ -303,25 +219,9 @@ static int extract_by_handle ( EFI_HANDLE handle ) {
 		}
 		wim_add_files ( bootwim, cmdline_index, efi_wim_paths );
 	}
-
 	/* Check that we have a boot file */
 	if ( ! bootmgfw ) {
 		die ( "FATAL: no %ls or bootmgfw.efi found\n",
-		      efi_bootarch() );
+			  efi_bootarch() );
 	}
-	return 0;
-}
-
-void efi_extract_hda ( void ) {
-	EFI_HANDLE *buffer;
-	UINTN num_handles = 0;
-	UINTN i;
-
-	buffer = efi_locate_handle ( &efi_device_path_protocol_guid,
-								 &num_handles );
-	for ( i = 0 ; i < num_handles ; i++ ) {
-		if ( extract_by_handle ( buffer[i] ) == 0 )
-			return;
-	}
-	die ( "FATAL: hda not found\n" );
 }

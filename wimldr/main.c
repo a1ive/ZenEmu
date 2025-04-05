@@ -93,6 +93,7 @@ static struct vdisk_file *bootwim;
 enum {
 	WIMBOOT_REGION = 0,
 	PE_REGION,
+	LDR_REGION,
 	INITRD_REGION,
 	NUM_REGIONS
 };
@@ -371,10 +372,6 @@ static int add_file ( const char *name, void *data, size_t len ) {
 	} else if ( strcasecmp ( name, "BCD" ) == 0 ) {
 		DBG ( "...found BCD\n" );
 		vdisk_patch_file ( file, patch_bcd );
-	} else if ( strcasecmp ( ( name + strlen ( name ) - 4 ),
-				 ".wim" ) == 0 ) {
-		DBG ( "...found WIM file %s\n", name );
-		bootwim = file;
 	}
 
 	return 0;
@@ -447,9 +444,13 @@ int main ( void ) {
 	initrd = relocate_memory_low ( initrd, initrd_len );
 	DBG ( "Placing initrd at [%p,%p)\n", initrd, ( initrd + initrd_len ) );
 
-	/* Extract files from initrd */
-	if ( cpio_extract ( initrd, initrd_len, add_file ) != 0 )
+	/* Extract files from loader */
+	if ( cpio_extract ( ldr_data, ldr_len, add_file ) != 0 )
 		die ( "FATAL: could not extract initrd files\n" );
+
+	/* Extract boot.wim from initrd */
+	bootwim = vdisk_add_file ( "boot.wim", initrd, initrd_len,
+							   read_file );
 
 	/* Process WIM image */
 	if ( bootwim ) {
@@ -495,6 +496,12 @@ int main ( void ) {
 	bootapps.regions[PE_REGION].start_page = page_start ( pe.base );
 	bootapps.regions[PE_REGION].num_pages =
 		page_len ( pe.base, ( pe.base + pe.len ) );
+
+	bootapps.regions[LDR_REGION].start_page =
+		( ldr_addr / PAGE_SIZE );
+	bootapps.regions[LDR_REGION].num_pages =
+		page_len ( ldr_data, ldr_data + ldr_len );
+
 	bootapps.regions[INITRD_REGION].start_page =
 		( initrd_phys / PAGE_SIZE );
 	bootapps.regions[INITRD_REGION].num_pages =

@@ -27,6 +27,10 @@
  *
  */
 
+extern void *ldr_data;
+extern unsigned long ldr_addr;
+extern unsigned int ldr_len;
+
 extern int cmdline_rawbcd;
 extern int cmdline_rawwim;
 extern int cmdline_quiet;

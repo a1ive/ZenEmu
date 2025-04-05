@@ -32,6 +32,10 @@
 #include "wimboot.h"
 #include "cmdline.h"
 
+void *ldr_data;
+unsigned long ldr_addr;
+unsigned int ldr_len;
+
 /** Use raw (unpatched) BCD files */
 int cmdline_rawbcd;
 
@@ -115,6 +119,19 @@ void process_cmdline ( char *cmdline ) {
 			cmdline_index = strtoul ( value, &endp, 0 );
 			if ( *endp )
 				die ( "Invalid index \"%s\"\n", value );
+		} else if ( strcmp ( key, "addr" ) == 0 ) {
+			if ( ( ! value ) || ( ! value[0] ) )
+				die ( "Argument \"addr\" needs a value\n" );
+			ldr_addr = strtoul ( value, &endp, 0 );
+			ldr_data = ( void * ) ( intptr_t ) ldr_addr;
+			if ( *endp )
+				die ( "Invalid addr \"%s\"\n", value );
+		} else if ( strcmp ( key, "len" ) == 0 ) {
+			if ( ( ! value ) || ( ! value[0] ) )
+				die ( "Argument \"len\" needs a value\n" );
+			ldr_len = strtoul ( value, &endp, 0 );
+			if ( *endp )
+				die ( "Invalid len \"%s\"\n", value );
 		} else if ( strcmp ( key, "initrd" ) == 0 ) {
 			/* Ignore this keyword to allow for use with QEMU */
 		} else if ( key == cmdline ) {
