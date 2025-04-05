@@ -183,25 +183,25 @@ CFLAGS_arm64	+= $(call CFLAGS_COND,arm64)
 
 all : wimldr.x64 wimldr.ia32 wimldr.aa64
 
-wimboot.%.elf : lib.%.a Makefile
-	$(LD_$*) $(LDFLAGS) $(LDFLAGS_$*) -T script.lds -o $@ -q \
-		-Map wimboot.$*.map prefix.$*.o lib.$*.a
+wimldr.%.elf : lib.%.a Makefile
+	$(LD_$*) $(LDFLAGS) $(LDFLAGS_$*) -T efi.lds -o $@ -q \
+		-Map wimldr.$*.map prefix.$*.o lib.$*.a
 
-wimboot.i386.efi : \
-wimboot.%.efi : wimboot.%.elf elf2efi32 Makefile
+wimldr.i386.efi : \
+wimldr.%.efi : wimldr.%.elf elf2efi32 Makefile
 	./elf2efi32 --hybrid $< $@
 
-wimboot.x86_64.efi wimboot.arm64.efi : \
-wimboot.%.efi : wimboot.%.elf elf2efi64 Makefile
+wimldr.x86_64.efi wimldr.arm64.efi : \
+wimldr.%.efi : wimldr.%.elf elf2efi64 Makefile
 	./elf2efi64 --hybrid $< $@
 
-wimldr.x64 : wimboot.x86_64.efi Makefile
+wimldr.x64 : wimldr.x86_64.efi Makefile
 	$(CP) $< $@
 
-wimldr.ia32 : wimboot.i386.efi Makefile
+wimldr.ia32 : wimldr.i386.efi Makefile
 	$(CP) $< $@
 
-wimldr.aa64 : wimboot.arm64.efi Makefile
+wimldr.aa64 : wimldr.arm64.efi Makefile
 	$(CP) $< $@
 
 ###############################################################################
@@ -272,8 +272,8 @@ elf2efi64 : elf2efi.c Makefile
 clean :
 	$(RM) -f *.s *.o *.a *.elf *.map
 	$(RM) -f elf2efi32 elf2efi64
-	$(RM) -f wimldr.ia32 wimboot.i386.*
-	$(RM) -f wimldr.x64 wimboot.x86_64.*
-	$(RM) -f wimldr.aa64 wimboot.arm64.*
+	$(RM) -f wimldr.ia32 wimldr.i386.*
+	$(RM) -f wimldr.x64 wimldr.x86_64.*
+	$(RM) -f wimldr.aa64 wimldr.arm64.*
 
 .DELETE_ON_ERROR :
