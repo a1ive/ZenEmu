@@ -4,6 +4,7 @@
 *.elf
 *.map
 *.efi
+wimldr
 wimldr.ia32
 wimldr.x64
 wimldr.aa64
