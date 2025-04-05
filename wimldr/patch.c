@@ -20,7 +20,7 @@
 /**
  * @file
  *
- * WIM dynamic patching
+ * WIM & BCD patching patching
  *
  */
 
@@ -28,13 +28,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+#include <wchar.h>
 #include <assert.h>
 #include "wimboot.h"
 #include "cmdline.h"
 #include "vdisk.h"
 #include "sha1.h"
 #include "wim.h"
-#include "wimpatch.h"
+#include "patch.h"
 
 /** Directory into which files are injected */
 #define WIM_INJECT_DIR "\\Windows\\System32"
@@ -776,8 +777,8 @@ static int wim_construct_patch ( struct vdisk_file *file,
  * @v offset		Offset
  * @v len		Length
  */
-void patch_wim ( struct vdisk_file *file, void *data, size_t offset,
-		 size_t len ) {
+void patch_wim ( struct vdisk_file *file, void *data,
+				 size_t offset, size_t len ) {
 	static struct wim_patch cached_patch;
 	struct wim_patch *patch = &cached_patch;
 	struct wim_patch_region *region;
@@ -810,6 +811,43 @@ void patch_wim ( struct vdisk_file *file, void *data, size_t offset,
 			die ( "Could not patch WIM %s %s at [%#zx,%#zx)\n",
 			      file->name, region->name, offset,
 			      ( offset + len ) );
+		}
+	}
+}
+
+#define BCD_SUFFIX_EXE L".exe"
+#define BCD_SUFFIX_EFI L".efi"
+
+#define BCD_SEARCH BCD_SUFFIX_EXE
+#define BCD_REPLACE BCD_SUFFIX_EFI
+
+/**
+ * Patch BCD file
+ *
+ * @v vfile		Virtual file
+ * @v data		Data buffer
+ * @v offset		Offset
+ * @v len		Length
+ */
+void patch_bcd ( struct vdisk_file *vfile __unused, void *data,
+				 size_t offset, size_t len ) {
+	static const wchar_t search[] = BCD_SEARCH;
+	static const wchar_t replace[] = BCD_REPLACE;
+	size_t i;
+
+	/* Do nothing if BCD patching is disabled */
+	if ( cmdline_rawbcd )
+		return;
+
+	/* Patch any occurrences of ".exe" to ".efi".  In the common
+	 * simple cases, this allows the same BCD file to be used for
+	 * both BIOS and UEFI systems.
+	 */
+	for ( i = 0 ; ( i + sizeof ( search ) ) < len ; i++ ) {
+		if ( wcscasecmp ( ( data + i ), search ) == 0 ) {
+			memcpy ( ( data + i ), replace, sizeof ( replace ) );
+			DBG ( "...patched BCD at %#zx: \"%ls\" to \"%ls\"\n",
+				  ( offset + i ), search, replace );
 		}
 	}
 }

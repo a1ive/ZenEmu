@@ -31,7 +31,7 @@
 #include "wimboot.h"
 #include "vdisk.h"
 #include "cmdline.h"
-#include "wimpatch.h"
+#include "patch.h"
 #include "wimfile.h"
 #include "efi.h"
 #include "efifile.h"
@@ -148,37 +148,6 @@ static void efi_read_file ( struct vdisk_file *vfile, void *data,
 	if ( ( efirc = file->Read ( file, &size, data ) ) != 0 ) {
 		die ( "Could not read from file: %#lx\n",
 		      ( ( unsigned long ) efirc ) );
-	}
-}
-
-/**
- * Patch BCD file
- *
- * @v vfile		Virtual file
- * @v data		Data buffer
- * @v offset		Offset
- * @v len		Length
- */
-static void efi_patch_bcd ( struct vdisk_file *vfile __unused, void *data,
-			    size_t offset, size_t len ) {
-	static const wchar_t search[] = L".exe";
-	static const wchar_t replace[] = L".efi";
-	size_t i;
-
-	/* Do nothing if BCD patching is disabled */
-	if ( cmdline_rawbcd )
-		return;
-
-	/* Patch any occurrences of ".exe" to ".efi".  In the common
-	 * simple cases, this allows the same BCD file to be used for
-	 * both BIOS and UEFI systems.
-	 */
-	for ( i = 0 ; ( i + sizeof ( search ) ) < len ; i++ ) {
-		if ( wcscasecmp ( ( data + i ), search ) == 0 ) {
-			memcpy ( ( data + i ), replace, sizeof ( replace ) );
-			DBG ( "...patched BCD at %#zx: \"%ls\" to \"%ls\"\n",
-			      ( offset + i ), search, replace );
-		}
 	}
 }
 
@@ -319,7 +288,7 @@ static int extract_by_handle ( EFI_HANDLE handle ) {
 			bootmgfw = vfile;
 		} else if ( wcscasecmp ( wname, L"BCD" ) == 0 ) {
 			DBG ( "...found BCD\n" );
-			vdisk_patch_file ( vfile, efi_patch_bcd );
+			vdisk_patch_file ( vfile, patch_bcd );
 		}
 	}
 

@@ -8,7 +8,7 @@ SBAT_GENERATION := 1
 OBJECTS := prefix.o vsprintf.o string.o
 OBJECTS += vdisk.o cpio.o stdio.o xca.o die.o efi.o efimain.o
 OBJECTS += efiguid.o efifile.o efipath.o efiboot.o efiblock.o cmdline.o
-OBJECTS += wimpatch.o huffman.o lzx.o wim.o wimfile.o pause.o sha1.o cookie.o
+OBJECTS += patch.o huffman.o lzx.o wim.o wimfile.o pause.o sha1.o cookie.o
 
 # Target-dependent objects
 #
