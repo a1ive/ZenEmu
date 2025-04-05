@@ -215,8 +215,8 @@ append_qemu_bootdev(void)
 		append_cmdline(L"-initrd \"%s\" ", rel_to_abs(nk.ini->boot_wim));
 		if (IS_BIOS)
 			append_cmdline(L"-append \"--config-file=\\\""
-				"find --set-root --ignore-floppies --ignore-cd _.QEMU_HDA._;;"
-				"kernel /wimboot rawwim gui index=%d;;"
+				"find --set-root --devices=h _.QEMU_HDA._;;"
+				"kernel /wimldr rawwim gui index=%d;;"
 				"initrd @boot.wim=(rd)+1 @bootmgr.exe=/bootmgr.exe @bcd=/bcd @boot.sdi=/boot.sdi @wgl4_boot.ttf=/wgl4_boot.ttf"
 				"\\\"\" ", nk.ini->boot_wim_index);
 		else
