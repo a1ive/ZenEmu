@@ -19,12 +19,32 @@ SECTIONS {
 	}
 	_prefix_len = ABSOLUTE ( _eprefix ) - ABSOLUTE ( _prefix );
 
-	/* Data section */
+	/* Real-mode uninitialised data section */
+	.bss16 ( NOLOAD ) : {
+		_bss16 = .;
+		*(.stack16)
+		*(.stack16.*)
+		*(.bss16)
+		*(.bss16.*)
+		. = ALIGN ( alignment );
+		_ebss16 = .;
+	}
+	_bss16_len = ABSOLUTE ( _ebss16 ) - ABSOLUTE ( _bss16 );
+
+	/* Data (and 16-bit BIOS text) section */
 	_payload_pos = ( _prefix_pos + _prefix_len );
 	_data_pos = _payload_pos;
 	.data : AT ( _data_pos ) {
 		_data = .;
 		_payload = .;
+		/* Portions that must be accessible in 16-bit modes */
+		*(.text16)
+		*(.text16.*)
+		*(.rodata16)
+		*(.rodata16.*)
+		*(.data16)
+		*(.data16.*)
+		/* Portions that need not be accessible in 16-bit modes */
 		*(.rodata)
 		*(.rodata.*)
 		*(.data)
@@ -36,7 +56,7 @@ SECTIONS {
 	}
 	_data_len = ABSOLUTE ( _edata ) - ABSOLUTE ( _data );
 
-	/* Text section */
+	/* Text (excluding 16-bit BIOS text) section */
 	_text_pos = ( _data_pos + _data_len );
 	.text : AT ( _text_pos ) {
 		_text = .;

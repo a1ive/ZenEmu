@@ -36,4 +36,5 @@ jobs:
             wim.qcow2
             wimldr/wimldr.x64
             wimldr/wimldr.ia32
+            wimldr/wimldr.aa64
             wimldr/wimldr

@@ -189,7 +189,7 @@ CFLAGS_arm64	+= $(call CFLAGS_COND,arm64)
 #
 # Final targets
 
-all : wimldr.x64 wimldr.ia32 wimldr
+all : wimldr.x64 wimldr.ia32 wimldr.aa64 wimldr
 
 wimldr.elf : lib.bios.a Makefile
 	$(LD_i386) $(LDFLAGS) $(LDFLAGS_i386) -T bios.lds -o $@ -q \
