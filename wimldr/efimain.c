@@ -66,6 +66,29 @@ static void efi_cmdline ( EFI_LOADED_IMAGE_PROTOCOL *loaded ) {
 	process_cmdline ( cmdline );
 }
 
+static void efi_connect ( void )
+{
+	EFI_STATUS status;
+	UINTN count;
+	EFI_HANDLE *buf;
+	UINTN i;
+	EFI_BOOT_SERVICES *bs = efi_systab->BootServices;
+	DBG ( "Connecting ...\n" );
+	status = bs->LocateHandleBuffer ( AllHandles,
+									  NULL, NULL,
+									  &count,
+									  &buf );
+
+	if (status != EFI_SUCCESS)
+		return;
+
+	for ( i = 0 ; i < count ; i++ )
+		bs->ConnectController ( buf[i], NULL, NULL, TRUE );
+
+	if ( buf )
+		bs->FreePool ( buf );
+}
+
 /**
  * EFI entry point
  *
@@ -106,6 +129,8 @@ EFI_STATUS EFIAPI efi_main ( EFI_HANDLE image_handle,
 
 	/* Process command line */
 	efi_cmdline ( loaded.image );
+
+	efi_connect ();
 
 	/* Extract files from file system */
 	efi_extract_wim ( loaded.image->DeviceHandle );
