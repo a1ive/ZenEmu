@@ -46,6 +46,7 @@ jobs:
         move firmware\wim.qcow2 zemu\
         move firmware\wimldr.x64 zemu\
         move firmware\wimldr.ia32 zemu\
+        move firmware\wimldr.aa64 zemu\
 
     - name: Create ZIP
       uses: thedoctor0/zip-release@master

@@ -264,10 +264,10 @@ ui_qemu_boot(struct nk_context* ctx)
 
 	nk_spacer(ctx);
 	UI_OPTION(ZTXT(ZTXT_LINUX_KERNEL), nk.ini->cur->boot, ZEMU_BOOT_LINUX);
-	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
+	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64 && nk.ini->cur->fw == ZEMU_FW_ARM32_EFI)
 		nk_widget_disable_begin(ctx);
 	UI_OPTION(ZTXT(ZTXT_WIM_IMAGE), nk.ini->cur->boot, ZEMU_BOOT_WIM);
-	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64)
+	if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_AA64 && nk.ini->cur->fw == ZEMU_FW_ARM32_EFI)
 		nk_widget_disable_end(ctx);
 	if (IS_BIOS)
 		nk_widget_disable_begin(ctx);
