@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "wimbcd/bcd.bat"
+
+jobs:
+  generate-bcd:
+    runs-on: windows-latest
+
+    steps:
+    - name: Run git checkout
+      uses: actions/checkout@v4
+
+    - name: Build BCD
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: |
+        .\wimbcd\bcd.bat
+
+    - name: Upload BCD
+      uses: actions/upload-artifact@v4
+      with:
+        name: bcd
+        path: build/bcd
