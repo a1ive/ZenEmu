@@ -40,6 +40,10 @@ struct nt_args {
 	uint8_t pause;
 	uint8_t linear;
 	unsigned int index;
+	/* QEMU Loader Data */
+	void *ldr_data;
+	intptr_t ldr_addr;
+	unsigned int ldr_len;
 };
 
 extern struct nt_args *nt_cmdline;

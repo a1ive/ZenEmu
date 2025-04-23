@@ -119,6 +119,19 @@ void process_cmdline ( char *cmdline ) {
 			args.index = strtoul ( value, &endp, 0 );
 			if ( *endp )
 				die ( "Invalid index \"%s\"\n", value );
+		} else if ( strcmp ( key, "addr" ) == 0 ) {
+			if ( ( ! value ) || ( ! value[0] ) )
+				die ( "Argument \"addr\" needs a value\n" );
+			args.ldr_addr = strtoul ( value, &endp, 0 );
+			args.ldr_data = ( void * ) args.ldr_addr;
+			if ( *endp )
+				die ( "Invalid addr \"%s\"\n", value );
+		} else if ( strcmp ( key, "len" ) == 0 ) {
+			if ( ( ! value ) || ( ! value[0] ) )
+				die ( "Argument \"len\" needs a value\n" );
+			args.ldr_len = strtoul ( value, &endp, 0 );
+			if ( *endp )
+				die ( "Invalid len \"%s\"\n", value );
 		} else if ( strcmp ( key, "initrd" ) == 0 ) {
 			/* Ignore this keyword to allow for use with QEMU */
 		} else if ( key == cmdline ) {
