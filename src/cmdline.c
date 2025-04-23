@@ -59,7 +59,7 @@ fix_dir_path(char* path, size_t path_size)
 static void
 append_qemu_path(void)
 {
-	append_cmdline(L"\"%s\\", utf8_to_ucs2(nk.ini->qemu_dir));
+	append_cmdline(L"\"%s\\", rel_to_abs(nk.ini->qemu_dir));
 	append_cmdline(L"%s\" ", utf8_to_ucs2(nk.ini->qemu_name[nk.ini->qemu_arch]));
 }
 
