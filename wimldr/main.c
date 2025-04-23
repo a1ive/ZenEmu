@@ -93,6 +93,7 @@ static struct vdisk_file *bootwim;
 enum {
 	WIMBOOT_REGION = 0,
 	PE_REGION,
+	LDR_REGION,
 	INITRD_REGION,
 	NUM_REGIONS
 };
@@ -120,7 +121,7 @@ static void call_interrupt_wrapper ( struct bootapp_callback_params *params ) {
 
 	} else if ( ( params->vector.interrupt == 0x10 ) &&
 		    ( params->ax == 0x4f01 ) &&
-		    ( ! cmdline_gui ) ) {
+		    ( ! nt_cmdline->gui ) ) {
 
 		/* Mark all VESA video modes as unsupported */
 		attributes = REAL_PTR ( params->es, params->di );
@@ -371,10 +372,6 @@ static int add_file ( const char *name, void *data, size_t len ) {
 	} else if ( strcasecmp ( name, "BCD" ) == 0 ) {
 		DBG ( "...found BCD\n" );
 		vdisk_patch_file ( file, patch_bcd );
-	} else if ( strcasecmp ( ( name + strlen ( name ) - 4 ),
-				 ".wim" ) == 0 ) {
-		DBG ( "...found WIM file %s\n", name );
-		bootwim = file;
 	}
 
 	return 0;
@@ -448,19 +445,23 @@ int main ( void ) {
 	DBG ( "Placing initrd at [%p,%p)\n", initrd, ( initrd + initrd_len ) );
 
 	/* Extract files from initrd */
-	if ( cpio_extract ( initrd, initrd_len, add_file ) != 0 )
+	if ( cpio_extract ( nt_cmdline->ldr_data, nt_cmdline->ldr_len, add_file ) != 0 )
 		die ( "FATAL: could not extract initrd files\n" );
+
+	/* Extract boot.wim from initrd */
+	bootwim = vdisk_add_file ( "boot.wim", initrd, initrd_len,
+							   read_file );
 
 	/* Process WIM image */
 	if ( bootwim ) {
 		vdisk_patch_file ( bootwim, patch_wim );
 		if ( ( ! bootmgr ) &&
-		     ( bootmgr = wim_add_file ( bootwim, cmdline_index,
+		     ( bootmgr = wim_add_file ( bootwim, nt_cmdline->index,
 						bootmgr_path,
 						L"bootmgr.exe" ) ) ) {
 			DBG ( "...extracted bootmgr.exe\n" );
 		}
-		wim_add_files ( bootwim, cmdline_index, wim_paths );
+		wim_add_files ( bootwim, nt_cmdline->index, wim_paths );
 	}
 
 	/* Add INT 13 drive */
@@ -495,6 +496,11 @@ int main ( void ) {
 	bootapps.regions[PE_REGION].start_page = page_start ( pe.base );
 	bootapps.regions[PE_REGION].num_pages =
 		page_len ( pe.base, ( pe.base + pe.len ) );
+	bootapps.regions[LDR_REGION].start_page =
+		page_start ( nt_cmdline->ldr_data );
+	bootapps.regions[LDR_REGION].num_pages =
+		page_len ( nt_cmdline->ldr_data,
+				   nt_cmdline->ldr_data + nt_cmdline->ldr_len );
 	bootapps.regions[INITRD_REGION].start_page =
 		( initrd_phys / PAGE_SIZE );
 	bootapps.regions[INITRD_REGION].num_pages =
@@ -509,7 +515,7 @@ int main ( void ) {
 
 	/* Jump to PE image */
 	DBG ( "Entering bootmgr.exe with parameters at %p\n", &bootapps );
-	if ( cmdline_pause )
+	if ( nt_cmdline->pause )
 		pause();
 	pe.entry ( &bootapps.bootapp );
 	die ( "FATAL: bootmgr.exe returned\n" );

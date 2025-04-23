@@ -27,14 +27,27 @@
  *
  */
 
-extern int cmdline_rawbcd;
-extern int cmdline_rawwim;
-extern int cmdline_quiet;
-extern int cmdline_gui;
-extern int cmdline_pause;
-extern int cmdline_pause_quiet;
-extern int cmdline_linear;
-extern unsigned int cmdline_index;
+#include <stdint.h>
+
+#define NTARG_BOOL_TRUE  1
+#define NTARG_BOOL_FALSE 0
+
+struct nt_args {
+	uint8_t testmode;
+	uint8_t minint;
+	uint8_t rawwim;
+	uint8_t gui;
+	uint8_t pause;
+	uint8_t linear;
+	unsigned int index;
+	/* QEMU Loader Data */
+	void *ldr_data;
+	intptr_t ldr_addr;
+	unsigned int ldr_len;
+};
+
+extern struct nt_args *nt_cmdline;
+
 extern void process_cmdline ( char *cmdline );
 
 #endif /* _CMDLINE_H */

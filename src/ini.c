@@ -103,6 +103,31 @@ get_human_size(UINT64 size, const char* human_sizes[6], UINT64 base)
 	return buf;
 }
 
+uint64_t get_file_size(const wchar_t* file_path)
+{
+	HANDLE file_handle = CreateFileW(
+		file_path,
+		GENERIC_READ,
+		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+	if (file_handle == INVALID_HANDLE_VALUE)
+		return 0;
+
+	LARGE_INTEGER size;
+	if (!GetFileSizeEx(file_handle, &size))
+	{
+		CloseHandle(file_handle);
+		return 0;
+	}
+
+	CloseHandle(file_handle);
+	return (uint64_t)size.QuadPart;
+}
+
 static ZEMU_INI_DATA static_ini_data;
 
 VOID load_ini(VOID)

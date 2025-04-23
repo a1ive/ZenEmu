@@ -96,7 +96,7 @@ void init_paging ( void ) {
 	unsigned int i;
 
 	/* Do nothing if paging is disabled */
-	if ( cmdline_linear ) {
+	if ( nt_cmdline->linear ) {
 		DBG ( "Paging disabled\n" );
 		return;
 	}

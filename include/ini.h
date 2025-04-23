@@ -18,6 +18,8 @@ extern const char* human_units[];
 const char*
 get_human_size(UINT64 size, const char* human_sizes[6], UINT64 base);
 
+uint64_t get_file_size(const wchar_t* file_path);
+
 typedef enum _ZEMU_QEMU_ARCH
 {
 	ZEMU_QEMU_ARCH_X64 = 0,
@@ -151,6 +153,8 @@ typedef struct _ZEMU_INI_DATA
 
 	CHAR qemu_wimldr[ZEMU_FW_MAX][OPT_SZ];
 	CHAR qemu_wimhda[OPT_SZ];
+	CHAR qemu_wimcpio[OPT_SZ];
+	DWORD qemu_wimaddr;
 
 	ZEMU_SCREEN_SAVE qemu_screenshot;
 	nk_bool qemu_fullscreen;

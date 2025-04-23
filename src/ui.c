@@ -109,11 +109,13 @@ ui_ini_init(void)
 	nk.ini->qemu_fullscreen = get_ini_bool(L"Qemu", L"FullScreen", nk_false);
 
 	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X64_EFI], OPT_SZ, get_ini_value(L"Wim", L"X64_EFI", L"wimldr.x64"));
-	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X86_BIOS], OPT_SZ, get_ini_value(L"Wim", L"X86_BIOS", L"grub.exe"));
+	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X86_BIOS], OPT_SZ, get_ini_value(L"Wim", L"X86_BIOS", L"wimldr"));
 	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_X86_EFI], OPT_SZ, get_ini_value(L"Wim", L"X86_EFI", L"wimldr.ia32"));
 	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_AA64_EFI], OPT_SZ, get_ini_value(L"Wim", L"AA64_EFI", L"wimldr.aa64"));
 	strcpy_s(nk.ini->qemu_wimldr[ZEMU_FW_ARM32_EFI], OPT_SZ, get_ini_value(L"Wim", L"ARM32_EFI", L"wimldr.arm"));
 	strcpy_s(nk.ini->qemu_wimhda, OPT_SZ, get_ini_value(L"Wim", L"Hda", L"wim.qcow2"));
+	strcpy_s(nk.ini->qemu_wimcpio, OPT_SZ, get_ini_value(L"Wim", L"Cpio", L"wim.cpio"));
+	nk.ini->qemu_wimaddr = get_ini_num(L"Wim", L"Addr", 0x1000000); // address: 0x1000000 (16MB)
 	nk.ini->boot_wim_index = get_ini_num(L"Wim", L"Index", 0);
 
 	nk.ini->boot_vhd_attr.snapshot = get_ini_bool(L"Vhd", L"Snapshot", nk_true);

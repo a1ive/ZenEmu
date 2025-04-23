@@ -42,8 +42,9 @@ jobs:
         move firmware\IA32_EFI.qcow2 zemu\
         move firmware\AA64_EFI.qcow2 zemu\
         move firmware\ARM_EFI.qcow2 zemu\
-        move firmware\grub.exe zemu\
+        move firmware\wim.cpio zemu\
         move firmware\wim.qcow2 zemu\
+        move firmware\wimldr zemu\
         move firmware\wimldr.x64 zemu\
         move firmware\wimldr.ia32 zemu\
         move firmware\wimldr.aa64 zemu\
