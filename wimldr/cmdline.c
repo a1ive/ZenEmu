@@ -28,33 +28,34 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <ctype.h>
 #include "wimboot.h"
 #include "cmdline.h"
 
-/** Use raw (unpatched) BCD files */
-int cmdline_rawbcd;
+static struct nt_args args = {
+	.testmode = NTARG_BOOL_FALSE,
+	.minint = NTARG_BOOL_FALSE,
+	.rawwim = NTARG_BOOL_FALSE,
+	.gui = NTARG_BOOL_FALSE,
+	.pause = NTARG_BOOL_FALSE,
+	.linear = NTARG_BOOL_FALSE,
+	.index = 0,
+};
 
-/** Use raw (unpatched) WIM files */
-int cmdline_rawwim;
+struct nt_args *nt_cmdline;
 
-/** Inhibit debugging output */
-int cmdline_quiet;
-
-/** Allow graphical output from bootmgr/bootmgfw */
-int cmdline_gui;
-
-/** Pause before booting OS */
-int cmdline_pause;
-
-/** Pause without displaying any prompt */
-int cmdline_pause_quiet;
-
-/** Use linear (unpaged) memory model */
-int cmdline_linear;
-
-/** WIM boot index */
-unsigned int cmdline_index;
+static uint8_t
+convert_bool ( const char *str ) {
+	uint8_t value = NTARG_BOOL_FALSE;
+	if ( ! str ||
+		 strcasecmp ( str, "yes" ) == 0 ||
+		 strcasecmp ( str, "on" ) == 0 ||
+		 strcasecmp ( str, "true" ) == 0 ||
+		 strcasecmp ( str, "1" ) == 0 )
+		value = NTARG_BOOL_TRUE;
+	return value;
+}
 
 /**
  * Process command line
@@ -68,9 +69,14 @@ void process_cmdline ( char *cmdline ) {
 	char *endp;
 	char chr;
 
+	nt_cmdline = &args;
+
 	/* Do nothing if we have no command line */
 	if ( ( cmdline == NULL ) || ( cmdline[0] == '\0' ) )
 		return;
+
+	/* Show command line */
+	printf ("Command line: \"%s\"\n", cmdline);
 
 	/* Parse command line */
 	while ( *tmp ) {
@@ -95,24 +101,22 @@ void process_cmdline ( char *cmdline ) {
 		}
 
 		/* Process this argument */
-		if ( strcmp ( key, "rawbcd" ) == 0 ) {
-			cmdline_rawbcd = 1;
+		if ( strcmp ( key, "testmode" ) == 0 ) {
+			args.testmode = convert_bool ( value );
+		} else if ( strcmp ( key, "minint" ) == 0 ) {
+			args.minint = convert_bool ( value );
 		} else if ( strcmp ( key, "rawwim" ) == 0 ) {
-			cmdline_rawwim = 1;
+			args.rawwim = convert_bool ( value );
 		} else if ( strcmp ( key, "gui" ) == 0 ) {
-			cmdline_gui = 1;
-		} else if ( strcmp ( key, "linear" ) == 0 ) {
-			cmdline_linear = 1;
-		} else if ( strcmp ( key, "quiet" ) == 0 ) {
-			cmdline_quiet = 1;
+			args.gui = convert_bool ( value );
 		} else if ( strcmp ( key, "pause" ) == 0 ) {
-			cmdline_pause = 1;
-			if ( value && ( strcmp ( value, "quiet" ) == 0 ) )
-				cmdline_pause_quiet = 1;
+			args.pause = convert_bool ( value );
+		} else if ( strcmp ( key, "linear" ) == 0 ) {
+			args.linear = convert_bool ( value );
 		} else if ( strcmp ( key, "index" ) == 0 ) {
 			if ( ( ! value ) || ( ! value[0] ) )
 				die ( "Argument \"index\" needs a value\n" );
-			cmdline_index = strtoul ( value, &endp, 0 );
+			args.index = strtoul ( value, &endp, 0 );
 			if ( *endp )
 				die ( "Invalid index \"%s\"\n", value );
 		} else if ( strcmp ( key, "initrd" ) == 0 ) {
@@ -132,7 +136,4 @@ void process_cmdline ( char *cmdline ) {
 		if ( value )
 			value[-1] = '=';
 	}
-
-	/* Show command line (after parsing "quiet" option) */
-	DBG ( "Command line: \"%s\"\n", cmdline );
 }

@@ -788,8 +788,8 @@ void patch_wim ( struct vdisk_file *file, void *data,
 	int rc;
 
 	/* Do nothing unless patching is required */
-	boot_index = cmdline_index;
-	inject = ( ! cmdline_rawwim );
+	boot_index = nt_cmdline->index;
+	inject = ( ! nt_cmdline->rawwim );
 	if ( ( boot_index == 0 ) && ( ! inject ) )
 		return;
 
@@ -839,10 +839,6 @@ void patch_bcd ( struct vdisk_file *vfile __unused, void *data,
 	static const wchar_t search[] = BCD_SEARCH;
 	static const wchar_t replace[] = BCD_REPLACE;
 	size_t i;
-
-	/* Do nothing if BCD patching is disabled */
-	if ( cmdline_rawbcd )
-		return;
 
 	/* Patch any occurrences of ".exe" to ".efi".  In the common
 	 * simple cases, this allows the same BCD file to be used for

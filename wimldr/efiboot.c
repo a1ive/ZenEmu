@@ -86,7 +86,7 @@ efi_open_protocol_wrapper ( EFI_HANDLE handle, EFI_GUID *protocol,
 			&efi_graphics_output_protocol_blocked_guid,
 			&efi_graphics_output_protocol_blocked,
 			NULL ) == 0 ) &&
-	     ( ! cmdline_gui ) ) {
+	     ( ! nt_cmdline->gui ) ) {
 		DBG ( "Forcing text mode output\n" );
 		return EFI_INVALID_PARAMETER;
 	}
@@ -160,7 +160,7 @@ void efi_boot ( struct vdisk_file *file, EFI_DEVICE_PATH_PROTOCOL *path,
 		efi_open_protocol_wrapper;
 
 	/* Start image */
-	if ( cmdline_pause )
+	if ( nt_cmdline->pause )
 		pause();
 	if ( ( efirc = bs->StartImage ( handle, NULL, NULL ) ) != 0 ) {
 		die ( "Could not start %s: %#lx\n",

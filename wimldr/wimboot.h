@@ -111,14 +111,14 @@ static inline void bochsbp ( void ) {
 
 /** Debugging output */
 #define DBG(...) do {						\
-		if ( ( DEBUG & 1 ) && ( ! cmdline_quiet ) ) {	\
+		if ( ( DEBUG & 1 ) ) {	\
 			printf ( __VA_ARGS__ );			\
 		}						\
 	} while ( 0 )
 
 /** Verbose debugging output */
 #define DBG2(...) do {						\
-		if ( ( DEBUG & 2 ) && ( ! cmdline_quiet ) ) {	\
+		if ( ( DEBUG & 2 ) ) {	\
 			printf ( __VA_ARGS__ );			\
 		}						\
 	} while ( 0 )

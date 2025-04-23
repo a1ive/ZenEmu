@@ -296,12 +296,12 @@ static int extract_by_handle ( EFI_HANDLE handle ) {
 	if ( bootwim ) {
 		vdisk_patch_file ( bootwim, patch_wim );
 		if ( ( ! bootmgfw ) &&
-		     ( bootmgfw = wim_add_file ( bootwim, cmdline_index,
+		     ( bootmgfw = wim_add_file ( bootwim, nt_cmdline->index,
 						 bootmgfw_path,
 						 efi_bootarch() ) ) ) {
 			DBG ( "...extracted %ls\n", bootmgfw_path );
 		}
-		wim_add_files ( bootwim, cmdline_index, efi_wim_paths );
+		wim_add_files ( bootwim, nt_cmdline->index, efi_wim_paths );
 	}
 
 	/* Check that we have a boot file */

@@ -120,7 +120,7 @@ static void call_interrupt_wrapper ( struct bootapp_callback_params *params ) {
 
 	} else if ( ( params->vector.interrupt == 0x10 ) &&
 		    ( params->ax == 0x4f01 ) &&
-		    ( ! cmdline_gui ) ) {
+		    ( ! nt_cmdline->gui ) ) {
 
 		/* Mark all VESA video modes as unsupported */
 		attributes = REAL_PTR ( params->es, params->di );
@@ -455,12 +455,12 @@ int main ( void ) {
 	if ( bootwim ) {
 		vdisk_patch_file ( bootwim, patch_wim );
 		if ( ( ! bootmgr ) &&
-		     ( bootmgr = wim_add_file ( bootwim, cmdline_index,
+		     ( bootmgr = wim_add_file ( bootwim, nt_cmdline->index,
 						bootmgr_path,
 						L"bootmgr.exe" ) ) ) {
 			DBG ( "...extracted bootmgr.exe\n" );
 		}
-		wim_add_files ( bootwim, cmdline_index, wim_paths );
+		wim_add_files ( bootwim, nt_cmdline->index, wim_paths );
 	}
 
 	/* Add INT 13 drive */
@@ -509,7 +509,7 @@ int main ( void ) {
 
 	/* Jump to PE image */
 	DBG ( "Entering bootmgr.exe with parameters at %p\n", &bootapps );
-	if ( cmdline_pause )
+	if ( nt_cmdline->pause )
 		pause();
 	pe.entry ( &bootapps.bootapp );
 	die ( "FATAL: bootmgr.exe returned\n" );
