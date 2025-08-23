@@ -9,6 +9,8 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
+  BUILD_CONFIGURATION: Release
+  BUILD_PLATFORM: x64
 
 jobs:
   build:
@@ -30,32 +32,61 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: |
-        msbuild /m /p:Configuration=Release /p:platform=x64 ${{env.SOLUTION_FILE_PATH}}
+        msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:platform=${{env.BUILD_PLATFORM}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Copy files
+    - name: Stage artifacts for packaging
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        md zemu
-        move x64\Release\zemu.exe zemu\
-        move firmware\bios.qcow2 zemu\
-        move firmware\X64_EFI.qcow2 zemu\
-        move firmware\IA32_EFI.qcow2 zemu\
-        move firmware\AA64_EFI.qcow2 zemu\
-        move firmware\ARM_EFI.qcow2 zemu\
-        move firmware\wim.cpio zemu\
-        move firmware\wim.qcow2 zemu\
-        move firmware\wimldr zemu\
-        move firmware\wimldr.x64 zemu\
-        move firmware\wimldr.ia32 zemu\
-        move firmware\wimldr.aa64 zemu\
+        $destDir = "zemu"
+        New-Item -ItemType Directory -Name $destDir -ErrorAction SilentlyContinue
+        $fileList = @(
+            "${{env.BUILD_PLATFORM}}/${{env.BUILD_CONFIGURATION}}/zemu.exe",
+            "firmware/bios.qcow2",
+            "firmware/X64_EFI.qcow2",
+            "firmware/IA32_EFI.qcow2",
+            "firmware/AA64_EFI.qcow2",
+            "firmware/ARM_EFI.qcow2",
+            "firmware/wim.cpio",
+            "firmware/wim.qcow2",
+            "firmware/wimldr",
+            "firmware/wimldr.x64",
+            "firmware/wimldr.ia32",
+            "firmware/wimldr.aa64"
+        )
+        Move-Item -Path $fileList -Destination $destDir
 
     - name: Create ZIP
-      uses: thedoctor0/zip-release@master
-      with:
-        type: 'zip'
-        filename: 'zemu.zip'
-        directory: '.'
-        path: 'zemu'
+      run: Compress-Archive -Path zemu/* -DestinationPath "zemu.zip"
+
+    - name: Generate Release Notes
+      env:
+        COMMITS_JSON: ${{ toJSON(github.event.commits) }}
+      run: |
+        $changelogLines = New-Object System.Collections.Generic.List[string]
+        if ("${{ github.event_name }}" -eq "push") {
+          Write-Host "Generating changelog from push event payload"
+          $commits = $env:COMMITS_JSON | ConvertFrom-Json
+          if ($null -ne $commits) {
+            foreach ($commit in $commits) {
+              $shortSha = $commit.id.Substring(0, 7)
+              # Take only the first line of the commit message
+              $commitMessage = ($commit.message -split "`r?`n")[0]
+              $changelogLines.Add("* $commitMessage ($shortSha) by @$($commit.author.name)")
+            }
+          }
+        }
+        else {
+          Write-Host "Generating changelog for workflow_dispatch event (latest commit)"
+          $latest_commit = git log --pretty=format:'* %s (%h) by @%an' -n 1
+          $changelogLines.Add($latest_commit)
+        }
+
+        $changelogBody = $changelogLines -join "`n"
+        if ([string]::IsNullOrWhiteSpace($changelogBody)) {
+          $changelogBody = "No new commits in this push. Automated build from commit ${{ github.sha }}."
+        }
+
+        $changelogBody | Out-File -FilePath "release_notes.txt" -Encoding utf8
 
     - name: Delete old release
       continue-on-error: true
@@ -68,6 +99,10 @@ jobs:
     - name: Release
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        gh release create latest zemu.zip -t "Development Build" -p
+        $date_version = (Get-Date -Format 'yyyyMMdd') + ".${{ github.run_number }}"
+        gh release create latest "zemu.zip" `
+          --prerelease `
+          --title "Build $date_version" `
+          --notes-file "release_notes.txt"
       env:
         GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
