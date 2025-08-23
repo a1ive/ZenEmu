@@ -10,7 +10,7 @@ static const char* edit_cpu_x86[] =
 	"486", "Broadwell", "Conroe", "Cooperlake",
 	"Dhyana", "EPYC", "Haswell", "Ivybridge",
 	"Skylake-Client", "Skylake-Server", "Snowridge",
-	"athlon", "core2duo", "max",
+	"YongFeng", "athlon", "core2duo", "max",
 };
 
 static const char* edit_cpu_arm[] =

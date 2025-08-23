@@ -238,6 +238,10 @@
     <Image Include="nuklear.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".github\workflows\bcd.yml" />
+    <None Include=".github\workflows\firmware.yml" />
+    <None Include=".github\workflows\msbuild.yml" />
+    <None Include=".github\workflows\wimldr.yml" />
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>

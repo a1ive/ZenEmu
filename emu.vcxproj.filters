@@ -19,6 +19,9 @@
     <Filter Include="EWS">
       <UniqueIdentifier>{e8f206a1-8351-4d28-a825-466926306d37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GitHub">
+      <UniqueIdentifier>{008be464-76f6-4d4b-925a-a5decb8148ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="nuklear.rc">
@@ -132,6 +135,18 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.md" />
+    <None Include=".github\workflows\msbuild.yml">
+      <Filter>GitHub</Filter>
+    </None>
+    <None Include=".github\workflows\bcd.yml">
+      <Filter>GitHub</Filter>
+    </None>
+    <None Include=".github\workflows\firmware.yml">
+      <Filter>GitHub</Filter>
+    </None>
+    <None Include=".github\workflows\wimldr.yml">
+      <Filter>GitHub</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cmdline.c">
