@@ -9,7 +9,7 @@ wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR lpCmdLine,
 	_In_ int nCmdShow)
 {
-	OleInitialize(NULL);
+	(void)OleInitialize(NULL);
 	ZeroMemory(&nk, sizeof(nk));
 	nk.inst = hInstance;
 	nk.prev = hPrevInstance;
