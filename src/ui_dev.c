@@ -145,4 +145,12 @@ ui_qemu_dev(struct nk_context* ctx)
 	}
 	if (!nk.ini->cur->audio)
 		nk_widget_disable_end(ctx);
+
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { nk.sq, 0.2f - nk.sq, 0.8f });
+	ui_dev_button(ctx, GET_PNG(IDR_PNG_BATTERY), ZTXT(ZTXT_BATTERY), &nk.ini->cur->battery);
+	if (!nk.ini->cur->battery)
+		nk_widget_disable_begin(ctx);
+	nk_spacer(ctx);
+	if (!nk.ini->cur->battery)
+		nk_widget_disable_end(ctx);
 }

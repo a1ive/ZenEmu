@@ -205,6 +205,7 @@
     <Image Include="icons\add.png" />
     <Image Include="icons\admin.png" />
     <Image Include="icons\audio.png" />
+    <Image Include="icons\battery.png" />
     <Image Include="icons\camera.png" />
     <Image Include="icons\cd.png" />
     <Image Include="icons\close.png" />
@@ -268,6 +269,7 @@
     <ClCompile Include="src\ui_mem.c" />
     <ClCompile Include="src\ui_end.c" />
     <ClCompile Include="src\wim.c" />
+    <ClCompile Include="src\write_file.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ews\EmbeddableWebServer.h" />

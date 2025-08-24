@@ -37,7 +37,8 @@
 #define IDR_PNG_CAMERA                  140
 #define IDR_PNG_DICE                    141
 #define IDR_PNG_VM                      142
+#define IDR_PNG_BATTERY                 143
 
-#define IDR_PNG_MAX                     143
+#define IDR_PNG_MAX                     144
 
 #define IDT_TIMER_1S                    2001

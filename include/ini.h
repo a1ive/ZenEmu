@@ -91,6 +91,7 @@ typedef struct _ZEMU_INI_PROFILE
 	nk_bool audio_hda;
 	nk_bool audio_spk;
 	char audiodev[OPT_SZ];
+	nk_bool battery;
 	ZEMU_FW fw;
 	nk_bool fw_menu;
 	char fw_timeout[OPT_SZ];
@@ -155,6 +156,8 @@ typedef struct _ZEMU_INI_DATA
 	CHAR qemu_wimhda[OPT_SZ];
 	CHAR qemu_wimcpio[OPT_SZ];
 	DWORD qemu_wimaddr;
+	CHAR qemu_batdmi[OPT_SZ];
+	CHAR qemu_bataml[OPT_SZ];
 
 	ZEMU_SCREEN_SAVE qemu_screenshot;
 	nk_bool qemu_fullscreen;
@@ -242,3 +245,9 @@ check_path_invalid(const char* str);
 
 uint64_t
 get_file_header(LPCWSTR path, void* header, size_t header_len);
+
+BOOL
+write_battery_dmi(LPCWSTR dmi);
+
+BOOL
+write_battery_aml(LPCWSTR aml);

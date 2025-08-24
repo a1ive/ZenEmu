@@ -131,6 +131,9 @@
     <Image Include="icons\vm.png">
       <Filter>RC\icons</Filter>
     </Image>
+    <Image Include="icons\battery.png">
+      <Filter>RC\icons</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -213,6 +216,9 @@
       <Filter>EWS</Filter>
     </ClCompile>
     <ClCompile Include="src\nkstyle.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\write_file.c">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

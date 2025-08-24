@@ -71,6 +71,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->audio_hda = get_ini_bool(section, L"IntelHDA", nk_false);
 	p->audio_spk = get_ini_bool(section, L"PcSpeaker", nk_false);
 	strcpy_s(p->audiodev, OPT_SZ, get_ini_value(section, L"AudioBackend", L"dsound"));
+	p->battery = get_ini_bool(section, L"Battery", nk_false);
 	
 	p->fw = get_ini_num(section, L"Firmware", fw);
 	if (p->fw < fw_min || p->fw > fw_max)
@@ -117,6 +118,9 @@ ui_ini_init(void)
 	strcpy_s(nk.ini->qemu_wimcpio, OPT_SZ, get_ini_value(L"Wim", L"Cpio", L"wim.cpio"));
 	nk.ini->qemu_wimaddr = get_ini_num(L"Wim", L"Addr", 0x1000000); // address: 0x1000000 (16MB)
 	nk.ini->boot_wim_index = get_ini_num(L"Wim", L"Index", 0);
+
+	strcpy_s(nk.ini->qemu_batdmi, OPT_SZ, get_ini_value(L"Battery", L"Dmi", L"bat.dmi"));
+	strcpy_s(nk.ini->qemu_bataml, OPT_SZ, get_ini_value(L"Battery", L"Asl", L"bat.aml"));
 
 	nk.ini->boot_vhd_attr.snapshot = get_ini_bool(L"Vhd", L"Snapshot", nk_true);
 	nk.ini->boot_hd_attr.snapshot = get_ini_bool(L"Pd", L"Snapshot", nk_true);
@@ -173,6 +177,7 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"IntelHDA", p->audio_hda);
 	set_ini_num(section, L"PcSpeaker", p->audio_spk);
 	set_ini_value(section, L"AudioBackend", p->audiodev);
+	set_ini_num(section, L"Battery", p->battery);
 	set_ini_num(section, L"Firmware", p->fw);
 	set_ini_num(section, L"BootMenu", p->fw_menu);
 	set_ini_value(section, L"Timeout", p->fw_timeout);

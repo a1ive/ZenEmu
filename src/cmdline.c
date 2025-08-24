@@ -134,6 +134,15 @@ append_qemu_hw(void)
 		if (nk.ini->cur->audio_hda)
 			append_cmdline(L"-device intel-hda -device hda-output,audiodev=snd0 ");
 	}
+	if (nk.ini->cur->battery)
+	{
+		LPCWSTR dmi = utf8_to_ucs2(nk.ini->qemu_batdmi);
+		if (write_battery_dmi(dmi))
+			append_cmdline(L"-smbios file=\"%s\" ", dmi);
+		LPCWSTR aml = utf8_to_ucs2(nk.ini->qemu_bataml); // absolute path not supported
+		if (write_battery_aml(aml))
+			append_cmdline(L"-acpitable file=\"%s\" ", aml);
+	}
 }
 
 static inline void
