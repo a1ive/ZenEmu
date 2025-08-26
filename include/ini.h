@@ -92,6 +92,8 @@ typedef struct _ZEMU_INI_PROFILE
 	nk_bool audio_spk;
 	char audiodev[OPT_SZ];
 	nk_bool battery;
+	nk_bool ac_power;
+	size_t battery_percent;
 	ZEMU_FW fw;
 	nk_bool fw_menu;
 	char fw_timeout[OPT_SZ];

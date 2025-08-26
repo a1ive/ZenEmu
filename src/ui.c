@@ -72,6 +72,10 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->audio_spk = get_ini_bool(section, L"PcSpeaker", nk_false);
 	strcpy_s(p->audiodev, OPT_SZ, get_ini_value(section, L"AudioBackend", L"dsound"));
 	p->battery = get_ini_bool(section, L"Battery", nk_false);
+	p->ac_power = get_ini_bool(section, L"AcPower", nk_true);
+	p->battery_percent = get_ini_num(section, L"BatteryPercent", 100);
+	if (p->battery_percent < 0 || p->battery_percent > 100)
+		p->battery_percent = 100;
 	
 	p->fw = get_ini_num(section, L"Firmware", fw);
 	if (p->fw < fw_min || p->fw > fw_max)
@@ -178,6 +182,8 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_num(section, L"PcSpeaker", p->audio_spk);
 	set_ini_value(section, L"AudioBackend", p->audiodev);
 	set_ini_num(section, L"Battery", p->battery);
+	set_ini_num(section, L"AcPower", p->ac_power);
+	set_ini_num(section, L"BatteryPercent", (int)p->battery_percent);
 	set_ini_num(section, L"Firmware", p->fw);
 	set_ini_num(section, L"BootMenu", p->fw_menu);
 	set_ini_value(section, L"Timeout", p->fw_timeout);

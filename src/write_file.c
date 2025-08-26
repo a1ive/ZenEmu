@@ -74,6 +74,269 @@ typedef struct _ACPI_HEADER
 
 #pragma pack()
 
+static UINT8
+get_acpi_checksum(void* base, size_t size)
+{
+	UINT8* ptr;
+	UINT8 ret = 0;
+	for (ptr = (UINT8*)base; ptr < ((UINT8*)base) + size; ptr++)
+		ret += *ptr;
+	return ret;
+}
+
+#define AML_NOTSERIALIZED 0
+#define AML_SERIALIZED 1
+
+typedef struct
+{
+	uint8_t* buffer;
+	size_t max;
+	size_t pos;
+} AML_BUFFER;
+
+static inline void aml_init_buffer(AML_BUFFER* ctx, uint8_t* buffer, size_t size)
+{
+	ctx->buffer = buffer;
+	ctx->max = size;
+	ctx->pos = 0;
+}
+
+static inline size_t aml_get_size(const AML_BUFFER* ctx)
+{
+	return ctx->pos;
+}
+
+static inline int aml_write_byte(AML_BUFFER* ctx, uint8_t val)
+{
+	if (ctx->pos >= ctx->max)
+	{
+		assert(!"AML buffer overflow");
+		return 0;
+	}
+	ctx->buffer[ctx->pos++] = val;
+	return 1;
+}
+
+static inline int aml_write_data(AML_BUFFER* ctx, const void* data, size_t len)
+{
+	if (ctx->pos + len > ctx->max)
+	{
+		assert(!"AML buffer overflow");
+		return 0;
+	}
+	memcpy(ctx->buffer + ctx->pos, data, len);
+	ctx->pos += len;
+	return 1;
+}
+
+static void aml_write_nameseg(AML_BUFFER* ctx, const char* seg)
+{
+	char padded_name[4] = { '_', '_', '_', '_' };
+	size_t len = strlen(seg);
+	if (len > 4)
+		len = 4;
+	memcpy(padded_name, seg, len);
+	aml_write_data(ctx, padded_name, 4);
+}
+
+static void aml_write_namestring(AML_BUFFER* ctx, const char* name)
+{
+	// '\', '^' or '.' are not supported
+	size_t len = strlen(name);
+	const char* p = name;
+	size_t num_segs = (len + 3) / 4;
+
+	if (num_segs == 1)
+		aml_write_nameseg(ctx, p);
+	else if (num_segs == 2)
+	{
+		aml_write_byte(ctx, 0x2E); // DualNamePrefix
+		aml_write_nameseg(ctx, p);
+		aml_write_nameseg(ctx, p + 4);
+	}
+	else
+	{
+		if (num_segs > 255)
+		{
+			assert(!"Name is too long, exceeds 255 segments");
+			num_segs = 255;
+		}
+		aml_write_byte(ctx, 0x2F); // MultiNamePrefix
+		aml_write_byte(ctx, (uint8_t)num_segs);
+		for (size_t i = 0; i < num_segs; ++i)
+			aml_write_nameseg(ctx, p + i * 4);
+	}
+}
+
+static void aml_int(AML_BUFFER* ctx, uint64_t value)
+{
+	if (value == 0)
+		aml_write_byte(ctx, 0x00); // ZeroOp
+	else if (value == 1)
+		aml_write_byte(ctx, 0x01); // OneOp
+	else if (value <= 0xFF)
+	{
+		aml_write_byte(ctx, 0x0A); // BytePrefix
+		aml_write_data(ctx, &value, 1);
+	}
+	else if (value <= 0xFFFF)
+	{
+		aml_write_byte(ctx, 0x0B); // WordPrefix
+		aml_write_data(ctx, &value, 2);
+	}
+	else if (value <= 0xFFFFFFFF)
+	{
+		aml_write_byte(ctx, 0x0C); // DWordPrefix
+		aml_write_data(ctx, &value, 4);
+	}
+	else
+	{
+		aml_write_byte(ctx, 0x0E); // QWordPrefix
+		aml_write_data(ctx, &value, 8);
+	}
+}
+
+static size_t aml_encode_pkg_length(size_t length, uint8_t out_buf[4])
+{
+	if (length < 64)
+	{
+		// 1 byte, [5:0] = length
+		out_buf[0] = (uint8_t)length;
+		return 1;
+	}
+	else if (length < 4096)
+	{
+		// 2 bytes, [3:0] of byte 0 = L1, [7:4]=1
+		out_buf[0] = (uint8_t)(((length & 0x0F) | 0x40));
+		out_buf[1] = (uint8_t)(length >> 4);
+		return 2;
+	}
+	else if (length < 2097152)
+	{
+		// 3 bytes, [3:0] of byte 0 = L1, [7:4]=2
+		out_buf[0] = (uint8_t)(((length & 0x0F) | 0x80));
+		out_buf[1] = (uint8_t)(length >> 4);
+		out_buf[2] = (uint8_t)(length >> 12);
+		return 3;
+	}
+	else
+	{
+		// 4 bytes, [3:0] of byte 0 = L1, [7:4]=3
+		out_buf[0] = (uint8_t)(((length & 0x0F) | 0xC0));
+		out_buf[1] = (uint8_t)(length >> 4);
+		out_buf[2] = (uint8_t)(length >> 12);
+		out_buf[3] = (uint8_t)(length >> 20);
+		return 4;
+	}
+}
+
+static void aml_finalize_package(AML_BUFFER* ctx, size_t package_start_pos, int is_ext_op)
+{
+	size_t content_end_pos = ctx->pos;
+	size_t content_len = content_end_pos - package_start_pos;
+
+	uint8_t pkg_len_bytes[4];
+	size_t pkg_len_size = aml_encode_pkg_length(content_len, pkg_len_bytes);
+
+	size_t move_size = content_len;
+	if (ctx->pos + pkg_len_size > ctx->max)
+	{
+		assert(!"AML buffer overflow while finalizing package");
+		return;
+	}
+
+	memmove(ctx->buffer + package_start_pos + pkg_len_size,
+		ctx->buffer + package_start_pos,
+		move_size);
+
+	memcpy(ctx->buffer + package_start_pos, pkg_len_bytes, pkg_len_size);
+
+	ctx->pos += pkg_len_size;
+
+	size_t total_package_len = ctx->pos - package_start_pos + (is_ext_op ? 2 : 1);
+
+	size_t final_content_len = content_len + pkg_len_size;
+	pkg_len_size = aml_encode_pkg_length(final_content_len, pkg_len_bytes);
+
+	memcpy(ctx->buffer + package_start_pos, pkg_len_bytes, pkg_len_size);
+}
+
+static size_t aml_start_scope(AML_BUFFER* ctx, const char* name)
+{
+	aml_write_byte(ctx, 0x10); // ScopeOp
+	size_t pkg_start = ctx->pos;
+	aml_write_namestring(ctx, name);
+	return pkg_start;
+}
+
+static void aml_end_scope(AML_BUFFER* ctx, size_t pkg_start_pos)
+{
+	aml_finalize_package(ctx, pkg_start_pos, 0);
+}
+
+static size_t aml_start_device(AML_BUFFER* ctx, const char* name)
+{
+	aml_write_byte(ctx, 0x5B); // ExtOpPrefix
+	aml_write_byte(ctx, 0x82); // DeviceOp
+	size_t pkg_start = ctx->pos;
+	aml_write_namestring(ctx, name);
+	return pkg_start;
+}
+
+static void aml_end_device(AML_BUFFER* ctx, size_t pkg_start_pos)
+{
+	aml_finalize_package(ctx, pkg_start_pos, 1);
+}
+
+static void aml_name_decl(AML_BUFFER* ctx, const char* name)
+{
+	aml_write_byte(ctx, 0x08); // NameOp
+	aml_write_namestring(ctx, name);
+}
+
+static size_t aml_start_method(AML_BUFFER* ctx, const char* name, int arg_count, int sflag)
+{
+	aml_write_byte(ctx, 0x14); // MethodOp
+	size_t pkg_start = ctx->pos;
+
+	uint8_t method_flags = (uint8_t)(arg_count & 0x07);
+	if (sflag == AML_SERIALIZED)
+		method_flags |= (1 << 3);
+
+	aml_write_namestring(ctx, name);
+	aml_write_byte(ctx, method_flags);
+	return pkg_start;
+}
+
+static void aml_end_method(AML_BUFFER* ctx, size_t pkg_start_pos)
+{
+	aml_finalize_package(ctx, pkg_start_pos, 0);
+}
+
+static void aml_return(AML_BUFFER* ctx)
+{
+	aml_write_byte(ctx, 0xA4); // ReturnOp
+}
+
+static size_t aml_start_package(AML_BUFFER* ctx, uint8_t num_elements)
+{
+	aml_write_byte(ctx, 0x12); // PackageOp
+	size_t pkg_start = ctx->pos;
+	aml_write_byte(ctx, num_elements);
+	return pkg_start;
+}
+
+static void aml_end_package(AML_BUFFER* ctx, size_t pkg_start_pos)
+{
+	aml_finalize_package(ctx, pkg_start_pos, 0);
+}
+
+static void aml_string(AML_BUFFER* ctx, const char* str)
+{
+	aml_write_byte(ctx, 0x0D); // StringPrefix
+	aml_write_data(ctx, str, strlen(str) + 1); // including null terminator
+}
+
 BOOL
 write_battery_dmi(LPCWSTR dmi)
 {
@@ -84,7 +347,7 @@ write_battery_dmi(LPCWSTR dmi)
 	bat.Location = 1;
 	const char* string1 = "Internal";
 	bat.Manufacturer = 2;
-	const char* string2 = "A1ive";
+	const char* string2 = "ZEMU";
 	bat.Date = 3;
 	const char* string3 = "2024/01/01";
 	bat.SN = 4;
@@ -123,7 +386,7 @@ out:
 }
 
 /*
-	DefinitionBlock ("bat.aml", "SSDT", 2, "ZEMU", "ZEMU_BAT", 0x00000001)
+	DefinitionBlock ("bat.aml", "SSDT", 2, "ZEMU", "ZEMUBAT", 0x00000001)
 	{
 		Scope (_SB)
 		{
@@ -147,30 +410,31 @@ out:
 					1000, // [6] Design Capacity of Low£º2%
 					1, // [7] Battery Capacity Granularity 1 (Low to Warning)
 					1, // [8] Battery Capacity Granularity 2 (Warning to Full)
-					"ZEMU-BAT01", // [9] Model Number (String)
-					"1453-0529", // [10] Serial Number (String)
+					"BAT01", // [9] Model Number (String)
+					"14530529", // [10] Serial Number (String)
 					"Li-Ion", // [11] Battery Type (String)
 					"A1ive" // [12] OEM Information (String)
 				})
 
-				Method (_BIF, 0, Serialized)
+				Method (_BIF, 0, NotSerialized)
 				{
 					Return (BIFP)
 				}
 
 				Name (BSTP, Package (4)
 				{
-					0x00, // [0] Battery State (Bitfield)
-					0, // [1] Battery Present Rate (mW)
+					0x02, // [0] Battery State (Bitfield)
+					0x10, // [1] Battery Present Rate (mW)
 					50000, // [2] Remaining Capacity (mWh)
 					10000 // [3] Battery Present Voltage (mV)
 				})
 
-				Method (_BST, 0, Serialized)
+				Method (_BST, 0, NotSerialized)
 				{
 					Return (BSTP)
 				}
 			}
+
 			Device (AC0)
 			{
 				Name (_HID, "ACPI0003") // AC adapter
@@ -189,64 +453,121 @@ out:
 		}
 	}
 */
-static UINT8 BAT_AML[] =
-{
-	0x53, 0x53, 0x44, 0x54, // "SSDT"
-	0xE3, 0x00, 0x00, 0x00, // Length
-	0x02, // Revision
-	0x4C, // Checksum
-	0x5A, 0x45, 0x4D, 0x55, 0x00, 0x00, // OemId
-	0x5A, 0x45, 0x4D, 0x55, 0x5F, 0x42, 0x41, 0x54, // OemTableId
-	0x01, 0x00, 0x00, 0x00, // OemRevision
-	0x49, 0x4E, 0x54, 0x4C, // CreatorId
-	0x07, 0x08, 0x25, 0x20, // CreatorRevision
-	0x10, 0x4E, 0x0B, 0x5F, 0x53, 0x42, 0x5F, // Scope (_SB)
-	0x5B, 0x82, 0x47, 0x08, 0x42, 0x41, 0x54, 0x30, // Device (BAT0)
-	0x08, 0x5F, 0x48, 0x49, 0x44, // Name (_HID)
-	0x0D, 0x50, 0x4E, 0x50, 0x30, 0x43, 0x30, 0x41, 0x00, // "PNP0C0A"
-	0x14, 0x09, 0x5F, 0x53, 0x54, 0x41, // Method (_STA)
-	0x00, 0xA4, 0x0A, 0x0F, // NotSerialized, Return (0x0F)
-	0x08, 0x42, 0x49, 0x46, 0x50, // Name (BIFP)
-	0x12, 0x3B, 0x0D, // Package (13)
-	0x00,
-	0x0B, 0x50, 0xC3, // 50000
-	0x0B, 0x50, 0xC3, // 50000
-	0x01,
-	0x0B, 0x10, 0x27, // 10000
-	0x0B, 0xC4, 0x09, // 2500
-	0x0B, 0xE8, 0x03, // 1000
-	0x01, 0x01,
-	0x0D, 0x5A, 0x45, 0x4D, 0x55, 0x2D, 0x42, 0x41, 0x54, 0x30, 0x31, 0x00, // "ZEMU-BAT01"
-	0x0D, 0x31, 0x34, 0x35, 0x33, 0x2D, 0x30, 0x35, 0x32, 0x39, 0x00, // "1453-0529"
-	0x0D, 0x4C, 0x69, 0x2D, 0x49, 0x6F, 0x6E, 0x00, // "Li-Ion"
-	0x0D, 0x41, 0x31, 0x69, 0x76, 0x65, 0x00, // "A1ive"
-	0x14, 0x0B, 0x5F, 0x42, 0x49, 0x46, // Method (_BIF)
-	0x08, 0xA4, 0x42, 0x49, 0x46, 0x50, // Serialized, Return (BIFP)
-	0x08, 0x42, 0x53, 0x54, 0x50, // Name (BSTP)
-	0x12, 0x0A, 0x04, // Package (4)
-	0x00, 0x00,
-	0x0B, 0x50, 0xC3, // 50000
-	0x0B, 0x10, 0x27, // 10000
-	0x14, 0x0B, 0x5F, 0x42, 0x53, 0x54, // Method (_BST)
-	0x08, 0xA4, 0x42, 0x53, 0x54, 0x50, // Serialized, Return (BSTP)
-	0x5B, 0x82, 0x2D, 0x41, 0x43, 0x30, 0x5F, // Device (AC0)
-	0x08, 0x5F, 0x48, 0x49, 0x44, // Name (_HID)
-	0x0D, 0x41, 0x43, 0x50, 0x49, 0x30, 0x30, 0x30, 0x33, 0x00, // "ACPI0003"
-	0x08, 0x5F, 0x55, 0x49, 0x44, 0x00, // Name (_UID, 0)
-	0x14, 0x09, 0x5F, 0x53, 0x54, 0x41, // Method (_STA)
-	0x00, 0xA4, 0x0A, 0x0F, // NotSerialized, Return (0x0F)
-	0x14, 0x08, 0x5F, 0x50, 0x53, 0x52, // Method (_PSR)
-	0x00, 0xA4, 0x01 // NotSerialized, Return (0x01)
-};
+
+#define MAX_AML_SZ 512
 
 BOOL write_battery_aml(LPCWSTR aml)
 {
+	UINT8 BAT_AML[MAX_AML_SZ] = { 0 };
+
+	AML_BUFFER ctx;
+	aml_init_buffer(&ctx, BAT_AML + sizeof(ACPI_HEADER), MAX_AML_SZ - sizeof(ACPI_HEADER));
+
+	size_t scope_sb = aml_start_scope(&ctx, "_SB");
+	{
+		size_t dev_bat0 = aml_start_device(&ctx, "BAT0");
+		{
+			aml_name_decl(&ctx, "_HID");
+			aml_string(&ctx, "PNP0C0A");
+
+			aml_name_decl(&ctx, "_UID");
+			aml_int(&ctx, 0);
+
+			size_t method_sta = aml_start_method(&ctx, "_STA", 0, AML_NOTSERIALIZED);
+			{
+				aml_return(&ctx);
+				aml_int(&ctx, 0x1F);
+			}
+			aml_end_method(&ctx, method_sta);
+
+			size_t method_bif = aml_start_method(&ctx, "_BIF", 0, AML_NOTSERIALIZED);
+			{
+				aml_return(&ctx);
+				size_t pkg_bif = aml_start_package(&ctx, 13);
+				{
+					aml_int(&ctx, 0); // [0] Power Unit
+					aml_int(&ctx, 50000); // [1] Design Capacity
+					aml_int(&ctx, 50000); // [2] Last Full Charge Capacity
+					aml_int(&ctx, 1); // [3] Battery Technology
+					aml_int(&ctx, 10000); // [4] Design Voltage
+					aml_int(&ctx, 2500); // [5] Design Capacity of Warning
+					aml_int(&ctx, 1000); // [6] Design Capacity of Low
+					aml_int(&ctx, 1); // [7] Granularity 1
+					aml_int(&ctx, 1); // [8] Granularity 2
+					aml_string(&ctx, "T1000"); // [9] Model Number
+					aml_string(&ctx, "1453-0529"); // [10] Serial Number
+					aml_string(&ctx, "Li-Ion"); // [11] Battery Type
+					aml_string(&ctx, "ZEMU"); // [12] OEM Info
+				}
+				aml_end_package(&ctx, pkg_bif);
+			}
+			aml_end_method(&ctx, method_bif);
+
+			size_t method_bst = aml_start_method(&ctx, "_BST", 0, AML_NOTSERIALIZED);
+			{
+				aml_return(&ctx);
+				size_t pkg_bst = aml_start_package(&ctx, 4);
+				{
+					uint64_t bat_remain = (uint64_t)((nk.ini->cur->battery_percent * 50000) / 100);
+					aml_int(&ctx, (nk.ini->cur->ac_power) ? 0x02 : 0x01); // [0] Battery State
+					aml_int(&ctx, 0x10); // [1] Battery Present Rate
+					aml_int(&ctx, bat_remain); // [2] Remaining Capacity
+					aml_int(&ctx, 10000); // [3] Battery Present Voltage
+				}
+				aml_end_package(&ctx, pkg_bst);
+			}
+			aml_end_method(&ctx, method_bst);
+		}
+		aml_end_device(&ctx, dev_bat0);
+
+		if (nk.ini->cur->ac_power)
+		{
+			size_t dev_ac0 = aml_start_device(&ctx, "AC0");
+			{
+				aml_name_decl(&ctx, "_HID");
+				aml_string(&ctx, "ACPI0003");
+
+				aml_name_decl(&ctx, "_UID");
+				aml_int(&ctx, 0);
+
+				size_t method_sta = aml_start_method(&ctx, "_STA", 0, AML_NOTSERIALIZED);
+				{
+					aml_return(&ctx);
+					aml_int(&ctx, 0x0F);
+				}
+				aml_end_method(&ctx, method_sta);
+
+				size_t method_psr = aml_start_method(&ctx, "_PSR", 0, AML_NOTSERIALIZED);
+				{
+					aml_return(&ctx);
+					aml_int(&ctx, 0x01);
+				}
+				aml_end_method(&ctx, method_psr);
+			}
+			aml_end_device(&ctx, dev_ac0);
+		}
+	}
+	aml_end_scope(&ctx, scope_sb);
+
+	ACPI_HEADER* hdr = (ACPI_HEADER*)BAT_AML;
+	memcpy(hdr->Signature, "SSDT", 4);
+	hdr->Length = (UINT32)(sizeof(ACPI_HEADER) + aml_get_size(&ctx));
+	hdr->Revision = 2;
+	hdr->Checksum = 0;
+	memcpy(hdr->OemId, "ZEMU\0\0", 6);
+	memcpy(hdr->OemTableId, "ZEMUBAT\0", 8);
+	hdr->OemRevision = 1;
+	memcpy(hdr->CreatorId, "INTL", 4);
+	hdr->CreatorRevision = 0x250807;
+
+	hdr->Checksum = 1 + ~get_acpi_checksum(BAT_AML, hdr->Length);
+
 	BOOL rc = FALSE;
 	FILE* fp = NULL;
 	errno_t err = _wfopen_s(&fp, aml, L"wb");
 	if (err != 0 || !fp)
 		return FALSE;
-	if (fwrite(BAT_AML, sizeof(BAT_AML), 1, fp) != 1)
+	if (fwrite(BAT_AML, hdr->Length, 1, fp) != 1)
 		goto out;
 	rc = TRUE;
 out:

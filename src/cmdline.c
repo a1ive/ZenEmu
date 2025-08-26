@@ -136,12 +136,16 @@ append_qemu_hw(void)
 	}
 	if (nk.ini->cur->battery)
 	{
-		LPCWSTR dmi = utf8_to_ucs2(nk.ini->qemu_batdmi);
+		LPCWSTR dmi = rel_to_abs(nk.ini->qemu_batdmi);
 		if (write_battery_dmi(dmi))
 			append_cmdline(L"-smbios file=\"%s\" ", dmi);
-		LPCWSTR aml = utf8_to_ucs2(nk.ini->qemu_bataml); // absolute path not supported
+		LPCWSTR aml = rel_to_abs(nk.ini->qemu_bataml);
 		if (write_battery_aml(aml))
+		{
+			// absolute path not supported
+			aml = utf8_to_ucs2(nk.ini->qemu_bataml);
 			append_cmdline(L"-acpitable file=\"%s\" ", aml);
+		}
 	}
 }
 

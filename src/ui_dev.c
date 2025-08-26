@@ -146,11 +146,13 @@ ui_qemu_dev(struct nk_context* ctx)
 	if (!nk.ini->cur->audio)
 		nk_widget_disable_end(ctx);
 
-	nk_layout_row(ctx, NK_DYNAMIC, 0, 3, (float[3]) { nk.sq, 0.2f - nk.sq, 0.8f });
+	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { nk.sq, 0.2f - nk.sq, 0.3f, 0.1f, 0.4f });
 	ui_dev_button(ctx, GET_PNG(IDR_PNG_BATTERY), ZTXT(ZTXT_BATTERY), &nk.ini->cur->battery);
 	if (!nk.ini->cur->battery)
 		nk_widget_disable_begin(ctx);
-	nk_spacer(ctx);
+	nk_checkbox_label(ctx, ZTXT(ZTXT_AC_POWER), &nk.ini->cur->ac_power);
+	nk_labelf(ctx, NK_TEXT_RIGHT, "%zu%%", nk.ini->cur->battery_percent);
+	nk_progress(ctx, &nk.ini->cur->battery_percent, 100, NK_MODIFIABLE);
 	if (!nk.ini->cur->battery)
 		nk_widget_disable_end(ctx);
 }

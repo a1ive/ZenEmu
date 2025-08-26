@@ -171,7 +171,7 @@ run_qemu(void)
 
 	ZeroMemory(&pi, sizeof(pi));
 
-	if (CreateProcessW(NULL, cmdline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+	if (CreateProcessW(NULL, cmdline, NULL, NULL, TRUE, 0, NULL, nk.ini->pwd, &si, &pi))
 	{
 		CloseHandle(child_out_w);
 		HANDLE hThread = CreateThread(NULL, 0, read_pipe_thread, child_out_r, 0, NULL);
