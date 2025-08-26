@@ -35,7 +35,7 @@ jobs:
           set -ex
 
           git clone --recursive https://github.com/tianocore/edk2.git
-          ( cd edk2 && git checkout edk2-stable202502 )
+          ( cd edk2 && git checkout edk2-stable202508 )
 
           export PACKAGES_PATH="$(pwd -P)"/edk2
 
