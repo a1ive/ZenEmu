@@ -139,12 +139,15 @@ append_qemu_hw(void)
 		LPCWSTR dmi = rel_to_abs(nk.ini->qemu_batdmi);
 		if (write_battery_dmi(dmi))
 			append_cmdline(L"-smbios file=\"%s\" ", dmi);
-		LPCWSTR aml = rel_to_abs(nk.ini->qemu_bataml);
-		if (write_battery_aml(aml))
+		if (nk.ini->qemu_arch == ZEMU_QEMU_ARCH_X64)
 		{
-			// absolute path not supported
-			aml = utf8_to_ucs2(nk.ini->qemu_bataml);
-			append_cmdline(L"-acpitable file=\"%s\" ", aml);
+			LPCWSTR aml = rel_to_abs(nk.ini->qemu_bataml);
+			if (write_battery_aml(aml))
+			{
+				// absolute path not supported
+				aml = utf8_to_ucs2(nk.ini->qemu_bataml);
+				append_cmdline(L"-acpitable file=\"%s\" ", aml);
+			}
 		}
 	}
 }
