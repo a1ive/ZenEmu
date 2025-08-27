@@ -1743,7 +1743,7 @@ static int sendResponseFile(struct Connection* connection, const struct Response
 	struct Response* errorResponse = NULL;
 	FILE* fp = fopen_utf8_path(response->filenameToSend, "rb");
 	int result = 0;
-	long fileLength;
+	long long fileLength;
 	ssize_t sendResult;
 	int headerLength;
 	size_t actualMIMEReadSize;
@@ -1760,7 +1760,7 @@ static int sendResponseFile(struct Connection* connection, const struct Response
 	} else {
 		assert(sizeof(connection->sendRecvBuffer) >= MIMEReadSize);
 		actualMIMEReadSize = fread(connection->sendRecvBuffer, 1, MIMEReadSize, fp);
-		if (0 == actualMIMEReadSize) {
+		if (0 == actualMIMEReadSize && ferror(fp)) { // Check for ferror, 0 bytes read could be an empty file
 			ews_printf("Unable to satisfy request for '%s' because we could read the first bunch of bytes to determine MIME type '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
 			errorResponse = responseAlloc500InternalErrorHTML("fread for MIME type detection failed");
 			goto exit;
@@ -1768,28 +1768,132 @@ static int sendResponseFile(struct Connection* connection, const struct Response
 		contentType = MIMETypeFromFile(response->filenameToSend, (const uint8_t*)connection->sendRecvBuffer, actualMIMEReadSize);
 		ews_printf_debug("Detected MIME type '%s' for file '%s'\n", contentType, response->filenameToSend);
 	}
-	/* get the file length, laboriously checking for errors */
+
+	// Get file length using 64-bit functions for large file support
+#ifdef WIN32
+	result = _fseeki64(fp, 0, SEEK_END);
+#else
 	result = fseek(fp, 0, SEEK_END);
+#endif
 	if (0 != result) {
 		ews_printf("Unable to satisfy request for '%s' because we could not fseek to the end of the file '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
 		errorResponse = responseAlloc500InternalErrorHTML("fseek to end of file failed");
 		goto exit;
 	}
+#ifdef WIN32
+	fileLength = _ftelli64(fp);
+#else
 	fileLength = ftell(fp);
+#endif
 	if (fileLength < 0) {
 		ews_printf("Unable to satisfy request for '%s' because we could not ftell on the file '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
 		errorResponse = responseAlloc500InternalErrorHTML("ftell to determine file length failed");
 		goto exit;
 	}
+#ifdef WIN32
+	result = _fseeki64(fp, 0, SEEK_SET);
+#else
 	result = fseek(fp, 0, SEEK_SET);
+#endif
 	if (0 != result) {
 		ews_printf("Unable to satisfy request for '%s' because we could not fseek to the beginning of the file '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
 		errorResponse = responseAlloc500InternalErrorHTML("fseek to beginning of file to start sending failed");
 		goto exit;
 	}
 
-	/* now we have the file length + MIME TYpe and we can send the header */
-	headerLength = snprintfResponseHeader(connection->responseHeader, sizeof(connection->responseHeader), response->code, response->status, contentType, response->extraHeaders, fileLength);
+	long long rangeStart = 0;
+	long long rangeEnd = fileLength > 0 ? fileLength - 1 : 0;
+	bool isRangeRequest = false;
+	const struct Header* rangeHeader = headerInRequest("Range", &connection->request);
+
+	int responseCode = response->code;
+	char* responseStatus = response->status;
+	char extraHeadersBuffer[256] = { 0 };
+
+	if (rangeHeader && rangeHeader->value.contents) {
+		long long r_start = -1, r_end = -1;
+		long long suffix_len = -1;
+
+		// Try to parse "bytes=start-end" (most specific)
+		if (sscanf(rangeHeader->value.contents, "bytes=%lld-%lld", &r_start, &r_end) == 2) {
+			isRangeRequest = true;
+		}
+		// Try to parse "bytes=-suffix" (must be checked before "start-")
+		else if (sscanf(rangeHeader->value.contents, "bytes=-%lld", &suffix_len) == 1) {
+			isRangeRequest = true;
+			// Clamp suffix length to file size to avoid negative start
+			if (suffix_len > fileLength) {
+				suffix_len = fileLength;
+			}
+			r_start = fileLength - suffix_len;
+			r_end = fileLength - 1;
+		}
+		// Try to parse "bytes=start-" (most general)
+		else if (sscanf(rangeHeader->value.contents, "bytes=%lld-", &r_start) == 1) {
+			isRangeRequest = true;
+			r_end = fileLength - 1;
+		}
+
+		if (isRangeRequest) {
+			// Validate and clamp the range
+			if (r_start < 0) r_start = 0;
+			if (r_end >= fileLength) r_end = fileLength - 1;
+
+			// If the range is invalid, send 416
+			if (r_start > r_end || r_start >= fileLength) {
+				struct HeapString responseBody;
+				heapStringInit(&responseBody);
+				heapStringAppendFormat(&responseBody, "<html><head><title>416 Range Not Satisfiable</title></head><body>Requested range not satisfiable.</body></html>");
+
+				snprintf(extraHeadersBuffer, sizeof(extraHeadersBuffer), "Content-Range: bytes */%lld\r\n", fileLength);
+
+				headerLength = snprintfResponseHeader(connection->responseHeader, sizeof(connection->responseHeader), 416, "Range Not Satisfiable", "text/html; charset=UTF-8", extraHeadersBuffer, responseBody.length);
+				sendResult = send(connection->socketfd, connection->responseHeader, headerLength, 0);
+				if (sendResult > 0) *bytesSent += sendResult;
+				sendResult = send(connection->socketfd, responseBody.contents, responseBody.length, 0);
+				if (sendResult > 0) *bytesSent += sendResult;
+
+				heapStringFreeContents(&responseBody);
+				result = 1; // Indicate an error/early exit condition
+				goto exit;
+
+			}
+			else {
+				rangeStart = r_start;
+				rangeEnd = r_end;
+				responseCode = 206;
+				responseStatus = "Partial Content";
+				snprintf(extraHeadersBuffer, sizeof(extraHeadersBuffer), "Content-Range: bytes %lld-%lld/%lld\r\nAccept-Ranges: bytes\r\n", rangeStart, rangeEnd, fileLength);
+			}
+		}
+	}
+
+	if (!isRangeRequest) {
+		// For non-range requests, advertise that we accept ranges
+		snprintf(extraHeadersBuffer, sizeof(extraHeadersBuffer), "Accept-Ranges: bytes\r\n");
+	}
+
+	long long contentLengthToSend = rangeEnd - rangeStart + 1;
+
+	// Append user-provided extra headers if any
+	if (response->extraHeaders) {
+		strncat(extraHeadersBuffer, response->extraHeaders, sizeof(extraHeadersBuffer) - strlen(extraHeadersBuffer) - 1);
+	}
+
+	// Seek to the start of the range to be sent
+#ifdef WIN32
+	result = _fseeki64(fp, rangeStart, SEEK_SET);
+#else
+	result = fseek(fp, rangeStart, SEEK_SET);
+#endif
+	if (0 != result) {
+		ews_printf("Unable to satisfy request for '%s' because we could not fseek to range start '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
+		errorResponse = responseAlloc500InternalErrorHTML("fseek to range start failed");
+		goto exit;
+	}
+
+	/* now we have the file length + MIME Type and we can send the header */
+	headerLength = snprintfResponseHeader(connection->responseHeader, sizeof(connection->responseHeader), responseCode, responseStatus, contentType, extraHeadersBuffer, contentLengthToSend);
 	sendResult = send(connection->socketfd, connection->responseHeader, headerLength, 0);
 	if (sendResult != headerLength) {
 		ews_printf("Unable to satisfy request for '%s' because we could not send the HTTP header '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
@@ -1800,17 +1904,21 @@ static int sendResponseFile(struct Connection* connection, const struct Response
 		fwrite(connection->responseHeader, 1, headerLength, stdout);
 	}
 	*bytesSent = sendResult;
-	/* read the whole file, just buffering into the connection buffer, and sending it out to the socket */
-	while (!feof(fp)) {
-		size_t bytesRead = fread(connection->sendRecvBuffer, 1, sizeof(connection->sendRecvBuffer), fp);
-		if (0 == bytesRead) { /* peacefull end of file */
-			break;
+
+	/* read the file range, buffering into the connection buffer, and sending it out to the socket */
+	long long bytesRemaining = contentLengthToSend;
+	while (bytesRemaining > 0 && !feof(fp)) {
+		size_t bytesToRead = (size_t)MIN(bytesRemaining, (long long)sizeof(connection->sendRecvBuffer));
+		size_t bytesRead = fread(connection->sendRecvBuffer, 1, bytesToRead, fp);
+		if (0 == bytesRead) { /* end of file or error */
+			if (ferror(fp)) {
+				ews_printf("Unable to satisfy request for '%s' because there was an error freading. '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
+				errorResponse = responseAlloc500InternalErrorHTML("Could not fread to send over socket");
+				goto exit;
+			}
+			break; // Peaceful end of file
 		}
-		if (ferror(fp)) {
-			ews_printf("Unable to satisfy request for '%s' because there was an error freading. '%s' %s = %d\n", connection->request.path, response->filenameToSend, strerror(errno), errno);
-			errorResponse = responseAlloc500InternalErrorHTML("Could not fread to send over socket");
-			goto exit;
-		}
+
 		/* send the data out the socket to the network */
 		sendResult = send(connection->socketfd, connection->sendRecvBuffer, bytesRead, 0);
 		if (sendResult != (ssize_t) bytesRead) {
@@ -1823,16 +1931,20 @@ static int sendResponseFile(struct Connection* connection, const struct Response
 		}
 
 		*bytesSent = *bytesSent + sendResult;
+		bytesRemaining -= bytesRead;
 	}
+
 exit:
 	if (NULL != fp) {
 		fclose(fp);
 	}
 	if (NULL != errorResponse) {
-		ews_printf("Instead of satisfying the request for '%s' we encountered an error and will return %d %s\n", connection->request.path, response->code, response->status);
+		ews_printf("Instead of satisfying the request for '%s' we encountered an error and will return %d %s\n", connection->request.path, errorResponse->code, errorResponse->status);
 		ssize_t errorBytesSent = 0;
+		// Use sendResponseBody to prevent recursive call to sendResponseFile
 		result = sendResponseBody(connection, errorResponse, &errorBytesSent);
 		*bytesSent = *bytesSent + errorBytesSent;
+		responseFree(errorResponse); // Free the error response we allocated
 		return result;
 	}
 	return result;
