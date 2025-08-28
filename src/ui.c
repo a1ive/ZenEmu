@@ -54,6 +54,9 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	snprintf(p->mem, OPT_SZ, "%d", num);
 
 	strcpy_s(p->machine, OPT_SZ, get_ini_value(section, L"Machine", machine));
+	p->accel = (ZEMU_ACCEL)get_ini_num(section, L"Accel", ZEMU_ACCEL_TCG);
+	if (p->accel < 0 || p->accel >= ZEMU_ACCEL_MAX)
+		p->accel = ZEMU_ACCEL_TCG;
 	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_true);
 	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
 	p->graphics = get_ini_bool(section, L"GuiWindow", nk_true);
@@ -163,6 +166,7 @@ set_profile(ZEMU_QEMU_ARCH arch)
 	set_ini_value(section, L"Model", p->model);
 	set_ini_value(section, L"Memory", p->mem);
 	set_ini_value(section, L"Machine", p->machine);
+	set_ini_num(section, L"Accel", p->accel);
 	set_ini_num(section, L"KernelIrqchip", p->irqchip);
 	set_ini_num(section, L"Virtualization", p->virt);
 	set_ini_num(section, L"GuiWindow", p->graphics);

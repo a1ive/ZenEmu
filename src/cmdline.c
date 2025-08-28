@@ -77,10 +77,22 @@ static void
 append_qemu_hw(void)
 {
 	append_cmdline(L"-cpu %s ", utf8_to_ucs2(nk.ini->cur->model));
-	if (nk.ini->cur->whpx)
-		append_cmdline(L"-accel whpx ");
-	else
-		append_cmdline(L"-accel tcg,thread=multi ");
+	switch (nk.ini->cur->accel)
+	{
+		case ZEMU_ACCEL_HAXM:
+			append_cmdline(L"-accel hax ");
+			break;
+		case ZEMU_ACCEL_KVM:
+			append_cmdline(L"-accel kvm ");
+			break;
+		case ZEMU_ACCEL_WHPX:
+			append_cmdline(L"-accel whpx ");
+			break;
+		case ZEMU_ACCEL_TCG:
+		default:
+			append_cmdline(L"-accel tcg,thread=multi ");
+			break;
+	}
 	if (nk.ini->cur->smp[0])
 		append_cmdline(L"-smp %s ", utf8_to_ucs2(nk.ini->cur->smp));
 	append_cmdline(L"-M %s,kernel-irqchip=%s", utf8_to_ucs2(nk.ini->cur->machine),

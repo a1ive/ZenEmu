@@ -57,6 +57,15 @@ typedef enum _ZEMU_BOOT_TARGET
 	ZEMU_BOOT_MAX,
 } ZEMU_BOOT_TARGET;
 
+typedef enum _ZEMU_ACCEL
+{
+	ZEMU_ACCEL_TCG = 0,
+	ZEMU_ACCEL_WHPX,
+	ZEMU_ACCEL_HAXM,
+	ZEMU_ACCEL_KVM,
+	ZEMU_ACCEL_MAX,
+} ZEMU_ACCEL;
+
 #define OUTBUF_SZ 4096
 
 #define OPT_SZ 32
@@ -75,7 +84,7 @@ typedef struct _ZEMU_INI_PROFILE
 	char machine[OPT_SZ];
 	nk_bool irqchip;
 	nk_bool virt; // ARM only
-	nk_bool whpx; // x86 only
+	ZEMU_ACCEL accel; // x86 only
 	nk_bool graphics;
 	char vgadev[OPT_SZ];
 	nk_bool pflash;
