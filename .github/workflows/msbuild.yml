@@ -43,7 +43,7 @@ jobs:
             "${{env.BUILD_PLATFORM}}/${{env.BUILD_CONFIGURATION}}/zemu.exe",
             "firmware/bios.bin",
             "firmware/X64_EFI.fd",
-            "firmware/IA32_EFI.bin",
+            "firmware/IA32_EFI.fd",
             "firmware/AA64_EFI.qcow2",
             "firmware/ARM_EFI.qcow2",
             "firmware/wim.cpio",

@@ -7,17 +7,16 @@
 
 static const char* edit_cpu_x86[] =
 {
-	"kvm64", "Broadwell", "Conroe", "Cooperlake",
-	"Dhyana", "EPYC", "Haswell", "Ivybridge",
-	"Skylake-Client", "Skylake-Server", "Snowridge",
-	"YongFeng", "athlon", "core2duo", "max",
+	"486", "Conroe", "Dhyana", "EPYC", "Haswell", "Ivybridge",
+	"Icelake-Server", "Skylake-Client", "Westmere", "YongFeng",
+	"athlon", "core2duo", "kvm64", "max",
 };
 
 static const char* edit_cpu_arm[] =
 {
 	"cortex-a7", "cortex-a15",
-	"cortex-a35", "cortex-a53", "cortex-a57", "cortex-a72", "cortex-a76",
-	"max",
+	"cortex-a35", "cortex-a53", "cortex-a72", "cortex-a76",
+	"cortex-a710", "neoverse-v1", "max",
 };
 
 static const char* edit_machine_x86[] =

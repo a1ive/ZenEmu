@@ -16,7 +16,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
 		section = L"X86";
-		model = L"kvm64";
+		model = L"Icelake-Server"; // "max" is not supported by whpx, kvm64 is not supported by windows
 		machine = L"q35";
 		display = L"vmware-svga";
 		fw = ZEMU_FW_X64_EFI;
