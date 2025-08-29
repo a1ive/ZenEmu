@@ -41,9 +41,9 @@ jobs:
         New-Item -ItemType Directory -Name $destDir -ErrorAction SilentlyContinue
         $fileList = @(
             "${{env.BUILD_PLATFORM}}/${{env.BUILD_CONFIGURATION}}/zemu.exe",
-            "firmware/bios.qcow2",
-            "firmware/X64_EFI.qcow2",
-            "firmware/IA32_EFI.qcow2",
+            "firmware/bios.bin",
+            "firmware/X64_EFI.fd",
+            "firmware/IA32_EFI.bin",
             "firmware/AA64_EFI.qcow2",
             "firmware/ARM_EFI.qcow2",
             "firmware/wim.cpio",

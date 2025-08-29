@@ -8,6 +8,7 @@ static void
 get_profile(ZEMU_QEMU_ARCH arch)
 {
 	int num;
+	nk_bool pflash;
 	LPCWSTR section, model, machine, display;
 	ZEMU_FW fw, fw_min, fw_max;
 	ZEMU_INI_PROFILE* p = &nk.ini->profile[arch];
@@ -15,12 +16,13 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	{
 	case ZEMU_QEMU_ARCH_X64:
 		section = L"X86";
-		model = L"max";
+		model = L"kvm64";
 		machine = L"q35";
 		display = L"vmware-svga";
 		fw = ZEMU_FW_X64_EFI;
 		fw_min = ZEMU_FW_X86_MIN;
 		fw_max = ZEMU_FW_X86_MAX;
+		pflash = nk_false; // https://gitlab.com/qemu-project/qemu/-/issues/1043
 		break;
 	case ZEMU_QEMU_ARCH_AA64:
 		section = L"Arm";
@@ -30,6 +32,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 		fw = ZEMU_FW_AA64_EFI;
 		fw_min = ZEMU_FW_ARM_MIN;
 		fw_max = ZEMU_FW_ARM_MAX;
+		pflash = nk_true;
 		break;
 	default:
 		section = L"Unknown";
@@ -39,6 +42,7 @@ get_profile(ZEMU_QEMU_ARCH arch)
 		fw = 0;
 		fw_min = ZEMU_FW_MAX;
 		fw_max = ZEMU_FW_MAX;
+		pflash = nk_true;
 	}
 
 	num = get_ini_num(section, L"Smp", 4);
@@ -57,11 +61,11 @@ get_profile(ZEMU_QEMU_ARCH arch)
 	p->accel = (ZEMU_ACCEL)get_ini_num(section, L"Accel", ZEMU_ACCEL_TCG);
 	if (p->accel < 0 || p->accel >= ZEMU_ACCEL_MAX)
 		p->accel = ZEMU_ACCEL_TCG;
-	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_true);
+	p->irqchip = get_ini_bool(section, L"KernelIrqchip", nk_false);
 	p->virt = get_ini_bool(section, L"Virtualization", nk_true);
 	p->graphics = get_ini_bool(section, L"GuiWindow", nk_true);
 	strcpy_s(p->vgadev, OPT_SZ, get_ini_value(section, L"Display", display));
-	p->pflash = get_ini_bool(section, L"Pflash", nk_true);
+	p->pflash = get_ini_bool(section, L"Pflash", pflash);
 	p->net = get_ini_bool(section, L"Network", nk_true);
 	strcpy_s(p->netdev, OPT_SZ, get_ini_value(section, L"NetworkDevice", L"e1000"));
 	strcpy_s(p->netmac, MAC_SZ, get_ini_value(section, L"NetworkMacAddr", L""));
@@ -104,9 +108,9 @@ ui_ini_init(void)
 	strcpy_s(nk.ini->qemu_name[ZEMU_QEMU_ARCH_X64], OPT_SZ, get_ini_value(L"Qemu", L"X64", L"qemu-system-x86_64w.exe"));
 	strcpy_s(nk.ini->qemu_name[ZEMU_QEMU_ARCH_AA64], OPT_SZ, get_ini_value(L"Qemu", L"AA64", L"qemu-system-aarch64w.exe"));
 
-	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_X64_EFI], MAX_PATH, get_ini_value(L"Qemu", L"X64_EFI", L"X64_EFI.qcow2"));
-	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_X86_BIOS], MAX_PATH, get_ini_value(L"Qemu", L"X86_BIOS", L"bios.qcow2"));
-	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_X86_EFI], MAX_PATH, get_ini_value(L"Qemu", L"X86_EFI", L"IA32_EFI.qcow2"));
+	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_X64_EFI], MAX_PATH, get_ini_value(L"Qemu", L"X64_EFI", L"X64_EFI.fd"));
+	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_X86_BIOS], MAX_PATH, get_ini_value(L"Qemu", L"X86_BIOS", L"bios.bin"));
+	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_X86_EFI], MAX_PATH, get_ini_value(L"Qemu", L"X86_EFI", L"IA32_EFI.fd"));
 	
 	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_AA64_EFI], MAX_PATH, get_ini_value(L"Qemu", L"AA64_EFI", L"AA64_EFI.qcow2"));
 	strcpy_s(nk.ini->qemu_fw[ZEMU_FW_ARM32_EFI], MAX_PATH, get_ini_value(L"Qemu", L"ARM32_EFI", L"ARM_EFI.qcow2"));
