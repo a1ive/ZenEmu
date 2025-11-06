@@ -14,6 +14,7 @@ void
 ui_qemu_mem(struct nk_context* ctx)
 {
 	char buf[48];
+	nk_bool is_running = ui_is_qemu_running();
 	nk_layout_row_dynamic(ctx, 0, 1);
 	nk_image_label(ctx, GET_PNG(IDR_PNG_MEMORY), ZTXT(ZTXT_MEMORY));
 	nk_layout_row(ctx, NK_DYNAMIC, 0, 5, (float[5]) { 0.2f, 0.2f - nk.sq, nk.sq, 0.1f, 0.5f });
@@ -33,7 +34,7 @@ ui_qemu_mem(struct nk_context* ctx)
 	strcpy_s(buf, 48, get_human_size(nk.statex.ullAvailPhys, human_units, 1024));
 	nk_labelf(ctx, NK_TEXT_RIGHT, "%lu%% (%s / %s)", nk.statex.dwMemoryLoad,
 		buf, get_human_size(nk.statex.ullTotalPhys, human_units, 1024));
-	if (strtoul(nk.ini->cur->mem, NULL, 10) + 64 >= nk.statex.ullAvailPhys / 1024 / 1024)
+	if (!is_running && strtoul(nk.ini->cur->mem, NULL, 10) + 64 >= nk.statex.ullAvailPhys / 1024 / 1024)
 	{
 		nk_layout_row_dynamic(ctx, 0, 1);
 		nk_image_label(ctx, GET_PNG(IDR_PNG_WARN), ZTXT(ZTXT_WARN_OUT_OF_MEM));
