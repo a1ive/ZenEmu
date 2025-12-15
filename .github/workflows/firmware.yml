@@ -69,7 +69,7 @@ jobs:
           cp Build/OvmfX64/RELEASE_GCC5/FV/OVMF_VARS.fd output/X64_VARS.fd
 
       - name: Upload firmware
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: firmware
           path: output/
